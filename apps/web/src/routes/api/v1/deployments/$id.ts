@@ -13,7 +13,6 @@ export const Route = createFileRoute('/api/v1/deployments/$id')({
           where: { id: params.id },
           include: {
             agent: { select: { id: true, name: true, isVerified: true } },
-            _count: { select: { transactions: true } },
           },
         });
 
@@ -40,7 +39,7 @@ export const Route = createFileRoute('/api/v1/deployments/$id')({
               verificationStatus: deployment.verificationStatus,
               securityScore: deployment.securityScore,
               agent: deployment.agent,
-              transactionCount: deployment._count.transactions,
+              interactionCount: deployment.interactionCount,
               explorerUrl: getExplorerUrl(deployment.chainKey, deployment.contractAddress),
               createdAt: deployment.createdAt.toISOString(),
               updatedAt: deployment.updatedAt.toISOString(),

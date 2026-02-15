@@ -24,6 +24,7 @@ import { Route as ApiV1StatsAgentsRouteImport } from './routes/api/v1/stats/agen
 import { Route as ApiV1DeploymentsIdRouteImport } from './routes/api/v1/deployments/$id'
 import { Route as ApiV1AgentsRegisterRouteImport } from './routes/api/v1/agents/register'
 import { Route as ApiV1AgentsIdRouteImport } from './routes/api/v1/agents/$id'
+import { Route as ApiV1DeploymentsIdInteractRouteImport } from './routes/api/v1/deployments/$id/interact'
 import { Route as ApiV1DeploymentsIdAbiRouteImport } from './routes/api/v1/deployments/$id/abi'
 import { Route as ApiV1AgentsIdDeploymentsRouteImport } from './routes/api/v1/agents/$id/deployments'
 
@@ -102,6 +103,12 @@ const ApiV1AgentsIdRoute = ApiV1AgentsIdRouteImport.update({
   path: '/api/v1/agents/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiV1DeploymentsIdInteractRoute =
+  ApiV1DeploymentsIdInteractRouteImport.update({
+    id: '/interact',
+    path: '/interact',
+    getParentRoute: () => ApiV1DeploymentsIdRoute,
+  } as any)
 const ApiV1DeploymentsIdAbiRoute = ApiV1DeploymentsIdAbiRouteImport.update({
   id: '/abi',
   path: '/abi',
@@ -132,6 +139,7 @@ export interface FileRoutesByFullPath {
   '/api/v1/deployments/': typeof ApiV1DeploymentsIndexRoute
   '/api/v1/agents/$id/deployments': typeof ApiV1AgentsIdDeploymentsRoute
   '/api/v1/deployments/$id/abi': typeof ApiV1DeploymentsIdAbiRoute
+  '/api/v1/deployments/$id/interact': typeof ApiV1DeploymentsIdInteractRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -151,6 +159,7 @@ export interface FileRoutesByTo {
   '/api/v1/deployments': typeof ApiV1DeploymentsIndexRoute
   '/api/v1/agents/$id/deployments': typeof ApiV1AgentsIdDeploymentsRoute
   '/api/v1/deployments/$id/abi': typeof ApiV1DeploymentsIdAbiRoute
+  '/api/v1/deployments/$id/interact': typeof ApiV1DeploymentsIdInteractRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -171,6 +180,7 @@ export interface FileRoutesById {
   '/api/v1/deployments/': typeof ApiV1DeploymentsIndexRoute
   '/api/v1/agents/$id/deployments': typeof ApiV1AgentsIdDeploymentsRoute
   '/api/v1/deployments/$id/abi': typeof ApiV1DeploymentsIdAbiRoute
+  '/api/v1/deployments/$id/interact': typeof ApiV1DeploymentsIdInteractRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -192,6 +202,7 @@ export interface FileRouteTypes {
     | '/api/v1/deployments/'
     | '/api/v1/agents/$id/deployments'
     | '/api/v1/deployments/$id/abi'
+    | '/api/v1/deployments/$id/interact'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -211,6 +222,7 @@ export interface FileRouteTypes {
     | '/api/v1/deployments'
     | '/api/v1/agents/$id/deployments'
     | '/api/v1/deployments/$id/abi'
+    | '/api/v1/deployments/$id/interact'
   id:
     | '__root__'
     | '/'
@@ -230,6 +242,7 @@ export interface FileRouteTypes {
     | '/api/v1/deployments/'
     | '/api/v1/agents/$id/deployments'
     | '/api/v1/deployments/$id/abi'
+    | '/api/v1/deployments/$id/interact'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -357,6 +370,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiV1AgentsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/v1/deployments/$id/interact': {
+      id: '/api/v1/deployments/$id/interact'
+      path: '/interact'
+      fullPath: '/api/v1/deployments/$id/interact'
+      preLoaderRoute: typeof ApiV1DeploymentsIdInteractRouteImport
+      parentRoute: typeof ApiV1DeploymentsIdRoute
+    }
     '/api/v1/deployments/$id/abi': {
       id: '/api/v1/deployments/$id/abi'
       path: '/abi'
@@ -388,10 +408,12 @@ const ApiV1AgentsIdRouteWithChildren = ApiV1AgentsIdRoute._addFileChildren(
 
 interface ApiV1DeploymentsIdRouteChildren {
   ApiV1DeploymentsIdAbiRoute: typeof ApiV1DeploymentsIdAbiRoute
+  ApiV1DeploymentsIdInteractRoute: typeof ApiV1DeploymentsIdInteractRoute
 }
 
 const ApiV1DeploymentsIdRouteChildren: ApiV1DeploymentsIdRouteChildren = {
   ApiV1DeploymentsIdAbiRoute: ApiV1DeploymentsIdAbiRoute,
+  ApiV1DeploymentsIdInteractRoute: ApiV1DeploymentsIdInteractRoute,
 }
 
 const ApiV1DeploymentsIdRouteWithChildren =

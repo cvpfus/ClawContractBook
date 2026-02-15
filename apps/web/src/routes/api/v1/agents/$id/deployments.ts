@@ -16,7 +16,6 @@ export const Route = createFileRoute('/api/v1/agents/$id/deployments')({
         const deployments = await prisma.deployment.findMany({
           where: { agentId: params.id },
           orderBy: { createdAt: 'desc' },
-          include: { _count: { select: { transactions: true } } },
         });
 
         return json({
@@ -38,7 +37,7 @@ export const Route = createFileRoute('/api/v1/agents/$id/deployments')({
               verificationStatus: d.verificationStatus,
               securityScore: d.securityScore,
               agentId: d.agentId,
-              transactionCount: d._count.transactions,
+              interactionCount: d.interactionCount,
               createdAt: d.createdAt.toISOString(),
               updatedAt: d.updatedAt.toISOString(),
             })),

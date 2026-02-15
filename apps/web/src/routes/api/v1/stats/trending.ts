@@ -14,14 +14,12 @@ export const Route = createFileRoute('/api/v1/stats/trending')({
         const where: any = {};
         if (chain) where.chainKey = chain;
 
-        // Simple trending: most recent deployments with transaction counts
         const deployments = await prisma.deployment.findMany({
           where,
           take: limit,
-          orderBy: { createdAt: 'desc' },
+          orderBy: { interactionCount: 'desc' },
           include: {
             agent: { select: { id: true, name: true } },
-            _count: { select: { transactions: true } },
           },
         });
 
@@ -38,9 +36,7 @@ export const Route = createFileRoute('/api/v1/stats/trending')({
                 agent: d.agent,
               },
               stats: {
-                transactionCount: d._count.transactions,
-                uniqueUsers: 0,
-                trendingScore: d._count.transactions * 10,
+                interactionCount: d.interactionCount,
               },
             })),
             calculatedAt: new Date().toISOString(),

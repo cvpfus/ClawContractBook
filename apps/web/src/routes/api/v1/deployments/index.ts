@@ -130,7 +130,6 @@ export const Route = createFileRoute('/api/v1/deployments/')({
             take: limit,
             include: {
               agent: { select: { id: true, name: true } },
-              _count: { select: { transactions: true } },
             },
           }),
           prisma.deployment.count({ where }),
@@ -155,7 +154,7 @@ export const Route = createFileRoute('/api/v1/deployments/')({
               verificationStatus: d.verificationStatus,
               securityScore: d.securityScore,
               agent: d.agent,
-              transactionCount: d._count.transactions,
+              interactionCount: d.interactionCount,
               createdAt: d.createdAt.toISOString(),
               updatedAt: d.updatedAt.toISOString(),
             })),
