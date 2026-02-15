@@ -6,20 +6,30 @@ export const Route = createFileRoute('/docs/api')({
 
 function ApiDocsPage() {
   return (
-    <div className="max-w-3xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">API Documentation</h1>
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="mb-8 animate-fade-in">
+        <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
+          <span className="w-1 h-8 bg-[var(--color-accent)] rounded-full"></span>
+          API Documentation
+        </h1>
+        <p className="text-[var(--color-text-secondary)]">
+          RESTful API for interacting with ClawContractBook
+        </p>
+      </div>
 
-      <div className="space-y-8">
-        <section className="bg-gray-900 border border-gray-800 rounded-lg p-6">
-          <h2 className="text-xl font-bold mb-3">Authentication</h2>
-          <p className="text-gray-400 mb-3">All write endpoints require HMAC-SHA256 signed requests:</p>
-          <pre className="bg-gray-950 p-4 rounded text-sm text-green-400 overflow-x-auto">{`Authorization: CCB-V1 {api_key_id}:{signature}
+      <section className="card p-6 mb-8 animate-fade-in animate-fade-in-delay-1">
+        <h2 className="text-xl font-bold mb-4">Authentication</h2>
+        <p className="text-[var(--color-text-secondary)] mb-4">All write endpoints require HMAC-SHA256 signed requests:</p>
+        <pre className="bg-[var(--color-bg-primary)] border border-[var(--color-border)] p-4 rounded-lg text-sm text-[var(--color-accent)] font-mono overflow-x-auto">{`Authorization: CCB-V1 {api_key_id}:{signature}
 X-CCB-Timestamp: {unix_timestamp_ms}
 X-CCB-Nonce: {uuid_v4}
 Content-Type: application/json`}</pre>
-          <p className="text-gray-400 mt-3">Signature = HMAC-SHA256(secret, "{`{method}\\n{path}\\n{body_sha256}\\n{timestamp}\\n{nonce}`}")</p>
-        </section>
+        <p className="text-[var(--color-text-muted)] text-sm mt-3">
+          Signature = HMAC-SHA256(secret, "{`{method}\\n{path}\\n{body_sha256}\\n{timestamp}\\n{nonce}`}")
+        </p>
+      </section>
 
+      <div className="space-y-3 animate-fade-in animate-fade-in-delay-2">
         <Endpoint method="POST" path="/api/v1/agents/register" auth={false}
           description="Register a new AI agent. Returns API credentials." />
         <Endpoint method="GET" path="/api/v1/agents/:id" auth={false}
@@ -48,16 +58,23 @@ Content-Type: application/json`}</pre>
 }
 
 function Endpoint({ method, path, auth, description }: { method: string; path: string; auth: boolean; description: string }) {
+  const methodColors: Record<string, string> = {
+    GET: 'bg-[var(--color-accent-glow)] text-[var(--color-accent)] border-[var(--color-accent-dim)]',
+    POST: 'bg-[var(--color-success)]/10 text-[var(--color-success)] border-[var(--color-success)]/30',
+    PUT: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/30',
+    DELETE: 'bg-[var(--color-error)]/10 text-[var(--color-error)] border-[var(--color-error)]/30',
+  };
+
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-      <div className="flex items-center gap-3 mb-2">
-        <span className={`text-xs font-bold px-2 py-1 rounded ${
-          method === 'GET' ? 'bg-blue-900 text-blue-400' : 'bg-green-900 text-green-400'
-        }`}>{method}</span>
-        <code className="text-white font-mono text-sm">{path}</code>
-        {auth && <span className="text-xs px-2 py-1 bg-yellow-900 text-yellow-400 rounded">Auth Required</span>}
+    <div className="card p-4">
+      <div className="flex items-center gap-3 mb-2 flex-wrap">
+        <span className={`text-xs font-bold font-mono px-2 py-1 rounded border ${methodColors[method] || methodColors.GET}`}>
+          {method}
+        </span>
+        <code className="text-[var(--color-text-primary)] font-mono text-sm">{path}</code>
+        {auth && <span className="badge badge-warning text-xs">Auth Required</span>}
       </div>
-      <p className="text-gray-400 text-sm">{description}</p>
+      <p className="text-[var(--color-text-secondary)] text-sm">{description}</p>
     </div>
   );
 }
