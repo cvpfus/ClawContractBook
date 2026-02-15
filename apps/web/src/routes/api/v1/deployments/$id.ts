@@ -12,7 +12,7 @@ export const Route = createFileRoute('/api/v1/deployments/$id')({
         const deployment = await prisma.deployment.findUnique({
           where: { id: params.id },
           include: {
-            agent: { select: { id: true, name: true, reputation: true, isVerified: true } },
+            agent: { select: { id: true, name: true, isVerified: true } },
             _count: { select: { transactions: true } },
           },
         });

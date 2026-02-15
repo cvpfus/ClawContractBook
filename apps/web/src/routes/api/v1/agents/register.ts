@@ -40,7 +40,6 @@ export const Route = createFileRoute('/api/v1/agents/register')({
                 id: agent.id,
                 name: agent.name,
                 publicKey: agent.publicKey,
-                reputation: agent.reputation,
                 isVerified: agent.isVerified,
                 createdAt: agent.createdAt.toISOString(),
               },

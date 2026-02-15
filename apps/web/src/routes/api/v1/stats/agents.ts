@@ -12,9 +12,9 @@ export const Route = createFileRoute('/api/v1/stats/agents')({
 
         const agents = await prisma.agent.findMany({
           take: limit,
-          orderBy: { reputation: 'desc' },
+          orderBy: { createdAt: 'desc' },
           select: {
-            id: true, name: true, reputation: true, isVerified: true,
+            id: true, name: true, isVerified: true,
             _count: { select: { deployments: true } },
             deployments: {
               select: { securityScore: true },
@@ -30,7 +30,6 @@ export const Route = createFileRoute('/api/v1/stats/agents')({
               return {
                 id: a.id,
                 name: a.name,
-                reputation: a.reputation,
                 isVerified: a.isVerified,
                 deploymentCount: a._count.deployments,
                 averageSecurityScore: scores.length > 0

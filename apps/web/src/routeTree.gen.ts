@@ -26,8 +26,6 @@ import { Route as ApiV1AgentsRegisterRouteImport } from './routes/api/v1/agents/
 import { Route as ApiV1AgentsIdRouteImport } from './routes/api/v1/agents/$id'
 import { Route as ApiV1DeploymentsIdAbiRouteImport } from './routes/api/v1/deployments/$id/abi'
 import { Route as ApiV1AgentsIdDeploymentsRouteImport } from './routes/api/v1/agents/$id/deployments'
-import { Route as ApiV1AgentsIdAttestationsRouteImport } from './routes/api/v1/agents/$id/attestations'
-import { Route as ApiV1AgentsIdAttestRouteImport } from './routes/api/v1/agents/$id/attest'
 
 const StatsRoute = StatsRouteImport.update({
   id: '/stats',
@@ -115,17 +113,6 @@ const ApiV1AgentsIdDeploymentsRoute =
     path: '/deployments',
     getParentRoute: () => ApiV1AgentsIdRoute,
   } as any)
-const ApiV1AgentsIdAttestationsRoute =
-  ApiV1AgentsIdAttestationsRouteImport.update({
-    id: '/attestations',
-    path: '/attestations',
-    getParentRoute: () => ApiV1AgentsIdRoute,
-  } as any)
-const ApiV1AgentsIdAttestRoute = ApiV1AgentsIdAttestRouteImport.update({
-  id: '/attest',
-  path: '/attest',
-  getParentRoute: () => ApiV1AgentsIdRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -143,8 +130,6 @@ export interface FileRoutesByFullPath {
   '/api/v1/stats/overview': typeof ApiV1StatsOverviewRoute
   '/api/v1/stats/trending': typeof ApiV1StatsTrendingRoute
   '/api/v1/deployments/': typeof ApiV1DeploymentsIndexRoute
-  '/api/v1/agents/$id/attest': typeof ApiV1AgentsIdAttestRoute
-  '/api/v1/agents/$id/attestations': typeof ApiV1AgentsIdAttestationsRoute
   '/api/v1/agents/$id/deployments': typeof ApiV1AgentsIdDeploymentsRoute
   '/api/v1/deployments/$id/abi': typeof ApiV1DeploymentsIdAbiRoute
 }
@@ -164,8 +149,6 @@ export interface FileRoutesByTo {
   '/api/v1/stats/overview': typeof ApiV1StatsOverviewRoute
   '/api/v1/stats/trending': typeof ApiV1StatsTrendingRoute
   '/api/v1/deployments': typeof ApiV1DeploymentsIndexRoute
-  '/api/v1/agents/$id/attest': typeof ApiV1AgentsIdAttestRoute
-  '/api/v1/agents/$id/attestations': typeof ApiV1AgentsIdAttestationsRoute
   '/api/v1/agents/$id/deployments': typeof ApiV1AgentsIdDeploymentsRoute
   '/api/v1/deployments/$id/abi': typeof ApiV1DeploymentsIdAbiRoute
 }
@@ -186,8 +169,6 @@ export interface FileRoutesById {
   '/api/v1/stats/overview': typeof ApiV1StatsOverviewRoute
   '/api/v1/stats/trending': typeof ApiV1StatsTrendingRoute
   '/api/v1/deployments/': typeof ApiV1DeploymentsIndexRoute
-  '/api/v1/agents/$id/attest': typeof ApiV1AgentsIdAttestRoute
-  '/api/v1/agents/$id/attestations': typeof ApiV1AgentsIdAttestationsRoute
   '/api/v1/agents/$id/deployments': typeof ApiV1AgentsIdDeploymentsRoute
   '/api/v1/deployments/$id/abi': typeof ApiV1DeploymentsIdAbiRoute
 }
@@ -209,8 +190,6 @@ export interface FileRouteTypes {
     | '/api/v1/stats/overview'
     | '/api/v1/stats/trending'
     | '/api/v1/deployments/'
-    | '/api/v1/agents/$id/attest'
-    | '/api/v1/agents/$id/attestations'
     | '/api/v1/agents/$id/deployments'
     | '/api/v1/deployments/$id/abi'
   fileRoutesByTo: FileRoutesByTo
@@ -230,8 +209,6 @@ export interface FileRouteTypes {
     | '/api/v1/stats/overview'
     | '/api/v1/stats/trending'
     | '/api/v1/deployments'
-    | '/api/v1/agents/$id/attest'
-    | '/api/v1/agents/$id/attestations'
     | '/api/v1/agents/$id/deployments'
     | '/api/v1/deployments/$id/abi'
   id:
@@ -251,8 +228,6 @@ export interface FileRouteTypes {
     | '/api/v1/stats/overview'
     | '/api/v1/stats/trending'
     | '/api/v1/deployments/'
-    | '/api/v1/agents/$id/attest'
-    | '/api/v1/agents/$id/attestations'
     | '/api/v1/agents/$id/deployments'
     | '/api/v1/deployments/$id/abi'
   fileRoutesById: FileRoutesById
@@ -396,32 +371,14 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiV1AgentsIdDeploymentsRouteImport
       parentRoute: typeof ApiV1AgentsIdRoute
     }
-    '/api/v1/agents/$id/attestations': {
-      id: '/api/v1/agents/$id/attestations'
-      path: '/attestations'
-      fullPath: '/api/v1/agents/$id/attestations'
-      preLoaderRoute: typeof ApiV1AgentsIdAttestationsRouteImport
-      parentRoute: typeof ApiV1AgentsIdRoute
-    }
-    '/api/v1/agents/$id/attest': {
-      id: '/api/v1/agents/$id/attest'
-      path: '/attest'
-      fullPath: '/api/v1/agents/$id/attest'
-      preLoaderRoute: typeof ApiV1AgentsIdAttestRouteImport
-      parentRoute: typeof ApiV1AgentsIdRoute
-    }
   }
 }
 
 interface ApiV1AgentsIdRouteChildren {
-  ApiV1AgentsIdAttestRoute: typeof ApiV1AgentsIdAttestRoute
-  ApiV1AgentsIdAttestationsRoute: typeof ApiV1AgentsIdAttestationsRoute
   ApiV1AgentsIdDeploymentsRoute: typeof ApiV1AgentsIdDeploymentsRoute
 }
 
 const ApiV1AgentsIdRouteChildren: ApiV1AgentsIdRouteChildren = {
-  ApiV1AgentsIdAttestRoute: ApiV1AgentsIdAttestRoute,
-  ApiV1AgentsIdAttestationsRoute: ApiV1AgentsIdAttestationsRoute,
   ApiV1AgentsIdDeploymentsRoute: ApiV1AgentsIdDeploymentsRoute,
 }
 

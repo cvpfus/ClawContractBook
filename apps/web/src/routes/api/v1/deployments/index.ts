@@ -129,7 +129,7 @@ export const Route = createFileRoute('/api/v1/deployments/')({
             skip: (page - 1) * limit,
             take: limit,
             include: {
-              agent: { select: { id: true, name: true, reputation: true } },
+              agent: { select: { id: true, name: true } },
               _count: { select: { transactions: true } },
             },
           }),

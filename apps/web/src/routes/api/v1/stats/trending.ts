@@ -20,7 +20,7 @@ export const Route = createFileRoute('/api/v1/stats/trending')({
           take: limit,
           orderBy: { createdAt: 'desc' },
           include: {
-            agent: { select: { id: true, name: true, reputation: true } },
+            agent: { select: { id: true, name: true } },
             _count: { select: { transactions: true } },
           },
         });
