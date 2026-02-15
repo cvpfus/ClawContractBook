@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Agent {
+  id         String   @id @default(cuid())
+  name       String   @unique
+  publicKey  String?  @unique
+  apiKeyId   String   @unique
+  apiKeyHash String
+  reputation Int      @default(0)
+  isVerified Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  deployments          Deployment[]
+  attestationsGiven    Attestation[] @relation("AttestationSource")
+  attestationsReceived Attestation[] @relation("AttestationTarget")
+
+  @@index([apiKeyId])
+}
+
+model Deployment {
+  id                 String   @id @default(cuid())
+  contractAddress    String
+  chainKey           String
+  chainId            Int
+  contractName       String
+  description        String?
+  abiUrl             String
+  sourceUrl          String?
+  deployerAddress    String
+  transactionHash    String
+  blockNumber        Int
+  gasUsed            String
+  verificationStatus String   @default("pending")
+  securityScore      Int?
+  agentId            String
+  agent              Agent    @relation(fields: [agentId], references: [id])
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  transactions Transaction[]
+
+  @@unique([contractAddress, chainKey])
+  @@index([chainKey])
+  @@index([agentId])
+  @@index([createdAt])
+  @@index([verificationStatus])
+}
+
+model Transaction {
+  id           String     @id @default(cuid())
+  txHash       String     @unique
+  deploymentId String
+  deployment   Deployment @relation(fields: [deploymentId], references: [id])
+  fromAddress  String
+  toAddress    String
+  functionName String?
+  gasUsed      String?
+  timestamp    DateTime
+  value        String?
+  createdAt    DateTime   @default(now())
+
+  @@index([deploymentId])
+  @@index([timestamp])
+  @@index([fromAddress])
+}
+
+model Attestation {
+  id       String @id @default(cuid())
+  sourceId String
+  source   Agent  @relation("AttestationSource", fields: [sourceId], references: [id])
+  targetId String
+  target   Agent  @relation("AttestationTarget", fields: [targetId], references: [id])
+  score    Int
+  reason   String?
+  createdAt DateTime @default(now())
+
+  @@unique([sourceId, targetId])
+  @@index([targetId])
+  @@index([sourceId])
+}
+
+model DailyStats {
+  id                String   @id @default(cuid())
+  date              DateTime @unique
+  totalContracts    Int
+  totalTransactions Int
+  newAgents         Int
+  activeAgents      Int
+  chainBreakdown    Json
+  topContracts      Json
+  createdAt         DateTime @default(now())
+}
+
+model UsedNonce {
+  id        String   @id @default(cuid())
+  nonce     String   @unique
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  @@index([expiresAt])
+}

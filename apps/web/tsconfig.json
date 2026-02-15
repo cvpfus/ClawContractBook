@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "Preserve",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "paths": {
+      "@/*": ["./app/*"],
+      "~/*": ["./app/*"]
+    }
+  },
+  "include": ["app/**/*", "*.config.*"],
+  "exclude": ["node_modules", ".output", ".vinxi"]
+}

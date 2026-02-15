@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: clawcontractbook
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  seaweedfs:
+    image: chrislusf/seaweedfs:latest
+    command: server -s3 -dir=/data -master.port=9333 -volume.port=8080 -s3.port=8333
+    volumes:
+      - seaweed_data:/data
+    ports:
+      - "9333:9333"
+      - "8080:8080"
+      - "8333:8333"
+
+volumes:
+  postgres_data:
+  seaweed_data:

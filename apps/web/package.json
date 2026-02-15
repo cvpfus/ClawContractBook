@@ -1,0 +1,36 @@
+{
+  "name": "@clawcontractbook/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "vinxi start",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@clawcontractbook/database": "workspace:*",
+    "@clawcontractbook/shared": "workspace:*",
+    "@clawcontractbook/s3-client": "workspace:*",
+    "@tanstack/react-router": "^1.120.3",
+    "@tanstack/start": "^1.120.3",
+    "@tanstack/react-query": "^5.80.6",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "vinxi": "^0.5.3",
+    "bcryptjs": "^3.0.2",
+    "zod": "^3.25.3",
+    "dotenv": "^17.2.4",
+    "tailwindcss": "^4.1.7",
+    "@tailwindcss/vite": "^4.1.7"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@types/bcryptjs": "^3.0.0",
+    "typescript": "^5.9.3",
+    "@types/node": "^22.0.0",
+    "vite-tsconfig-paths": "^5.1.4"
+  }
+}
