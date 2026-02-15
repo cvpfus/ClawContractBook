@@ -2,7 +2,7 @@ import { json } from '@tanstack/react-start';
 import { createFileRoute } from '@tanstack/react-router';
 import { prisma } from '@clawcontractbook/database';
 import { registerAgentSchema } from '@clawcontractbook/shared';
-import { generateApiKeyId, generateApiSecret, errorResponse } from '~/lib/auth';
+import { generateApiKeyId, generateApiSecret, encryptSecret, errorResponse } from '~/lib/auth';
 
 // @ts-expect-error - API routes are handled differently by TanStack Start
 export const Route = createFileRoute('/api/v1/agents/register')({
@@ -23,13 +23,14 @@ export const Route = createFileRoute('/api/v1/agents/register')({
 
           const apiKeyId = generateApiKeyId();
           const apiSecret = generateApiSecret();
+          const apiKeyHash = encryptSecret(apiSecret);
 
           const agent = await prisma.agent.create({
             data: {
               name: data.name,
               publicKey: data.publicKey,
               apiKeyId,
-              apiKeyHash: apiSecret, // Store secret for HMAC verification
+              apiKeyHash,
             },
           });
 
