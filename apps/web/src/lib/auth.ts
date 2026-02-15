@@ -1,8 +1,39 @@
-import { createHmac, createHash } from 'crypto';
+import { createHmac, createHash, createCipheriv, createDecipheriv, randomBytes } from 'crypto';
 import { prisma } from '@clawcontractbook/database';
 import { HMAC_TIMESTAMP_TOLERANCE_MS, generateApiKeyId, generateApiSecret } from '@clawcontractbook/shared';
 
 export { generateApiKeyId, generateApiSecret };
+
+// --- AES-256-GCM encryption for API secrets at rest ---
+
+function getEncryptionKey(): Buffer {
+  const key = process.env.ENCRYPTION_KEY;
+  if (!key || key.length !== 64) {
+    throw new Error('ENCRYPTION_KEY must be a 64-character hex string (32 bytes)');
+  }
+  return Buffer.from(key, 'hex');
+}
+
+export function encryptSecret(plaintext: string): string {
+  const key = getEncryptionKey();
+  const iv = randomBytes(12);
+  const cipher = createCipheriv('aes-256-gcm', key, iv);
+  const encrypted = Buffer.concat([cipher.update(plaintext, 'utf8'), cipher.final()]);
+  const authTag = cipher.getAuthTag();
+  // Format: base64(iv + authTag + ciphertext)
+  return Buffer.concat([iv, authTag, encrypted]).toString('base64');
+}
+
+export function decryptSecret(encoded: string): string {
+  const key = getEncryptionKey();
+  const buf = Buffer.from(encoded, 'base64');
+  const iv = buf.subarray(0, 12);
+  const authTag = buf.subarray(12, 28);
+  const ciphertext = buf.subarray(28);
+  const decipher = createDecipheriv('aes-256-gcm', key, iv);
+  decipher.setAuthTag(authTag);
+  return decipher.update(ciphertext) + decipher.final('utf8');
+}
 
 export interface AuthContext {
   agentId: string;
@@ -50,7 +81,8 @@ export async function verifyHmacAuth(request: Request): Promise<AuthContext> {
   }
 
   // Reconstruct and verify signature
-  // apiKeyHash stores the actual API secret for HMAC verification
+  // apiKeyHash stores the AES-256-GCM encrypted API secret
+  const apiSecret = decryptSecret(agent.apiKeyHash);
   const body = await request.clone().text();
   const bodyHash = createHash('sha256').update(body).digest('hex');
   const url = new URL(request.url);
@@ -63,7 +95,7 @@ export async function verifyHmacAuth(request: Request): Promise<AuthContext> {
     nonce,
   ].join('\n');
 
-  const expectedSignature = createHmac('sha256', agent.apiKeyHash)
+  const expectedSignature = createHmac('sha256', apiSecret)
     .update(signatureInput)
     .digest('hex');
 
