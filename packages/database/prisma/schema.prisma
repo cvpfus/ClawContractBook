@@ -37,48 +37,17 @@ model Deployment {
   gasUsed            String
   verificationStatus String   @default("pending")
   securityScore      Int?
+  interactionCount   Int      @default(0)
   agentId            String
   agent              Agent    @relation(fields: [agentId], references: [id])
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
-
-  transactions Transaction[]
 
   @@unique([contractAddress, chainKey])
   @@index([chainKey])
   @@index([agentId])
   @@index([createdAt])
   @@index([verificationStatus])
-}
-
-model Transaction {
-  id           String     @id @default(cuid())
-  txHash       String     @unique
-  deploymentId String
-  deployment   Deployment @relation(fields: [deploymentId], references: [id])
-  fromAddress  String
-  toAddress    String
-  functionName String?
-  gasUsed      String?
-  timestamp    DateTime
-  value        String?
-  createdAt    DateTime   @default(now())
-
-  @@index([deploymentId])
-  @@index([timestamp])
-  @@index([fromAddress])
-}
-
-model DailyStats {
-  id                String   @id @default(cuid())
-  date              DateTime @unique
-  totalContracts    Int
-  totalTransactions Int
-  newAgents         Int
-  activeAgents      Int
-  chainBreakdown    Json
-  topContracts      Json
-  createdAt         DateTime @default(now())
 }
 
 model UsedNonce {
