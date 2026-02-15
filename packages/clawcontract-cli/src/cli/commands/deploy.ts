@@ -80,30 +80,14 @@ export async function deployCommand(
     displayResult('Deployer', result.deployer);
     displayResult('Explorer URL', result.explorerUrl);
 
-    try {
-      const compiled = await compileContract(filePath);
-      saveDeployment({
-        contractAddress: result.contractAddress,
-        abi: compiled.abi,
-        chainKey,
-        contractName: compiled.contractName,
-        sourceFile: filePath,
-        deployer: result.deployer,
-        transactionHash: result.transactionHash,
-        blockNumber: result.blockNumber,
-        deployedAt: new Date().toISOString(),
-      }, path.dirname(filePath));
-    } catch {}
-
-    // Publish to ClawContractBook
+    const compiled = await compileContract(filePath);
     const ccbConfig = getClawContractBookConfig();
-    if (options.publish || (ccbConfig.enabled && ccbConfig.autoPublish)) {
-      if (ccbConfig.enabled && ccbConfig.apiKeyId && ccbConfig.apiSecret) {
-        console.log('');
+    let deploymentId: string | undefined;
+
+    if (ccbConfig.enabled && ccbConfig.apiKeyId && ccbConfig.apiSecret) {
+      if (options.publish || ccbConfig.autoPublish) {
         const publishSpinner = ora('Publishing to ClawContractBook...').start();
         try {
-          const compiled = await compileContract(filePath);
-          const chainConfig = getChain(chainKey);
           const publishResult = await publishDeployment({
             contractAddress: result.contractAddress,
             chainKey,
@@ -121,6 +105,7 @@ export async function deployCommand(
 
           if (publishResult.success) {
             publishSpinner.succeed('Published to ClawContractBook');
+            deploymentId = publishResult.deploymentId;
             if (publishResult.url) {
               displayResult('View at', publishResult.url);
             }
@@ -130,10 +115,23 @@ export async function deployCommand(
         } catch (publishError) {
           publishSpinner.fail('Failed to publish to ClawContractBook');
         }
-      } else if (options.publish) {
-        console.log(chalk.yellow('\n  ClawContractBook publishing not configured. Set CLAWCONTRACT_BOOK_ENABLED=true and provide API credentials.'));
       }
+    } else if (options.publish) {
+      console.log(chalk.yellow('\n  ClawContractBook publishing not configured. Set CLAWCONTRACT_BOOK_ENABLED=true and provide API credentials.'));
     }
+
+    saveDeployment({
+      contractAddress: result.contractAddress,
+      abi: compiled.abi,
+      chainKey,
+      contractName: compiled.contractName,
+      sourceFile: filePath,
+      deployer: result.deployer,
+      transactionHash: result.transactionHash,
+      blockNumber: result.blockNumber,
+      deployedAt: new Date().toISOString(),
+      deploymentId,
+    }, path.dirname(filePath));
 
     return result;
   } catch (error) {

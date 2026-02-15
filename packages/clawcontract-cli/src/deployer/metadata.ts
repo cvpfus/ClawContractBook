@@ -17,6 +17,7 @@ export interface DeploymentRecord {
   transactionHash: string;
   blockNumber: number;
   deployedAt: string;
+  deploymentId?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -34,6 +35,7 @@ interface StoredRecord {
   transactionHash: string;
   blockNumber: number;
   deployedAt: string;
+  deploymentId?: string;
 }
 
 interface DeploymentsIndex {
@@ -241,6 +243,7 @@ function hydrateRecord(
     transactionHash: stored.transactionHash,
     blockNumber: stored.blockNumber,
     deployedAt: stored.deployedAt,
+    deploymentId: stored.deploymentId,
   };
 }
 
@@ -281,6 +284,7 @@ export function saveDeployment(
     transactionHash: record.transactionHash,
     blockNumber: record.blockNumber,
     deployedAt: record.deployedAt,
+    deploymentId: record.deploymentId,
   };
   const recPath = recordFilePath(
     outputDir,

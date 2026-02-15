@@ -142,3 +142,50 @@ export function getClawContractBookConfig(): ClawContractBookConfig {
     autoPublish: envAutoPublish === "true",
   };
 }
+
+export interface IncrementInteractionOptions {
+  deploymentId: string;
+  apiKeyId: string;
+  apiSecret: string;
+  endpoint?: string;
+}
+
+export interface IncrementInteractionResult {
+  success: boolean;
+  error?: string;
+}
+
+export async function incrementInteraction(
+  options: IncrementInteractionOptions,
+): Promise<IncrementInteractionResult> {
+  const endpoint = options.endpoint || "http://localhost:3000";
+
+  const { headers } = signRequest(
+    "POST",
+    `/api/v1/deployments/${options.deploymentId}/interact`,
+    null,
+    options.apiKeyId,
+    options.apiSecret,
+  );
+
+  try {
+    const response = await fetch(`${endpoint}/api/v1/deployments/${options.deploymentId}/interact`, {
+      method: "POST",
+      headers,
+    });
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: `HTTP ${response.status}`,
+      };
+    }
+
+    return { success: true };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Network error",
+    };
+  }
+}

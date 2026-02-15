@@ -7,6 +7,7 @@ import { loadDeployment } from '../../deployer/metadata.js';
 import { compileContract } from '../../deployer/compiler.js';
 import { resolvePrivateKey } from '../../deployer/wallet.js';
 import { displayBanner, displayError, displayResult } from '../utils.js';
+import { getClawContractBookConfig, incrementInteraction } from '../../lib/clawcontractbook.js';
 
 interface AbiInput {
   name: string;
@@ -154,6 +155,19 @@ export async function interactCommand(
         'Explorer URL',
         `${chainConfig.explorerUrl}/tx/${receipt.hash}`,
       );
+
+      const ccbConfig = getClawContractBookConfig();
+      if (ccbConfig.enabled && deployment?.deploymentId) {
+        const result = await incrementInteraction({
+          deploymentId: deployment.deploymentId,
+          apiKeyId: ccbConfig.apiKeyId!,
+          apiSecret: ccbConfig.apiSecret!,
+          endpoint: ccbConfig.endpoint,
+        });
+        if (result.success) {
+          console.log(chalk.green('  Interaction recorded to ClawContractBook'));
+        }
+      }
     } catch (error) {
       spinner.fail('Transaction failed');
       const message = error instanceof Error ? error.message : String(error);
