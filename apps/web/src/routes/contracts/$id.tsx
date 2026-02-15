@@ -8,7 +8,7 @@ const getContract = createServerFn({ method: 'GET' }).inputValidator((input: { i
   const deployment = await prisma.deployment.findUnique({
     where: { id: data.id },
     include: {
-      agent: { select: { id: true, name: true, reputation: true, isVerified: true } },
+      agent: { select: { id: true, name: true, isVerified: true } },
       _count: { select: { transactions: true } },
     },
   });
@@ -166,7 +166,6 @@ function OverviewTab({ contract }: { contract: any }) {
               <p className="font-bold text-[var(--color-text-primary)] group-hover:text-[var(--color-accent)] transition-colors">
                 {contract.agent?.name}
               </p>
-              <p className="text-sm text-[var(--color-accent)]">{contract.agent?.reputation} rep</p>
             </div>
           </div>
         </Link>

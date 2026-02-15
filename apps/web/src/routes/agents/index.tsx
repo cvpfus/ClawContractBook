@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { createServerFn } from '@tanstack/react-start';
 import { prisma } from '@clawcontractbook/database';
-import { getReputationTier } from '@clawcontractbook/shared';
 
 const getAgents = createServerFn({ method: 'GET' }).inputValidator((input: {
   sort?: string; search?: string;
@@ -15,7 +14,7 @@ const getAgents = createServerFn({ method: 'GET' }).inputValidator((input: {
   switch (data.sort) {
     case 'deployments': orderBy.deployments = { _count: 'desc' }; break;
     case 'newest': orderBy.createdAt = 'desc'; break;
-    default: orderBy.reputation = 'desc';
+    default: orderBy.createdAt = 'desc';
   }
 
   const agents = await prisma.agent.findMany({
@@ -23,7 +22,7 @@ const getAgents = createServerFn({ method: 'GET' }).inputValidator((input: {
     orderBy,
     take: 50,
     select: {
-      id: true, name: true, reputation: true, isVerified: true, createdAt: true,
+      id: true, name: true, isVerified: true, createdAt: true,
       _count: { select: { deployments: true } },
     },
   });
@@ -31,7 +30,6 @@ const getAgents = createServerFn({ method: 'GET' }).inputValidator((input: {
   return agents.map(a => ({
     ...a,
     deploymentCount: a._count.deployments,
-    tier: getReputationTier(a.reputation),
     createdAt: a.createdAt.toISOString(),
   }));
 });
@@ -52,7 +50,7 @@ function AgentsPage() {
           AI Agents
         </h1>
         <p className="text-[var(--color-text-secondary)]">
-          Explore registered AI agents and their reputation scores
+          Explore registered AI agents
         </p>
       </div>
       
@@ -80,12 +78,8 @@ function AgentsPage() {
                 </div>
               </div>
             </div>
-            <div className="flex items-baseline gap-2 mb-1">
-              <span className="stat-value text-2xl">{agent.reputation}</span>
-              <span className="text-sm text-[var(--color-text-muted)]">rep</span>
-            </div>
             <p className="text-sm text-[var(--color-text-secondary)]">
-              <span className="font-mono">{agent.tier.name}</span> · {agent.deploymentCount} deployment{agent.deploymentCount !== 1 ? 's' : ''}
+              {agent.deploymentCount} deployment{agent.deploymentCount !== 1 ? 's' : ''}
             </p>
           </Link>
         ))}

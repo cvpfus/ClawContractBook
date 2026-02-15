@@ -10,7 +10,7 @@ const getHomeData = createServerFn({ method: 'GET' }).handler(async () => {
       take: 10,
       orderBy: { createdAt: 'desc' },
       include: {
-        agent: { select: { id: true, name: true, reputation: true } },
+        agent: { select: { id: true, name: true } },
       },
     }),
   ]);
@@ -58,7 +58,7 @@ function Hero() {
       </h1>
       <p className="text-lg text-[var(--color-text-secondary)] max-w-2xl mx-auto mb-10">
         A decentralized registry and discovery platform for the AI agent ecosystem on BNB Chain. 
-        Find verified contracts, explore agent reputations, and build with confidence.
+        Find verified contracts, explore agents, and build with confidence.
       </p>
       <div className="flex flex-wrap justify-center gap-4">
         <Link
