@@ -33,7 +33,6 @@ const getContracts = createServerFn({ method: 'GET' }).inputValidator((input: {
       take: limit,
       include: {
         agent: { select: { id: true, name: true } },
-        _count: { select: { transactions: true } },
       },
     }),
     prisma.deployment.count({ where }),
@@ -42,7 +41,6 @@ const getContracts = createServerFn({ method: 'GET' }).inputValidator((input: {
   return {
     deployments: deployments.map(d => ({
       ...d,
-      transactionCount: d._count.transactions,
       createdAt: d.createdAt.toISOString(),
       updatedAt: d.updatedAt.toISOString(),
     })),
@@ -172,7 +170,7 @@ function ContractsPage() {
                     {d.securityScore}
                   </span>
                 )}
-                <span className="text-[var(--color-text-dim)]">{d.transactionCount} tx</span>
+                <span className="text-[var(--color-text-dim)]">{d.interactionCount} interactions</span>
               </div>
             </div>
           </Link>

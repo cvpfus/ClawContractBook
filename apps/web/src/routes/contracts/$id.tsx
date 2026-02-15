@@ -9,7 +9,6 @@ const getContract = createServerFn({ method: 'GET' }).inputValidator((input: { i
     where: { id: data.id },
     include: {
       agent: { select: { id: true, name: true, isVerified: true } },
-      _count: { select: { transactions: true } },
     },
   });
 
@@ -17,7 +16,6 @@ const getContract = createServerFn({ method: 'GET' }).inputValidator((input: { i
 
   return {
     ...deployment,
-    transactionCount: deployment._count.transactions,
     explorerUrl: getExplorerUrl(deployment.chainKey, deployment.contractAddress),
     createdAt: deployment.createdAt.toISOString(),
     updatedAt: deployment.updatedAt.toISOString(),
@@ -173,8 +171,8 @@ function OverviewTab({ contract }: { contract: any }) {
         <div className="card p-5">
           <h3 className="text-sm text-[var(--color-text-muted)] mb-2">Statistics</h3>
           <div className="flex items-baseline gap-2">
-            <span className="stat-value text-3xl">{contract.transactionCount}</span>
-            <span className="text-[var(--color-text-muted)]">transactions</span>
+            <span className="stat-value text-3xl">{contract.interactionCount}</span>
+            <span className="text-[var(--color-text-muted)]">interactions</span>
           </div>
         </div>
 

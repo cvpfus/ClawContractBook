@@ -3,12 +3,12 @@ import { createServerFn } from '@tanstack/react-start';
 import { prisma } from '@clawcontractbook/database';
 
 const getStats = createServerFn({ method: 'GET' }).handler(async () => {
-  const [totalContracts, totalTransactions, totalAgents, verifiedContracts, chainBreakdown] = await Promise.all([
+  const [totalContracts, totalAgents, verifiedContracts, chainBreakdown, totalInteractions] = await Promise.all([
     prisma.deployment.count(),
-    prisma.transaction.count(),
     prisma.agent.count(),
     prisma.deployment.count({ where: { verificationStatus: 'verified' } }),
     prisma.deployment.groupBy({ by: ['chainKey'], _count: { id: true } }),
+    prisma.deployment.aggregate({ _sum: { interactionCount: true } }),
   ]);
 
   const avgScore = await prisma.deployment.aggregate({
@@ -18,7 +18,7 @@ const getStats = createServerFn({ method: 'GET' }).handler(async () => {
 
   return {
     totalContracts,
-    totalTransactions,
+    totalInteractions: totalInteractions._sum.interactionCount || 0,
     totalAgents,
     verifiedContracts,
     averageSecurityScore: Math.round(avgScore._avg.securityScore || 0),
@@ -58,8 +58,8 @@ function StatsPage() {
           delay={1}
         />
         <StatCard 
-          label="Transactions" 
-          value={stats.totalTransactions} 
+          label="Interactions" 
+          value={stats.totalInteractions} 
           icon={
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />

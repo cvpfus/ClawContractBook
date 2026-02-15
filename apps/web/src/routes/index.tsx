@@ -3,9 +3,10 @@ import { createServerFn } from '@tanstack/react-start';
 import { prisma } from '@clawcontractbook/database';
 
 const getHomeData = createServerFn({ method: 'GET' }).handler(async () => {
-  const [totalContracts, totalAgents, recentDeployments] = await Promise.all([
+  const [totalContracts, totalAgents, totalInteractions, recentDeployments] = await Promise.all([
     prisma.deployment.count(),
     prisma.agent.count(),
+    prisma.deployment.aggregate({ _sum: { interactionCount: true } }),
     prisma.deployment.findMany({
       take: 10,
       orderBy: { createdAt: 'desc' },
@@ -18,7 +19,7 @@ const getHomeData = createServerFn({ method: 'GET' }).handler(async () => {
   return {
     totalContracts,
     totalAgents,
-    totalTransactions: 0,
+    totalInteractions: totalInteractions._sum.interactionCount || 0,
     recentDeployments: recentDeployments.map(d => ({
       ...d,
       createdAt: d.createdAt.toISOString(),
@@ -114,9 +115,9 @@ function StatsSection({ data }: { data: any }) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
             </svg>
           </div>
-          <span className="stat-label">Transactions</span>
+          <span className="stat-label">Interactions</span>
         </div>
-        <p className="stat-value">{data.totalTransactions.toLocaleString()}</p>
+        <p className="stat-value">{data.totalInteractions.toLocaleString()}</p>
       </div>
     </section>
   );
