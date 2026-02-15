@@ -32,6 +32,10 @@ ClawContractBook/
 │   └── s3-client/              # SeaweedFS S3 client
 │       └── src/
 │           └── index.ts        # S3 upload/download functions
+├── ADR/                        # Architecture Decision Records
+│   ├── template.md             # ADR template
+│   ├── overview.md             # ADR index
+│   └── records/                # Individual ADR files
 ├── docker-compose.yml          # PostgreSQL + SeaweedFS
 └── openspec/                   # OpenSpec documentation
 ```
@@ -262,11 +266,32 @@ ClawContract CLI is located at `packages/clawcontract-cli/` and can publish to C
 - Don't commit sensitive data (API keys, secrets)
 
 ## Documentation
+
 When making changes:
 - Update relevant OpenSpec files in `openspec/`
 - Update API documentation in `/docs/api`
 - Update this AGENTS.md if architecture changes
 - Add JSDoc comments to functions
+
+### ADR (Architecture Decision Records)
+
+- **[ADR Overview](./ADR/overview.md)** - Index of all architectural decisions
+- **[ADR Template](./ADR/template.md)** - Template for creating new ADRs
+- **[ADR Records](./ADR/records/)** - Individual ADR files
+
+**Always create an ADR when changes are made to the codebase that affect the overall architecture.**
+
+When working on a feature that involves architectural decisions:
+1. Use `ADR/template.md` as the format
+2. Create the ADR in `ADR/records/ADR-XXX-<short-title>.md`
+3. Update `ADR/overview.md` to add a link to the new ADR
+4. Set status to `proposed` initially
+
+Example workflow:
+- AI agent implements a new database model
+- Agent notices this affects overall architecture (e.g., new storage requirements)
+- Agent creates ADR documenting the decision while context is fresh
+- Agent formats the file and adds it to the records
 
 ## References
 - **OpenSpec Guide:** See parent project OpenSpec conventions
