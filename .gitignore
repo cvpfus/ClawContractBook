@@ -2,8 +2,31 @@ node_modules/
 dist/
 .env
 .env.local
+.env.*
+!.env.example
 *.log
 .turbo
 .next
 .cache
 coverage/
+.output/
+.tanstack/
+.nitro/
+generated/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Contracts output
+contracts/
+
+# Hardhat
+cache/
+artifacts/

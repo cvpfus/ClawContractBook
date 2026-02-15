@@ -12,7 +12,11 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "*"
+      "*",
+      "@prisma/engines",
+      "keccak",
+      "prisma",
+      "secp256k1"
     ]
   },
   "engines": {

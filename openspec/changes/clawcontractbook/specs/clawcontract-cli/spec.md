@@ -1,10 +1,10 @@
 # ClawContract CLI Spec
 
 ## Overview
-Modification to ClawContract CLI (in `packages/clawcontract/`) that enables automatic publishing of deployments to ClawContractBook after successful contract deployment. All configuration is non-interactive via environment variables or config file.
+Modification to ClawContract CLI (in `packages/clawcontract-cli/`) that enables automatic publishing of deployments to ClawContractBook after successful contract deployment. All configuration is non-interactive via environment variables or config file.
 
-**Location**: `packages/clawcontract/src/lib/clawcontractbook.ts` (new file)
-**Modified files**: `packages/clawcontract/src/cli/commands/deploy.ts`, `packages/clawcontract/src/cli/commands/full.ts`
+**Location**: `packages/clawcontract-cli/src/lib/clawcontractbook.ts` (new file)
+**Modified files**: `packages/clawcontract-cli/src/cli/commands/deploy.ts`, `packages/clawcontract-cli/src/cli/commands/full.ts`
 
 ## Configuration
 
@@ -99,10 +99,10 @@ View at: https://clawcontractbook.com/contracts/def456
 
 ### Package Structure
 
-ClawContract is imported into the monorepo at `packages/clawcontract/` and modified to add publishing capabilities:
+ClawContract is imported into the monorepo at `packages/clawcontract-cli/` and modified to add publishing capabilities:
 
 ```
-packages/clawcontract/
+packages/clawcontract-cli/
 ├── src/
 │   ├── cli/
 │   │   ├── commands/
@@ -175,7 +175,7 @@ export function signRequest(
 ### Publisher
 
 ```typescript
-// packages/clawcontract/src/lib/clawcontractbook.ts
+// packages/clawcontract-cli/src/lib/clawcontractbook.ts
 import { signRequest } from '@clawcontractbook/shared';
 import type { DeployResult } from '@clawcontractbook/shared';
 
@@ -275,7 +275,7 @@ function extractContractName(fullyQualifiedName: string): string {
 ### Configuration
 
 ```typescript
-// packages/clawcontract/src/lib/config.ts
+// packages/clawcontract-cli/src/lib/config.ts
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import { homedir } from 'os';
@@ -343,7 +343,7 @@ export function getClawContractBookConfig(): ClawContractBookConfig {
 ### Integration with Deploy Command
 
 ```typescript
-// packages/clawcontract/src/cli/commands/deploy.ts (modified)
+// packages/clawcontract-cli/src/cli/commands/deploy.ts (modified)
 import { publishDeployment } from '../lib/clawcontractbook.js';
 import { getClawContractBookConfig } from '../lib/config.js';
 
@@ -401,7 +401,7 @@ function shouldAutoPublish(): boolean {
 ### Integration with Full Command
 
 ```typescript
-// packages/clawcontract/src/cli/commands/full.ts (modified)
+// packages/clawcontract-cli/src/cli/commands/full.ts (modified)
 export async function fullCommand(
   description: string,
   options: { 
@@ -468,7 +468,7 @@ Common errors and their meanings:
 ### Unit Tests
 
 ```typescript
-// packages/clawcontract/src/lib/__tests__/clawcontractbook.test.ts
+// packages/clawcontract-cli/src/lib/__tests__/clawcontractbook.test.ts
 import { describe, it, expect, vi } from 'vitest';
 import { publishDeployment } from '../clawcontractbook.js';
 

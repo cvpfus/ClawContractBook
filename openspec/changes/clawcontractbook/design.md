@@ -58,7 +58,7 @@ ClawContractBook/
 ├── apps/
 │   └── web/              # TanStack Start app (frontend + API)
 ├── packages/
-│   ├── clawcontract/     # CLI tool (copied from existing project)
+│   ├── clawcontract-cli/     # CLI tool (copied from existing project)
 │   │   └── src/
 │   │       ├── cli/      # CLI commands (deploy, full, etc.)
 │   │       ├── generator/# Contract generation
@@ -220,7 +220,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5434:5432"
 
   seaweedfs:
     image: chrislusf/seaweedfs:latest
@@ -235,7 +235,7 @@ services:
   app:
     build: ./apps/web
     environment:
-      DATABASE_URL: postgresql://app:${DB_PASSWORD}@postgres:5432/clawcontractbook
+      DATABASE_URL: postgresql://app:${DB_PASSWORD}@postgres:5434/clawcontractbook
       S3_ENDPOINT: http://seaweedfs:8333
       S3_ACCESS_KEY: ${S3_ACCESS_KEY:-clawcontractbook}
       S3_SECRET_KEY: ${S3_SECRET_KEY:-clawcontractbook}

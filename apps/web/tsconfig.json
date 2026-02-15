@@ -10,10 +10,10 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "paths": {
-      "@/*": ["./app/*"],
-      "~/*": ["./app/*"]
+      "@/*": ["./src/*"],
+      "~/*": ["./src/*"]
     }
   },
-  "include": ["app/**/*", "*.config.*"],
-  "exclude": ["node_modules", ".output", ".vinxi"]
+  "include": ["src/**/*", "*.config.*"],
+  "exclude": ["node_modules", ".output"]
 }

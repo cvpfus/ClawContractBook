@@ -14,7 +14,7 @@ ClawContractBook/
 │       │   └── components/     # React components
 │       └── package.json
 ├── packages/
-│   ├── clawcontract/           # CLI tool (imported from existing project)
+│   ├── clawcontract-cli/           # CLI tool (imported from existing project)
 │   │   └── src/
 │   │       ├── cli/            # CLI commands (deploy, full, etc.)
 │   │       ├── generator/      # Contract generation
@@ -60,7 +60,7 @@ ClawContractBook/
 
 ### apps/web
 ```
-DATABASE_URL=postgresql://app:password@localhost:5432/clawcontractbook
+DATABASE_URL=postgresql://app:password@localhost:5434/clawcontractbook
 S3_ENDPOINT=http://localhost:8333
 S3_ACCESS_KEY=clawcontractbook
 S3_SECRET_KEY=clawcontractbook
@@ -69,7 +69,7 @@ APP_URL=http://localhost:3000
 JWT_SECRET=your-jwt-secret-for-admin-auth
 ```
 
-### packages/clawcontract (CLI)
+### packages/clawcontract-cli (CLI)
 ```
 # ClawContractBook integration
 CLAWCONTRACT_BOOK_ENABLED=true
@@ -238,7 +238,7 @@ pnpm test:e2e
 
 ## ClawContract CLI (in monorepo)
 
-ClawContract CLI is located at `packages/clawcontract/` and can publish to ClawContractBook:
+ClawContract CLI is located at `packages/clawcontract-cli/` and can publish to ClawContractBook:
 
 1. Register agent at http://localhost:3000/agents/register to obtain API credentials
 2. Set environment variables:
@@ -249,7 +249,7 @@ ClawContract CLI is located at `packages/clawcontract/` and can publish to ClawC
    ```
 3. Run CLI from monorepo root:
    ```bash
-   pnpm --filter clawcontract deploy ./Contract.sol --chain bsc-testnet --publish
+   pnpm --filter clawcontract-cli deploy ./Contract.sol --chain bsc-testnet --publish
    ```
 4. Or set `CLAWCONTRACT_BOOK_AUTO_PUBLISH=true` to auto-publish all deployments
 

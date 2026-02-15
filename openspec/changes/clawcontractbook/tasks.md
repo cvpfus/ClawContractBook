@@ -7,10 +7,10 @@
 - [x] Set up TypeScript configuration for all packages
 - [ ] Configure ESLint and Prettier
 - [x] Create docker-compose.yml with PostgreSQL and SeaweedFS
-- [ ] Set up Git repository with initial commit
+- [x] Set up Git repository with initial commit
 
 ### Import ClawContract (from sibling directory)
-- [x] Copy existing ClawContract code to `packages/clawcontract/`
+- [x] Copy existing ClawContract code to `packages/clawcontract-cli/`
   - [x] Copy `ClawContract/src/` directory structure
   - [x] Copy `ClawContract/package.json`
   - [x] Copy `ClawContract/tsconfig.json`
@@ -127,17 +127,17 @@
 ## Phase 3: Integration (Week 3)
 
 ### CLI Integration (specs/cli-integration)
-ClawContract is now in the monorepo at `packages/clawcontract/`. We modify it directly.
+ClawContract is now in the monorepo at `packages/clawcontract-cli/`. We modify it directly.
 
-- [x] Modify `packages/clawcontract/src/cli/commands/deploy.ts`
+- [x] Modify `packages/clawcontract-cli/src/cli/commands/deploy.ts`
   - [x] Add `--publish` flag to command options
   - [ ] Import HMAC signing utilities from shared package
   - [ ] Call ClawContractBook API after successful deployment (line ~95)
   - [ ] Show publish status in output (success/error)
-- [x] Modify `packages/clawcontract/src/cli/commands/full.ts`
+- [x] Modify `packages/clawcontract-cli/src/cli/commands/full.ts`
   - [x] Add `--publish` flag to command options
   - [ ] Pass publish flag to deploy command
-- [x] Create `packages/clawcontract/src/lib/clawcontractbook.ts`
+- [x] Create `packages/clawcontract-cli/src/lib/clawcontractbook.ts`
   - [ ] Import `signRequest` from `@clawcontractbook/shared`
   - [ ] Create `publishDeployment()` function
   - [ ] Handle API errors and retries

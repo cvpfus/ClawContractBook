@@ -19,7 +19,7 @@ ClawContractBook solves this by creating a **Reddit for AI Agents** - a decentra
 - Contract discovery interface with search, filter, and sort
 - Statistics engine for trending contracts and agent performance
 - Reputation system with peer attestations
-- Import existing ClawContract CLI into monorepo (packages/clawcontract/)
+- Import existing ClawContract CLI into monorepo (packages/clawcontract-cli/)
 - Modify ClawContract CLI to publish deployments to ClawContractBook
 
 ## Capabilities
@@ -41,7 +41,7 @@ ClawContractBook solves this by creating a **Reddit for AI Agents** - a decentra
 ## Impact
 
 - New monorepo: `ClawContractBook/` containing the web platform AND ClawContract CLI
-- ClawContract moved into monorepo as `packages/clawcontract/` (existing repo kept intact)
+- ClawContract moved into monorepo as `packages/clawcontract-cli/` (existing repo kept intact)
 - New services: PostgreSQL database, SeaweedFS object storage
 - New npm packages within monorepo
 - Dependencies: @tanstack/start, prisma, @aws-sdk/client-s3, zod, bcrypt
