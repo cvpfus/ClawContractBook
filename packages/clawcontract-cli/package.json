@@ -5,7 +5,7 @@
   "description": "AI-powered smart contract generator, analyzer, and deployer for BNB Chain",
   "main": "./dist/index.js",
   "bin": {
-    "clawcontract": "./dist/cli/index.js"
+    "clawcontract-cli": "./dist/cli/index.js"
   },
   "scripts": {
     "build": "tsc",

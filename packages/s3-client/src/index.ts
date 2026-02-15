@@ -5,13 +5,14 @@ const BUCKET_NAME = 'clawcontractbook';
 let s3Client: S3Client | null = null;
 
 function getClient(): S3Client {
+  console.log("endpoint", process.env.S3_ENDPOINT)
   if (!s3Client) {
     s3Client = new S3Client({
-      endpoint: process.env.S3_ENDPOINT || 'http://localhost:8333',
+      endpoint: process.env.S3_ENDPOINT || 'http://localhost:9334',
       region: 'us-east-1',
       credentials: {
-        accessKeyId: process.env.S3_ACCESS_KEY || 'clawcontractbook',
-        secretAccessKey: process.env.S3_SECRET_KEY || 'clawcontractbook',
+        accessKeyId: process.env.S3_ACCESS_KEY || 'admin',
+        secretAccessKey: process.env.S3_SECRET_KEY || 'key',
       },
       forcePathStyle: true,
     });

@@ -1,4 +1,4 @@
-import { createHmac, createHash, randomUUID } from 'crypto';
+import { createHmac, createHash, randomUUID } from "crypto";
 
 export interface PublishOptions {
   contractAddress: string;
@@ -31,13 +31,13 @@ function signRequest(
   path: string,
   body: object | null,
   apiKeyId: string,
-  apiSecret: string
+  apiSecret: string,
 ) {
   const timestamp = Date.now().toString();
   const nonce = randomUUID();
 
-  const bodyString = body ? JSON.stringify(body) : '';
-  const bodyHash = createHash('sha256').update(bodyString).digest('hex');
+  const bodyString = body ? JSON.stringify(body) : "";
+  const bodyHash = createHash("sha256").update(bodyString).digest("hex");
 
   const signatureInput = [
     method.toUpperCase(),
@@ -45,24 +45,26 @@ function signRequest(
     bodyHash,
     timestamp,
     nonce,
-  ].join('\n');
+  ].join("\n");
 
-  const signature = createHmac('sha256', apiSecret)
+  const signature = createHmac("sha256", apiSecret)
     .update(signatureInput)
-    .digest('hex');
+    .digest("hex");
 
   return {
     headers: {
-      'Authorization': `CCB-V1 ${apiKeyId}:${signature}`,
-      'X-CCB-Timestamp': timestamp,
-      'X-CCB-Nonce': nonce,
-      'Content-Type': 'application/json',
+      Authorization: `CCB-V1 ${apiKeyId}:${signature}`,
+      "X-CCB-Timestamp": timestamp,
+      "X-CCB-Nonce": nonce,
+      "Content-Type": "application/json",
     },
   };
 }
 
-export async function publishDeployment(options: PublishOptions): Promise<PublishResult> {
-  const endpoint = options.endpoint || 'http://localhost:3000';
+export async function publishDeployment(
+  options: PublishOptions,
+): Promise<PublishResult> {
+  const endpoint = options.endpoint || "http://localhost:3000";
 
   const payload = {
     contractAddress: options.contractAddress,
@@ -81,16 +83,16 @@ export async function publishDeployment(options: PublishOptions): Promise<Publis
   };
 
   const { headers } = signRequest(
-    'POST',
-    '/api/v1/deployments',
+    "POST",
+    "/api/v1/deployments",
     payload,
     options.apiKeyId,
-    options.apiSecret
+    options.apiSecret,
   );
 
   try {
     const response = await fetch(`${endpoint}/api/v1/deployments`, {
-      method: 'POST',
+      method: "POST",
       headers,
       body: JSON.stringify(payload),
     });
@@ -112,7 +114,7 @@ export async function publishDeployment(options: PublishOptions): Promise<Publis
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Network error',
+      error: error instanceof Error ? error.message : "Network error",
     };
   }
 }
@@ -133,10 +135,10 @@ export function getClawContractBookConfig(): ClawContractBookConfig {
   const envAutoPublish = process.env.CLAWCONTRACT_BOOK_AUTO_PUBLISH;
 
   return {
-    enabled: envEnabled === 'true',
+    enabled: envEnabled === "true",
     apiKeyId: envApiKeyId,
     apiSecret: envApiSecret,
     endpoint: envEndpoint,
-    autoPublish: envAutoPublish === 'true',
+    autoPublish: envAutoPublish === "true",
   };
 }
