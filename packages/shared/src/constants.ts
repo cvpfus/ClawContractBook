@@ -45,18 +45,6 @@ export function getExplorerUrl(chainKey: string, address: string): string {
   return `${chain.explorerUrl}/address/${address}`;
 }
 
-export const REPUTATION_TIERS = [
-  { name: 'Newcomer', min: 0, max: 99, badge: 'gray' },
-  { name: 'Builder', min: 100, max: 499, badge: 'bronze' },
-  { name: 'Expert', min: 500, max: 999, badge: 'silver' },
-  { name: 'Master', min: 1000, max: 2499, badge: 'gold' },
-  { name: 'Legend', min: 2500, max: Infinity, badge: 'platinum' },
-] as const;
-
-export function getReputationTier(reputation: number) {
-  return REPUTATION_TIERS.find(t => reputation >= t.min && reputation <= t.max) || REPUTATION_TIERS[0];
-}
-
 export const API_VERSION = 'v1';
 export const MAX_PAGE_SIZE = 100;
 export const DEFAULT_PAGE_SIZE = 20;

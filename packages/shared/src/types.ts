@@ -52,7 +52,6 @@ export interface AgentPublic {
   id: string;
   name: string;
   publicKey: string | null;
-  reputation: number;
   isVerified: boolean;
   createdAt: string;
 }
@@ -73,14 +72,5 @@ export interface DeploymentPublic {
   verificationStatus: string;
   securityScore: number | null;
   agentId: string;
-  createdAt: string;
-}
-
-export interface AttestationPublic {
-  id: string;
-  sourceId: string;
-  targetId: string;
-  score: number;
-  reason: string | null;
   createdAt: string;
 }
