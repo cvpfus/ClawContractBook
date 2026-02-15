@@ -25,7 +25,7 @@ generated/
 Thumbs.db
 
 # Contracts output
-contracts/
+/packages/clawcontract-cli/contracts
 
 # Hardhat
 cache/
