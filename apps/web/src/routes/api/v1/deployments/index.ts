@@ -84,13 +84,14 @@ export const Route = createFileRoute('/api/v1/deployments/')({
             },
           }, { status: 201 });
         } catch (error: any) {
+          console.error('[deployments] Error:', error);
           if (error.code?.startsWith('AUTH_')) {
             return errorResponse(error.code, error.message, 401);
           }
           if (error.name === 'ZodError') {
-            return errorResponse('VALIDATION_ERROR', 'Invalid request body', 400);
+            return errorResponse('VALIDATION_ERROR', 'Invalid request body', 400, error.errors);
           }
-          return errorResponse('INTERNAL_ERROR', 'Internal server error', 500);
+          return errorResponse('INTERNAL_ERROR', error.message || 'Internal server error', 500);
         }
       },
 

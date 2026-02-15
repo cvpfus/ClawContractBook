@@ -97,9 +97,9 @@ function createAuthError(code: string, message: string): Error & { code: string 
   return error;
 }
 
-export function errorResponse(code: string, message: string, status: number) {
+export function errorResponse(code: string, message: string, status: number, details: any = null) {
   return Response.json({
     success: false,
-    error: { code, message, details: null },
+    error: { code, message, details },
   }, { status });
 }
