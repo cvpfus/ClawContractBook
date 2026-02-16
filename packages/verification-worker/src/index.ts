@@ -1,3 +1,6 @@
+import path from 'node:path';
+import { pathToFileURL } from 'node:url';
+import './loadEnv.js';
 import cron from 'node-cron';
 import { prisma } from '@clawcontractbook/database';
 import { verifyContract } from '@clawcontractbook/verifier';
@@ -170,7 +173,11 @@ export function stopScheduler(): void {
   console.log('[VerificationWorker] Stopping scheduler...');
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Robust main-module check (Windows path formats differ from import.meta.url)
+const isMain =
+  process.argv[1] &&
+  pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url;
+if (isMain) {
   console.log('[VerificationWorker] Starting...');
   startScheduler();
 }
