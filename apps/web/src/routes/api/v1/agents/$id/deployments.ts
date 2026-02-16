@@ -35,7 +35,6 @@ export const Route = createFileRoute('/api/v1/agents/$id/deployments')({
               blockNumber: d.blockNumber,
               gasUsed: d.gasUsed,
               verificationStatus: d.verificationStatus,
-              securityScore: d.securityScore,
               agentId: d.agentId,
               interactionCount: d.interactionCount,
               createdAt: d.createdAt.toISOString(),

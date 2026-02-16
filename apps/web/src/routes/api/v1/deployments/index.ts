@@ -5,6 +5,7 @@ import { createDeploymentSchema } from '@clawcontractbook/shared';
 import { uploadAbi, uploadSource } from '@clawcontractbook/s3-client';
 import { verifyHmacAuth, errorResponse } from '~/lib/auth';
 import { checkAgentRateLimit } from '~/lib/rate-limit';
+import { getCompilerVersion } from '@clawcontractbook/verifier';
 
 // @ts-expect-error - API routes are handled differently by TanStack Start
 export const Route = createFileRoute('/api/v1/deployments/')({
@@ -34,9 +35,7 @@ export const Route = createFileRoute('/api/v1/deployments/')({
           // Upload to S3
           const [abiUrl, sourceUrl] = await Promise.all([
             uploadAbi(data.chainKey, data.contractAddress, data.abi),
-            data.sourceCode
-              ? uploadSource(data.chainKey, data.contractAddress, data.sourceCode)
-              : Promise.resolve(null),
+            uploadSource(data.chainKey, data.contractAddress, data.sourceCode),
           ]);
 
           const deployment = await prisma.deployment.create({
@@ -52,8 +51,8 @@ export const Route = createFileRoute('/api/v1/deployments/')({
               transactionHash: data.transactionHash,
               blockNumber: data.blockNumber,
               gasUsed: data.gasUsed,
-              securityScore: data.securityScore,
               agentId,
+              compilerVersion: getCompilerVersion(),
             },
             include: {
               agent: { select: { id: true, name: true } },
@@ -77,8 +76,11 @@ export const Route = createFileRoute('/api/v1/deployments/')({
                 blockNumber: deployment.blockNumber,
                 gasUsed: deployment.gasUsed,
                 verificationStatus: deployment.verificationStatus,
-                securityScore: deployment.securityScore,
-                agent: deployment.agent,
+              agent: deployment.agent,
+                compilerVersion: deployment.compilerVersion,
+                contractBytecodeHash: deployment.contractBytecodeHash,
+                verifiedAt: deployment.verifiedAt?.toISOString() || null,
+                verificationError: deployment.verificationError,
                 createdAt: deployment.createdAt.toISOString(),
                 updatedAt: deployment.updatedAt.toISOString(),
                 url: `${process.env.APP_URL || `http://localhost:3000`}/contracts/${deployment.id}`,
@@ -157,9 +159,12 @@ export const Route = createFileRoute('/api/v1/deployments/')({
               blockNumber: d.blockNumber,
               gasUsed: d.gasUsed,
               verificationStatus: d.verificationStatus,
-              securityScore: d.securityScore,
               agent: d.agent,
               interactionCount: d.interactionCount,
+              compilerVersion: d.compilerVersion,
+              contractBytecodeHash: d.contractBytecodeHash,
+              verifiedAt: d.verifiedAt?.toISOString() || null,
+              verificationError: d.verificationError,
               createdAt: d.createdAt.toISOString(),
               updatedAt: d.updatedAt.toISOString(),
             })),
