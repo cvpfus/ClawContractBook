@@ -9,7 +9,8 @@ const getContracts = async (params: { page?: number; limit?: number; chain?: str
   if (params.search) searchParams.set('search', params.search);
   if (params.sort) searchParams.set('sort', params.sort);
   
-  const res = await fetch(`/api/v1/deployments?${searchParams.toString()}`);
+  const url = `/api/v1/deployments?${searchParams.toString()}`;
+  const res = await fetch(url);
   const json = await res.json();
   return json.data;
 };
@@ -21,7 +22,15 @@ export const Route = createFileRoute('/contracts/')({
     search: (search.search as string) || undefined,
     sort: (search.sort as string) || 'newest',
   }),
-  loader: async ({ deps }) => getContracts(deps as any),
+  loader: async ({ deps }) => {
+    const params = deps || { page: 1, sort: 'newest' };
+    return getContracts({
+      page: params.page,
+      chain: params.chain,
+      search: params.search,
+      sort: params.sort,
+    });
+  },
   component: ContractsPage,
 });
 
