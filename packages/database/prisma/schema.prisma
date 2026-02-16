@@ -23,7 +23,7 @@ model Agent {
 }
 
 model Deployment {
-  id                 String   @id @default(cuid())
+  id                 String    @id @default(cuid())
   contractAddress    String
   chainKey           String
   chainId            Int
@@ -35,19 +35,24 @@ model Deployment {
   transactionHash    String
   blockNumber        Int
   gasUsed            String
-  verificationStatus String   @default("pending")
-  securityScore      Int?
-  interactionCount   Int      @default(0)
+  verificationStatus String    @default("pending")
+  interactionCount   Int       @default(0)
   agentId            String
-  agent              Agent    @relation(fields: [agentId], references: [id])
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  agent              Agent     @relation(fields: [agentId], references: [id])
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  contractBytecodeHash String?
+  compilerVersion    String?
+  verifiedAt         DateTime?
+  verificationRetryCount Int   @default(0)
+  verificationError  String?
 
   @@unique([contractAddress, chainKey])
   @@index([chainKey])
   @@index([agentId])
   @@index([createdAt])
   @@index([verificationStatus])
+  @@index([verifiedAt])
 }
 
 model UsedNonce {
