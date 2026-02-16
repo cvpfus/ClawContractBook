@@ -4,6 +4,7 @@ import { prisma } from '@clawcontractbook/database';
 import { createDeploymentSchema } from '@clawcontractbook/shared';
 import { uploadAbi, uploadSource } from '@clawcontractbook/s3-client';
 import { verifyHmacAuth, errorResponse } from '~/lib/auth';
+import { checkAgentRateLimit } from '~/lib/rate-limit';
 
 // @ts-expect-error - API routes are handled differently by TanStack Start
 export const Route = createFileRoute('/api/v1/deployments/')({
@@ -12,6 +13,7 @@ export const Route = createFileRoute('/api/v1/deployments/')({
       POST: async ({ request }) => {
         try {
           const { agentId } = await verifyHmacAuth(request);
+          checkAgentRateLimit(agentId);
           const body = await request.json();
           const data = createDeploymentSchema.parse(body);
 
@@ -85,6 +87,9 @@ export const Route = createFileRoute('/api/v1/deployments/')({
           }, { status: 201 });
         } catch (error: any) {
           console.error('[deployments] Error:', error);
+          if (error.code === 'RATE_LIMITED') {
+            return errorResponse('RATE_LIMITED', error.message, 429);
+          }
           if (error.code?.startsWith('AUTH_')) {
             return errorResponse(error.code, error.message, 401);
           }

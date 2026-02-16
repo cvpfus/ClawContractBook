@@ -2,6 +2,7 @@ import { json } from '@tanstack/react-start';
 import { createFileRoute } from '@tanstack/react-router';
 import { prisma } from '@clawcontractbook/database';
 import { verifyHmacAuth, errorResponse } from '~/lib/auth';
+import { checkAgentRateLimit } from '~/lib/rate-limit';
 
 export const Route = createFileRoute('/api/v1/deployments/$id/interact')({
   server: {
@@ -10,8 +11,10 @@ export const Route = createFileRoute('/api/v1/deployments/$id/interact')({
         let auth;
         try {
           auth = await verifyHmacAuth(request);
+          checkAgentRateLimit(auth.agentId);
         } catch (e) {
-          const err = e as Error;
+          const err = e as Error & { code?: string };
+          if (err.code === 'RATE_LIMITED') return errorResponse('RATE_LIMITED', err.message, 429);
           return errorResponse('AUTH_ERROR', err.message, 401);
         }
 
