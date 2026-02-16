@@ -12,7 +12,46 @@ const queryClient = new QueryClient();
 
 export const Route = createRootRoute({
   component: RootComponent,
+  notFoundComponent: NotFoundPage,
 });
+
+function NotFoundPage() {
+  return (
+    <div className="min-h-[60vh] flex flex-col items-center justify-center px-4 py-20 animate-fade-in">
+      <div className="relative">
+        <span className="font-mono text-[10rem] md:text-[14rem] font-bold text-[var(--color-bg-tertiary)] leading-none select-none">
+          404
+        </span>
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
+          <div className="w-16 h-16 rounded-2xl bg-[var(--color-accent-glow)] border border-[var(--color-accent-dim)] flex items-center justify-center text-3xl animate-glow">
+            ⚡
+          </div>
+          <h1 className="text-2xl md:text-3xl font-bold text-[var(--color-text-primary)] text-center">
+            Page not found
+          </h1>
+          <p className="text-[var(--color-text-secondary)] text-center max-w-md">
+            This page doesn&apos;t exist. It may have been removed or the URL might be incorrect.
+          </p>
+          <div className="flex flex-wrap justify-center gap-3 mt-4">
+            <Link to="/" className="btn-primary">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+              Back to home
+            </Link>
+            <Link
+              to="/contracts"
+              search={{ page: 1, chain: undefined, search: undefined, sort: "newest" }}
+              className="btn-secondary"
+            >
+              Browse contracts
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function RootComponent() {
   return (
