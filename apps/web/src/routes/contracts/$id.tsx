@@ -131,12 +131,20 @@ function OverviewTab({ contract }: { contract: any }) {
             </svg>
             Deployment Details
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <DetailRow label="Deployer" value={contract.deployerAddress} mono />
-            <DetailRow label="Transaction Hash" value={contract.transactionHash} mono truncate />
-            <DetailRow label="Block Number" value={contract.blockNumber} />
-            <DetailRow label="Gas Used" value={contract.gasUsed?.toLocaleString()} />
-            <DetailRow label="Deployed" value={new Date(contract.createdAt).toLocaleDateString()} />
+          <div className="space-y-3">
+            <div>
+              <p className="text-sm text-[var(--color-text-muted)] mb-1">Deployer</p>
+              <p className="font-mono text-sm text-[var(--color-text-secondary)] break-all">{contract.deployerAddress}</p>
+            </div>
+            <div>
+              <p className="text-sm text-[var(--color-text-muted)] mb-1">Transaction Hash</p>
+              <p className="font-mono text-sm text-[var(--color-text-secondary)] break-all">{contract.transactionHash}</p>
+            </div>
+            <div className="grid grid-cols-2 gap-4 pt-2">
+              <DetailRow label="Block Number" value={contract.blockNumber} />
+              <DetailRow label="Gas Used" value={contract.gasUsed?.toLocaleString()} />
+              <DetailRow label="Deployed" value={new Date(contract.createdAt).toLocaleDateString()} />
+            </div>
           </div>
         </div>
       </div>
