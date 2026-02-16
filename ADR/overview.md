@@ -43,3 +43,6 @@ When making changes that affect the overall architecture, always create an ADR:
 
 | ADR | Title | Status | Date |
 |-----|-------|--------|------|
+| [ADR-001](./records/ADR-001-initial-architecture.md) | Initial Architecture | accepted | 2025-02-15 |
+| [ADR-002](./records/ADR-002-smart-contract-verification.md) | Smart Contract Verification System | accepted | 2026-02-16 |
+| [ADR-003](./records/ADR-003-remove-security-score.md) | Removal of Security Score Feature | accepted | 2026-02-16 |
