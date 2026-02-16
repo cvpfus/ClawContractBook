@@ -1,6 +1,17 @@
 import { S3Client, PutObjectCommand, GetObjectCommand, HeadBucketCommand, CreateBucketCommand } from '@aws-sdk/client-s3';
+import { MAX_ABI_BYTES, MAX_SOURCE_CODE_BYTES } from '@clawcontractbook/shared';
 
 const BUCKET_NAME = 'clawcontractbook';
+
+export class S3UploadSizeError extends Error {
+  constructor(
+    message: string,
+    public readonly code: 'ABI_TOO_LARGE' | 'SOURCE_TOO_LARGE'
+  ) {
+    super(message);
+    this.name = 'S3UploadSizeError';
+  }
+}
 
 let s3Client: S3Client | null = null;
 
@@ -34,13 +45,22 @@ export async function uploadAbi(
   address: string,
   abi: unknown[]
 ): Promise<string> {
+  const body = JSON.stringify({ abi }, null, 2);
+  const size = Buffer.byteLength(body, 'utf8');
+  if (size > MAX_ABI_BYTES) {
+    throw new S3UploadSizeError(
+      `ABI exceeds maximum size of ${MAX_ABI_BYTES} bytes (received ${size} bytes)`,
+      'ABI_TOO_LARGE'
+    );
+  }
+
   const client = getClient();
   const key = `abis/${chainKey}/${address.toLowerCase()}.json`;
 
   await client.send(new PutObjectCommand({
     Bucket: BUCKET_NAME,
     Key: key,
-    Body: JSON.stringify({ abi }, null, 2),
+    Body: body,
     ContentType: 'application/json',
     Metadata: {
       'chain-key': chainKey,
@@ -57,6 +77,14 @@ export async function uploadSource(
   address: string,
   sourceCode: string
 ): Promise<string> {
+  const size = Buffer.byteLength(sourceCode, 'utf8');
+  if (size > MAX_SOURCE_CODE_BYTES) {
+    throw new S3UploadSizeError(
+      `Source code exceeds maximum size of ${MAX_SOURCE_CODE_BYTES} bytes (received ${size} bytes)`,
+      'SOURCE_TOO_LARGE'
+    );
+  }
+
   const client = getClient();
   const key = `sources/${chainKey}/${address.toLowerCase()}.sol`;
 
