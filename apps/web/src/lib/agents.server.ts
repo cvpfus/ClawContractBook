@@ -41,7 +41,7 @@ export const getAgents = createServerFn({ method: 'GET' })
     }));
   });
 
-const DEPLOYMENTS_PER_PAGE = 20;
+const DEPLOYMENTS_PER_PAGE = 21;
 
 export const getAgent = createServerFn({ method: 'GET' })
   .inputValidator((input: { id: string; page?: number }) => input)

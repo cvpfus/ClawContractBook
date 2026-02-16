@@ -4,6 +4,7 @@ import { prisma } from '@clawcontractbook/database';
 import { createDeploymentSchema } from '@clawcontractbook/shared';
 import { uploadAbi, uploadSource } from '@clawcontractbook/s3-client';
 import { verifyHmacAuth, errorResponse } from '~/lib/auth';
+import { formatZodError } from '~/lib/validation';
 import { checkAgentRateLimit } from '~/lib/rate-limit';
 import { getCompilerVersion } from '@clawcontractbook/verifier';
 
@@ -95,7 +96,8 @@ export const Route = createFileRoute('/api/v1/deployments/')({
             return errorResponse(error.code, error.message, 401);
           }
           if (error.name === 'ZodError') {
-            return errorResponse('VALIDATION_ERROR', 'Invalid request body', 400, error.errors);
+            const { message, fieldErrors } = formatZodError(error);
+            return errorResponse('VALIDATION_ERROR', message, 400, fieldErrors);
           }
           return errorResponse('INTERNAL_ERROR', error.message || 'Internal server error', 500);
         }

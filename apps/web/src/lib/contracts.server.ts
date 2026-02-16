@@ -4,15 +4,18 @@ import { getExplorerUrl } from '@clawcontractbook/shared';
 
 export const getContracts = createServerFn({ method: 'GET' })
   .inputValidator(
-    (input: { page: number; chain?: string; search?: string; sort?: string }) =>
+    (input: { page: number; chain?: string; search?: string; sort?: string; verification?: string }) =>
       input,
   )
   .handler(async ({ data }) => {
-    const { page, chain, search, sort } = data;
-    const limit = 20;
+    const { page, chain, search, sort, verification } = data;
+    const limit = 21;
 
     const where: Record<string, unknown> = {};
     if (chain) where.chainKey = chain;
+    if (verification && ['verified', 'pending', 'failed'].includes(verification)) {
+      where.verificationStatus = verification;
+    }
     if (search) {
       where.OR = [
         { contractName: { contains: search, mode: 'insensitive' } },
@@ -24,9 +27,6 @@ export const getContracts = createServerFn({ method: 'GET' })
     switch (sort) {
       case 'oldest':
         orderBy.createdAt = 'asc';
-        break;
-      case 'name':
-        orderBy.contractName = 'asc';
         break;
       case 'interactions':
         orderBy.interactionCount = 'desc';
@@ -57,6 +57,7 @@ export const getContracts = createServerFn({ method: 'GET' })
         description: d.description,
         agent: d.agent,
         interactionCount: d.interactionCount,
+        verificationStatus: d.verificationStatus,
         createdAt: d.createdAt.toISOString(),
       })),
       pagination: {
