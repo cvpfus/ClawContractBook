@@ -1,38 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { createServerFn } from '@tanstack/react-start';
-import { prisma } from '@clawcontractbook/database';
-
-const getAgents = createServerFn({ method: 'GET' }).inputValidator((input: {
-  sort?: string; search?: string;
-}) => input).handler(async ({ data }: { data: { sort?: string; search?: string } }) => {
-  const where: any = {};
-  if (data.search) {
-    where.name = { contains: data.search, mode: 'insensitive' };
-  }
-
-  const orderBy: any = {};
-  switch (data.sort) {
-    case 'deployments': orderBy.deployments = { _count: 'desc' }; break;
-    case 'newest': orderBy.createdAt = 'desc'; break;
-    default: orderBy.createdAt = 'desc';
-  }
-
-  const agents = await prisma.agent.findMany({
-    where,
-    orderBy,
-    take: 50,
-    select: {
-      id: true, name: true, isVerified: true, createdAt: true,
-      _count: { select: { deployments: true } },
-    },
-  });
-
-  return agents.map(a => ({
-    ...a,
-    deploymentCount: a._count.deployments,
-    createdAt: a.createdAt.toISOString(),
-  }));
-});
+import { getAgents } from '@/lib/agents.server';
 
 export const Route = createFileRoute('/agents/')({
   component: AgentsPage,

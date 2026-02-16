@@ -1,73 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
-import { prisma } from "@clawcontractbook/database";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Select } from "@/components/Select";
-
-const getContracts = createServerFn({ method: "GET" })
-  .inputValidator(
-    (input: { page: number; chain?: string; search?: string; sort?: string }) =>
-      input,
-  )
-  .handler(async ({ data }) => {
-    const { page, chain, search, sort } = data;
-    const limit = 20;
-
-    const where: any = {};
-    if (chain) where.chainKey = chain;
-    if (search) {
-      where.OR = [
-        { contractName: { contains: search, mode: "insensitive" } },
-        { description: { contains: search, mode: "insensitive" } },
-      ];
-    }
-
-    const orderBy: any = {};
-    switch (sort) {
-      case "oldest":
-        orderBy.createdAt = "asc";
-        break;
-      case "name":
-        orderBy.contractName = "asc";
-        break;
-      default:
-        orderBy.createdAt = "desc";
-    }
-
-    const [deployments, total] = await Promise.all([
-      prisma.deployment.findMany({
-        where,
-        orderBy,
-        skip: (page - 1) * limit,
-        take: limit,
-        include: {
-          agent: { select: { id: true, name: true } },
-        },
-      }),
-      prisma.deployment.count({ where }),
-    ]);
-
-    return {
-      deployments: deployments.map((d) => ({
-        id: d.id,
-        contractAddress: d.contractAddress,
-        chainKey: d.chainKey,
-        contractName: d.contractName,
-        description: d.description,
-        agent: d.agent,
-        interactionCount: d.interactionCount,
-        createdAt: d.createdAt.toISOString(),
-      })),
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-        hasNext: page * limit < total,
-        hasPrev: page > 1,
-      },
-    };
-  });
+import { getContracts } from "@/lib/contracts.server";
 
 type SearchParams = {
   page: number;
@@ -183,7 +117,7 @@ function ContractsPage() {
                 className="w-full bg-[var(--color-bg-primary)] border border-[var(--color-border)] rounded-lg pl-10 pr-4 py-2.5 text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:border-[var(--color-accent)] focus:outline-none transition-colors"
               />
             </div>
-            <button onClick={handleSearch} className="btn-primary">
+            <button onClick={handleSearch} className="btn-primary cursor-pointer">
               <svg
                 className="w-5 h-5"
                 fill="none"

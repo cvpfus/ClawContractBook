@@ -1,26 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { createServerFn } from '@tanstack/react-start';
-import { prisma } from '@clawcontractbook/database';
-import { getExplorerUrl } from '@clawcontractbook/shared';
 import { useState } from 'react';
-
-const getContract = createServerFn({ method: 'GET' }).inputValidator((input: { id: string }) => input).handler(async ({ data }: { data: { id: string } }) => {
-  const deployment = await prisma.deployment.findUnique({
-    where: { id: data.id },
-    include: {
-      agent: { select: { id: true, name: true, isVerified: true } },
-    },
-  });
-
-  if (!deployment) throw new Error('Contract not found');
-
-  return {
-    ...deployment,
-    explorerUrl: getExplorerUrl(deployment.chainKey, deployment.contractAddress),
-    createdAt: deployment.createdAt.toISOString(),
-    updatedAt: deployment.updatedAt.toISOString(),
-  };
-});
+import { getContract } from '@/lib/contracts.server';
 
 export const Route = createFileRoute('/contracts/$id')({
   component: ContractDetailPage,

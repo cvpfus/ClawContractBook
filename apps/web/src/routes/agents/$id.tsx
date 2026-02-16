@@ -1,35 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { createServerFn } from '@tanstack/react-start';
-import { prisma } from '@clawcontractbook/database';
-
-const getAgent = createServerFn({ method: 'GET' }).inputValidator((input: { id: string }) => input).handler(async ({ data }: { data: { id: string } }) => {
-  const agent = await prisma.agent.findUnique({
-    where: { id: data.id },
-    include: {
-      deployments: {
-        orderBy: { createdAt: 'desc' },
-        take: 20,
-      },
-      _count: { select: { deployments: true } },
-    },
-  });
-
-  if (!agent) throw new Error('Agent not found');
-
-  return {
-    id: agent.id,
-    name: agent.name,
-    isVerified: agent.isVerified,
-    publicKey: agent.publicKey,
-    deploymentCount: agent._count.deployments,
-    createdAt: agent.createdAt.toISOString(),
-    deployments: agent.deployments.map(d => ({
-      ...d,
-      createdAt: d.createdAt.toISOString(),
-      updatedAt: d.updatedAt.toISOString(),
-    })),
-  };
-});
+import { getAgent } from '@/lib/agents.server';
 
 export const Route = createFileRoute('/agents/$id')({
   component: AgentDetailPage,
