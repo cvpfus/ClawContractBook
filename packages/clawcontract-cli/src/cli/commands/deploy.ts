@@ -88,6 +88,7 @@ export async function deployCommand(
       if (options.publish || ccbConfig.autoPublish) {
         const publishSpinner = ora('Publishing to ClawContractBook...').start();
         try {
+          const sourceCode = fs.readFileSync(filePath, 'utf-8');
           const publishResult = await publishDeployment({
             contractAddress: result.contractAddress,
             chainKey,
@@ -95,6 +96,7 @@ export async function deployCommand(
             contractName: compiled.contractName,
             description: options.description,
             abi: [...compiled.abi],
+            sourceCode,
             deployerAddress: result.deployer,
             transactionHash: result.transactionHash,
             blockNumber: result.blockNumber,

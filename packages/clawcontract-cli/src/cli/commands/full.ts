@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import path from 'node:path';
 import chalk from 'chalk';
 import ora from 'ora';
 import { displayBanner, displayError } from '../utils.js';
@@ -9,6 +10,13 @@ import { verifyCommand } from './verify.js';
 import { createLLMClient } from '../../generator/index.js';
 
 const MAX_FIX_ATTEMPTS = 3;
+
+export interface FullCommandInput {
+  description?: string;
+  source?: string;
+  stdin?: boolean;
+  file?: string;
+}
 
 async function autoFixHighSeverity(
   filePath: string,
@@ -59,15 +67,32 @@ async function autoFixHighSeverity(
 }
 
 export async function fullCommand(
-  description: string,
+  input: FullCommandInput,
   options: { chain: string; output: string; skipDeploy?: boolean; skipFix?: boolean; skipAnalyze?: boolean; publish?: boolean; description?: string },
 ): Promise<void> {
   displayBanner();
   console.log(chalk.bold('Full Pipeline: Generate → Analyze → Deploy → Verify\n'));
 
-  // Step 1: Generate
-  console.log(chalk.bold.blue('\n━━━ Step 1/4: Generate Contract ━━━\n'));
-  const filePath = await generateCommand(description, options);
+  let filePath: string;
+
+  if (input.file) {
+    filePath = path.resolve(process.cwd(), input.file);
+    if (!fs.existsSync(filePath)) {
+      displayError(`File not found: ${filePath}`);
+      process.exit(1);
+    }
+    console.log(chalk.bold.blue('\n━━━ Step 1/4: Generate Contract ━━━\n'));
+    console.log(chalk.yellow.bold('  ⏭ Using existing file (--file). Skipping generate.\n'));
+  } else {
+    // Step 1: Generate (AI or user-supplied source)
+    console.log(chalk.bold.blue('\n━━━ Step 1/4: Generate Contract ━━━\n'));
+    filePath = await generateCommand(input.description, {
+      chain: options.chain,
+      output: options.output,
+      source: input.source,
+      stdin: input.stdin,
+    });
+  }
 
   // Step 2: Analyze
   if (options.skipAnalyze) {
@@ -113,7 +138,7 @@ export async function fullCommand(
   }
 
   console.log(chalk.gray(`\n  Tip: interact with your contract using:`));
-  console.log(chalk.gray(`    clawcontract interact ${deployResult.contractAddress} <function> --chain ${options.chain}\n`));
+  console.log(chalk.gray(`    clawcontract-cli interact ${deployResult.contractAddress} <function> --chain ${options.chain}\n`));
 
   // Step 4: Verify
   console.log(chalk.bold.blue('\n━━━ Step 4/4: Verify Contract ━━━\n'));

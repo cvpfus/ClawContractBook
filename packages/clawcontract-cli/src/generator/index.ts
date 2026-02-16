@@ -11,9 +11,11 @@ export type { LLMClient } from "./llm.js";
 export { extractContractName, sanitizeFileName, writeFileUnique, ensureOutputDir } from "./utils.js";
 
 export interface GenerateOptions {
-  description: string;
+  description?: string;
   outputDir: string;
   useAI: boolean;
+  /** When provided, skip AI and write this source to file */
+  source?: string;
 }
 
 export interface GenerateResult {
@@ -26,7 +28,27 @@ export interface GenerateResult {
 export async function generateContract(
   options: GenerateOptions
 ): Promise<GenerateResult> {
-  const { description, outputDir, useAI } = options;
+  const { description, outputDir, useAI, source: suppliedSource } = options;
+
+  if (suppliedSource !== undefined) {
+    if (description !== undefined) {
+      throw new Error('Use either description (for AI) or source (for your own contract), not both.');
+    }
+    await ensureOutputDir(outputDir);
+    const contractName = extractContractName(suppliedSource);
+    const fileName = sanitizeFileName(contractName);
+    const filePath = await writeFileUnique(outputDir, fileName, suppliedSource);
+    return {
+      filePath,
+      contractName,
+      source: suppliedSource,
+      aiGenerated: false,
+    };
+  }
+
+  if (!description) {
+    throw new Error('Provide either a description (for AI generation) or use --source / --stdin (for your own contract).');
+  }
 
   const llm = createLLMClient();
   const aiAvailable = useAI && llm.isAvailable();
