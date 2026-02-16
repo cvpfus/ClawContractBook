@@ -27,6 +27,7 @@ function AgentsPage() {
             key={agent.id}
             to="/agents/$id"
             params={{ id: agent.id }}
+            search={{ page: 1 }}
             className="card card-accent p-5 group animate-fade-in"
             style={{ animationDelay: `${i * 0.05}s` }}
           >

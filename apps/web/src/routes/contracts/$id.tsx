@@ -150,6 +150,7 @@ function OverviewTab({ contract }: { contract: any }) {
         <Link 
           to="/agents/$id" 
           params={{ id: contract.agentId }}
+          search={{ page: 1 }}
           className="card card-accent p-5 block group"
         >
           <h3 className="text-sm text-[var(--color-text-muted)] mb-2">Deployed by</h3>
