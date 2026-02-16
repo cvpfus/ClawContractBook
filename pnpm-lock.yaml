@@ -19,6 +19,9 @@ importers:
       '@clawcontractbook/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@clawcontractbook/verifier':
+        specifier: workspace:*
+        version: link:../../packages/verifier
       '@tailwindcss/vite':
         specifier: ^4.1.7
         version: 4.1.18(vite@7.3.1(@types/node@22.19.11)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0))
@@ -37,6 +40,9 @@ importers:
       dotenv:
         specifier: ^17.2.4
         version: 17.3.1
+      ethers:
+        specifier: ^6.16.0
+        version: 6.16.0
       react:
         specifier: ^19.1.0
         version: 19.2.4
@@ -150,45 +156,61 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  packages/scanner:
-    dependencies:
-      '@clawcontractbook/database':
-        specifier: workspace:*
-        version: link:../database
-      '@prisma/adapter-pg':
-        specifier: ^7.4.0
-        version: 7.4.0
-      ethers:
-        specifier: ^6.13.0
-        version: 6.16.0
-      node-cron:
-        specifier: ^3.0.3
-        version: 3.0.3
-      pg:
-        specifier: ^8.18.0
-        version: 8.18.0
-    devDependencies:
-      '@types/node':
-        specifier: ^22.0.0
-        version: 22.19.11
-      '@types/node-cron':
-        specifier: ^3.0.11
-        version: 3.0.11
-      dotenv:
-        specifier: ^17.3.1
-        version: 17.3.1
-      tsx:
-        specifier: ^4.19.0
-        version: 4.21.0
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
   packages/shared:
     dependencies:
       zod:
         specifier: ^3.25.3
         version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.19.11
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/verification-worker:
+    dependencies:
+      '@clawcontractbook/database':
+        specifier: workspace:*
+        version: link:../database
+      '@clawcontractbook/s3-client':
+        specifier: workspace:*
+        version: link:../s3-client
+      '@clawcontractbook/shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@clawcontractbook/verifier':
+        specifier: workspace:*
+        version: link:../verifier
+      ethers:
+        specifier: ^6.16.0
+        version: 6.16.0
+      node-cron:
+        specifier: ^3.0.3
+        version: 3.0.3
+    devDependencies:
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.19.11
+      tsx:
+        specifier: ^4.21.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/verifier:
+    dependencies:
+      '@clawcontractbook/shared':
+        specifier: workspace:*
+        version: link:../shared
+      ethers:
+        specifier: ^6.16.0
+        version: 6.16.0
+      solc:
+        specifier: ^0.8.20
+        version: 0.8.26(debug@4.4.3)
     devDependencies:
       '@types/node':
         specifier: ^22.0.0
@@ -1718,9 +1740,6 @@ packages:
 
   '@types/mocha@10.0.10':
     resolution: {integrity: sha512-xPyYSz1cMPnJQhl0CLMH68j3gprKZaTjG3s5Vi+fDgx+uhG9NOXwbVt52eFS8ECyXhyKcjDLCBEqBExKuiZb7Q==}
-
-  '@types/node-cron@3.0.11':
-    resolution: {integrity: sha512-0ikrnug3/IyneSHqCBeslAhlK2aBfYek1fGo4bP4QnZPmiqSGRK+Oy7ZMisLWkesffJvQ1cqAcBnJC+8+nxIAg==}
 
   '@types/node@10.17.60':
     resolution: {integrity: sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw==}
@@ -6400,8 +6419,6 @@ snapshots:
       minimatch: 10.2.0
 
   '@types/mocha@10.0.10': {}
-
-  '@types/node-cron@3.0.11': {}
 
   '@types/node@10.17.60': {}
 

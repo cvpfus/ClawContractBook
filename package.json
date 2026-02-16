@@ -8,7 +8,9 @@
     "typecheck": "pnpm -r typecheck",
     "db:migrate": "pnpm --filter @clawcontractbook/database db:migrate",
     "db:generate": "pnpm --filter @clawcontractbook/database db:generate",
-    "db:studio": "pnpm --filter @clawcontractbook/database db:studio"
+    "db:studio": "pnpm --filter @clawcontractbook/database db:studio",
+    "verification-worker:dev": "pnpm --filter @clawcontractbook/verification-worker dev",
+    "verification-worker:start": "pnpm --filter @clawcontractbook/verification-worker start"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

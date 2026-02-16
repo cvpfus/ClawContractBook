@@ -22,6 +22,7 @@ import { Route as ApiV1StatsTrendingRouteImport } from './routes/api/v1/stats/tr
 import { Route as ApiV1StatsOverviewRouteImport } from './routes/api/v1/stats/overview'
 import { Route as ApiV1StatsAgentsRouteImport } from './routes/api/v1/stats/agents'
 import { Route as ApiV1DeploymentsIdRouteImport } from './routes/api/v1/deployments/$id'
+import { Route as ApiV1AgentsRotateKeyRouteImport } from './routes/api/v1/agents/rotate-key'
 import { Route as ApiV1AgentsRegisterRouteImport } from './routes/api/v1/agents/register'
 import { Route as ApiV1AgentsIdRouteImport } from './routes/api/v1/agents/$id'
 import { Route as ApiV1DeploymentsIdInteractRouteImport } from './routes/api/v1/deployments/$id/interact'
@@ -93,6 +94,11 @@ const ApiV1DeploymentsIdRoute = ApiV1DeploymentsIdRouteImport.update({
   path: '/api/v1/deployments/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiV1AgentsRotateKeyRoute = ApiV1AgentsRotateKeyRouteImport.update({
+  id: '/api/v1/agents/rotate-key',
+  path: '/api/v1/agents/rotate-key',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiV1AgentsRegisterRoute = ApiV1AgentsRegisterRouteImport.update({
   id: '/api/v1/agents/register',
   path: '/api/v1/agents/register',
@@ -132,6 +138,7 @@ export interface FileRoutesByFullPath {
   '/contracts/': typeof ContractsIndexRoute
   '/api/v1/agents/$id': typeof ApiV1AgentsIdRouteWithChildren
   '/api/v1/agents/register': typeof ApiV1AgentsRegisterRoute
+  '/api/v1/agents/rotate-key': typeof ApiV1AgentsRotateKeyRoute
   '/api/v1/deployments/$id': typeof ApiV1DeploymentsIdRouteWithChildren
   '/api/v1/stats/agents': typeof ApiV1StatsAgentsRoute
   '/api/v1/stats/overview': typeof ApiV1StatsOverviewRoute
@@ -152,6 +159,7 @@ export interface FileRoutesByTo {
   '/contracts': typeof ContractsIndexRoute
   '/api/v1/agents/$id': typeof ApiV1AgentsIdRouteWithChildren
   '/api/v1/agents/register': typeof ApiV1AgentsRegisterRoute
+  '/api/v1/agents/rotate-key': typeof ApiV1AgentsRotateKeyRoute
   '/api/v1/deployments/$id': typeof ApiV1DeploymentsIdRouteWithChildren
   '/api/v1/stats/agents': typeof ApiV1StatsAgentsRoute
   '/api/v1/stats/overview': typeof ApiV1StatsOverviewRoute
@@ -173,6 +181,7 @@ export interface FileRoutesById {
   '/contracts/': typeof ContractsIndexRoute
   '/api/v1/agents/$id': typeof ApiV1AgentsIdRouteWithChildren
   '/api/v1/agents/register': typeof ApiV1AgentsRegisterRoute
+  '/api/v1/agents/rotate-key': typeof ApiV1AgentsRotateKeyRoute
   '/api/v1/deployments/$id': typeof ApiV1DeploymentsIdRouteWithChildren
   '/api/v1/stats/agents': typeof ApiV1StatsAgentsRoute
   '/api/v1/stats/overview': typeof ApiV1StatsOverviewRoute
@@ -195,6 +204,7 @@ export interface FileRouteTypes {
     | '/contracts/'
     | '/api/v1/agents/$id'
     | '/api/v1/agents/register'
+    | '/api/v1/agents/rotate-key'
     | '/api/v1/deployments/$id'
     | '/api/v1/stats/agents'
     | '/api/v1/stats/overview'
@@ -215,6 +225,7 @@ export interface FileRouteTypes {
     | '/contracts'
     | '/api/v1/agents/$id'
     | '/api/v1/agents/register'
+    | '/api/v1/agents/rotate-key'
     | '/api/v1/deployments/$id'
     | '/api/v1/stats/agents'
     | '/api/v1/stats/overview'
@@ -235,6 +246,7 @@ export interface FileRouteTypes {
     | '/contracts/'
     | '/api/v1/agents/$id'
     | '/api/v1/agents/register'
+    | '/api/v1/agents/rotate-key'
     | '/api/v1/deployments/$id'
     | '/api/v1/stats/agents'
     | '/api/v1/stats/overview'
@@ -256,6 +268,7 @@ export interface RootRouteChildren {
   ContractsIndexRoute: typeof ContractsIndexRoute
   ApiV1AgentsIdRoute: typeof ApiV1AgentsIdRouteWithChildren
   ApiV1AgentsRegisterRoute: typeof ApiV1AgentsRegisterRoute
+  ApiV1AgentsRotateKeyRoute: typeof ApiV1AgentsRotateKeyRoute
   ApiV1DeploymentsIdRoute: typeof ApiV1DeploymentsIdRouteWithChildren
   ApiV1StatsAgentsRoute: typeof ApiV1StatsAgentsRoute
   ApiV1StatsOverviewRoute: typeof ApiV1StatsOverviewRoute
@@ -356,6 +369,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiV1DeploymentsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/v1/agents/rotate-key': {
+      id: '/api/v1/agents/rotate-key'
+      path: '/api/v1/agents/rotate-key'
+      fullPath: '/api/v1/agents/rotate-key'
+      preLoaderRoute: typeof ApiV1AgentsRotateKeyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/v1/agents/register': {
       id: '/api/v1/agents/register'
       path: '/api/v1/agents/register'
@@ -430,6 +450,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContractsIndexRoute: ContractsIndexRoute,
   ApiV1AgentsIdRoute: ApiV1AgentsIdRouteWithChildren,
   ApiV1AgentsRegisterRoute: ApiV1AgentsRegisterRoute,
+  ApiV1AgentsRotateKeyRoute: ApiV1AgentsRotateKeyRoute,
   ApiV1DeploymentsIdRoute: ApiV1DeploymentsIdRouteWithChildren,
   ApiV1StatsAgentsRoute: ApiV1StatsAgentsRoute,
   ApiV1StatsOverviewRoute: ApiV1StatsOverviewRoute,
