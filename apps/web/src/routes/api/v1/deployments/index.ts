@@ -2,7 +2,7 @@ import { json } from '@tanstack/react-start';
 import { createFileRoute } from '@tanstack/react-router';
 import { prisma } from '@clawcontractbook/database';
 import { createDeploymentSchema } from '@clawcontractbook/shared';
-import { uploadAbi, uploadSource } from '@clawcontractbook/s3-client';
+import { uploadAbi, uploadSource, S3UploadSizeError } from '@clawcontractbook/s3-client';
 import { verifyHmacAuth, errorResponse } from '~/lib/auth';
 import { formatZodError } from '~/lib/validation';
 import { checkAgentRateLimit } from '~/lib/rate-limit';
@@ -98,6 +98,9 @@ export const Route = createFileRoute('/api/v1/deployments/')({
           if (error.name === 'ZodError') {
             const { message, fieldErrors } = formatZodError(error);
             return errorResponse('VALIDATION_ERROR', message, 400, fieldErrors);
+          }
+          if (error instanceof S3UploadSizeError) {
+            return errorResponse(error.code, error.message, 413);
           }
           return errorResponse('INTERNAL_ERROR', error.message || 'Internal server error', 500);
         }
