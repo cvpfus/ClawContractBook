@@ -8,7 +8,7 @@ import { getSource } from '@clawcontractbook/s3-client';
 import { keccak256 } from 'ethers';
 import type { ChainKey } from '@clawcontractbook/shared';
 
-const CRON_SCHEDULE = '*/10 * * * *';
+const CRON_SCHEDULE = '* * * * *';
 const BATCH_SIZE = 10;
 const MAX_RETRIES = 3;
 const VERIFICATION_TIMEOUT = 30000;
