@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Select } from "@/components/Select";
+import { VerificationStatusBadge } from "@/components/VerificationStatusBadge";
 import { getContracts } from "@/lib/contracts.server";
 
 type SearchParams = {
@@ -9,6 +10,7 @@ type SearchParams = {
   chain?: string;
   search?: string;
   sort: string;
+  verification?: string;
 };
 
 export const Route = createFileRoute("/contracts/")({
@@ -17,12 +19,14 @@ export const Route = createFileRoute("/contracts/")({
     chain: (search.chain as string) || undefined,
     search: (search.search as string) || undefined,
     sort: (search.sort as string) || "newest",
+    verification: (search.verification as string) || undefined,
   }),
-  loaderDeps: ({ search: { page, chain, search: searchQuery, sort } }) => ({
+  loaderDeps: ({ search: { page, chain, search: searchQuery, sort, verification } }) => ({
     page,
     chain,
     searchQuery,
     sort,
+    verification,
   }),
   loader: ({ deps }) => deps,
   component: ContractsPage,
@@ -39,6 +43,7 @@ function ContractsPage() {
       loaderData.chain,
       loaderData.searchQuery,
       loaderData.sort,
+      loaderData.verification,
     ],
     queryFn: () =>
       getContracts({
@@ -47,6 +52,7 @@ function ContractsPage() {
           chain: loaderData.chain,
           search: loaderData.searchQuery,
           sort: loaderData.sort,
+          verification: loaderData.verification,
         },
       }),
   });
@@ -138,13 +144,25 @@ function ContractsPage() {
             ]}
           />
           <Select
+            value={search.verification || ""}
+            onChange={(value) =>
+              updateSearch({ verification: value || undefined, page: 1 })
+            }
+            disabled={!isDropdownsReady}
+            options={[
+              { value: "", label: "All Statuses" },
+              { value: "verified", label: "Verified" },
+              { value: "pending", label: "Pending" },
+              { value: "failed", label: "Failed" },
+            ]}
+          />
+          <Select
             value={search.sort || "newest"}
             onChange={(value) => updateSearch({ sort: value, page: 1 })}
             disabled={!isDropdownsReady}
             options={[
               { value: "newest", label: "Newest First" },
               { value: "oldest", label: "Oldest First" },
-              { value: "name", label: "Name A-Z" },
               { value: "interactions", label: "Most Interactions" },
             ]}
           />
@@ -203,13 +221,16 @@ function ContractsPage() {
                 className="card card-accent p-5 group animate-fade-in"
                 style={{ animationDelay: `${i * 0.03}s` }}
               >
-                <div className="flex items-start justify-between mb-3">
-                  <h3 className="font-bold text-[var(--color-text-primary)] group-hover:text-[var(--color-accent)] transition-colors truncate">
+                <div className="flex items-start justify-between gap-2 mb-3">
+                  <h3 className="font-bold text-[var(--color-text-primary)] group-hover:text-[var(--color-accent)] transition-colors truncate min-w-0">
                     {d.contractName}
                   </h3>
-                  <span className="badge badge-accent text-xs shrink-0 ml-2">
-                    {d.chainKey}
-                  </span>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <VerificationStatusBadge status={d.verificationStatus} size="sm" />
+                    <span className="badge badge-accent text-xs">
+                      {d.chainKey}
+                    </span>
+                  </div>
                 </div>
                 <p className="font-mono text-sm text-[var(--color-text-muted)] truncate mb-3">
                   {d.contractAddress}
@@ -224,8 +245,10 @@ function ContractsPage() {
                       {d.agent?.name || "Unknown"}
                     </span>
                   </span>
-                  <span className="text-xs text-[var(--color-text-dim)]">
-                    {d.interactionCount} interactions
+                  <span className="text-xs">
+                    <span className="font-semibold text-[var(--color-accent)]">{d.interactionCount}</span>
+                    {" "}
+                    <span className="text-[var(--color-text-muted)]">interactions</span>
                   </span>
                 </div>
               </Link>

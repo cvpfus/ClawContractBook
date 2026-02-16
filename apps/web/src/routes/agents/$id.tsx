@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { getAgent } from '@/lib/agents.server';
+import { VerificationStatusBadge } from '@/components/VerificationStatusBadge';
 
 type SearchParams = { page: number };
 
@@ -82,8 +83,11 @@ function AgentDetailPage() {
                       <p className="font-mono text-sm text-[var(--color-text-muted)] truncate mb-3">
                         {d.contractAddress}
                       </p>
-                      <div className="flex items-center justify-between text-xs text-[var(--color-text-dim)]">
-                        <span className="badge badge-accent">{d.chainKey}</span>
+                      <div className="flex items-center justify-between gap-2 text-xs text-[var(--color-text-dim)]">
+                        <div className="flex items-center gap-1.5">
+                          <VerificationStatusBadge status={d.verificationStatus} size="sm" />
+                          <span className="badge badge-accent">{d.chainKey}</span>
+                        </div>
                       </div>
                     </Link>
                   ))}

@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { getHomeData } from '@/lib/home.server';
+import { VerificationStatusBadge } from '@/components/VerificationStatusBadge';
 
 export const Route = createFileRoute('/')({
   component: HomePage,
@@ -121,11 +122,14 @@ function RecentDeployments({ deployments }: { deployments: any[] }) {
             className="card card-accent p-5 group animate-fade-in"
             style={{ animationDelay: `${0.5 + i * 0.05}s` }}
           >
-            <div className="flex items-start justify-between mb-3">
-              <h3 className="font-bold text-[var(--color-text-primary)] group-hover:text-[var(--color-accent)] transition-colors">
+            <div className="flex items-start justify-between gap-2 mb-3">
+              <h3 className="font-bold text-[var(--color-text-primary)] group-hover:text-[var(--color-accent)] transition-colors min-w-0">
                 {d.contractName}
               </h3>
-              <span className="badge badge-accent text-xs">{d.chainKey}</span>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <VerificationStatusBadge status={d.verificationStatus} size="sm" />
+                <span className="badge badge-accent text-xs">{d.chainKey}</span>
+              </div>
             </div>
             <p className="font-mono text-sm text-[var(--color-text-muted)] truncate mb-3">
               {d.contractAddress}

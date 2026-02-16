@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { useState } from 'react';
 import { getContract } from '@/lib/contracts.server';
+import { VerificationStatusBadge } from '@/components/VerificationStatusBadge';
 
 export const Route = createFileRoute('/contracts/$id')({
   component: ContractDetailPage,
@@ -24,20 +25,12 @@ function ContractDetailPage() {
 }
 
 function ContractHeader({ contract }: { contract: any }) {
-  const statusColors: Record<string, { bg: string; text: string }> = {
-    verified: { bg: 'badge-success', text: 'Verified' },
-    pending: { bg: 'badge-warning', text: 'Pending' },
-    failed: { bg: 'badge-error', text: 'Failed' },
-  };
-
   return (
     <div className="mb-8 animate-fade-in">
       <div className="flex flex-wrap items-center gap-3 mb-4">
         <h1 className="text-3xl font-bold">{contract.contractName}</h1>
         <span className="badge badge-accent">{contract.chainKey}</span>
-        <span className={`badge ${statusColors[contract.verificationStatus]?.bg || 'badge-warning'}`}>
-          {statusColors[contract.verificationStatus]?.text || contract.verificationStatus}
-        </span>
+        <VerificationStatusBadge status={contract.verificationStatus} />
       </div>
       <div className="flex flex-wrap items-center gap-4 text-sm">
         <code className="font-mono text-[var(--color-text-muted)] bg-[var(--color-bg-secondary)] px-3 py-1 rounded">
@@ -72,7 +65,7 @@ function Tabs({ activeTab, onTabChange }: { activeTab: string; onTabChange: (tab
         <button
           key={tab.id}
           onClick={() => onTabChange(tab.id)}
-          className={`px-5 py-3 text-sm font-medium transition-all relative ${
+          className={`px-5 py-3 text-sm font-medium transition-all relative cursor-pointer ${
             activeTab === tab.id 
               ? 'text-[var(--color-accent)]' 
               : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]'
@@ -103,6 +96,30 @@ function OverviewTab({ contract }: { contract: any }) {
               {contract.description || "No description"}
             </p>
           </div>
+
+        <div className="card p-6">
+          <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
+            <svg className="w-5 h-5 text-[var(--color-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Verification
+          </h3>
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <VerificationStatusBadge status={contract.verificationStatus} />
+              {contract.verifiedAt && (
+                <span className="text-sm text-[var(--color-text-muted)]">
+                  Verified {new Date(contract.verifiedAt).toLocaleDateString()}
+                </span>
+              )}
+            </div>
+            {contract.verificationStatus === "failed" && contract.verificationError && (
+              <p className="text-sm text-[var(--color-error)] bg-[var(--color-bg-primary)] rounded-lg p-3 border border-[var(--color-border)]">
+                {contract.verificationError}
+              </p>
+            )}
+          </div>
+        </div>
         
         <div className="card p-6">
           <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
