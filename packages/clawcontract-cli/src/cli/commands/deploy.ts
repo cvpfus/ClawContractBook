@@ -11,7 +11,7 @@ import { publishDeployment, getClawContractBookConfig } from '../../lib/clawcont
 
 export async function deployCommand(
   file: string,
-  options: { chain: string; publish?: boolean },
+  options: { chain: string; publish?: boolean; description?: string },
 ): Promise<DeployResult | undefined> {
   displayBanner();
   console.log(chalk.bold('Deploy Contract\n'));
@@ -93,6 +93,7 @@ export async function deployCommand(
             chainKey,
             chainId: chainConfig.chainId,
             contractName: compiled.contractName,
+            description: options.description,
             abi: [...compiled.abi],
             deployerAddress: result.deployer,
             transactionHash: result.transactionHash,

@@ -46,9 +46,10 @@ program
   .command('deploy <file>')
   .description('Deploy a contract to BSC/opBNB')
   .option('--publish', 'Publish to ClawContractBook')
-  .action(async (file: string, cmdOpts: { publish?: boolean }) => {
+  .option('--description <text>', 'Deployment description')
+  .action(async (file: string, cmdOpts: { publish?: boolean; description?: string }) => {
     const opts = program.opts<{ chain: string; output: string }>();
-    await deployCommand(file, { chain: opts.chain, publish: cmdOpts.publish });
+    await deployCommand(file, { chain: opts.chain, publish: cmdOpts.publish, description: cmdOpts.description });
   });
 
 program
@@ -67,9 +68,10 @@ program
   .option('--skip-fix', 'Do not auto-fix high-severity issues')
   .option('--skip-analyze', 'Skip security analysis step entirely')
   .option('--publish', 'Publish to ClawContractBook')
-  .action(async (description: string, cmdOpts: { skipDeploy?: boolean; skipFix?: boolean; skipAnalyze?: boolean; publish?: boolean }) => {
+  .option('--description <text>', 'Deployment description')
+  .action(async (description: string, cmdOpts: { skipDeploy?: boolean; skipFix?: boolean; skipAnalyze?: boolean; publish?: boolean; description?: string }) => {
     const opts = program.opts<{ chain: string; output: string }>();
-    await fullCommand(description, { ...opts, skipDeploy: cmdOpts.skipDeploy, skipFix: cmdOpts.skipFix, skipAnalyze: cmdOpts.skipAnalyze, publish: cmdOpts.publish });
+    await fullCommand(description, { ...opts, skipDeploy: cmdOpts.skipDeploy, skipFix: cmdOpts.skipFix, skipAnalyze: cmdOpts.skipAnalyze, publish: cmdOpts.publish, description: cmdOpts.description });
   });
 
 program
