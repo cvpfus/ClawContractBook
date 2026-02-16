@@ -89,7 +89,7 @@ function ContractsPage() {
       </div>
 
       {/* Search & Filters */}
-      <div className="card p-4 mb-6 animate-fade-in animate-fade-in-delay-1">
+      <div className="card p-4 mb-6 animate-fade-in animate-fade-in-delay-1 overflow-visible">
         <div className="flex flex-col md:flex-row gap-3">
           <div className="flex-1 flex gap-2">
             <div className="relative flex-1">

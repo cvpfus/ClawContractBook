@@ -49,7 +49,7 @@ export function Select({ value, onChange, options, placeholder }: SelectProps) {
       </button>
 
       {isOpen && (
-        <div className="absolute z-50 mt-1 w-full bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg shadow-lg overflow-hidden animate-fade-in">
+        <div className="absolute z-[100] mt-1 min-w-full bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg shadow-lg overflow-hidden animate-fade-in">
           {options.map((option) => (
             <button
               key={option.value}
