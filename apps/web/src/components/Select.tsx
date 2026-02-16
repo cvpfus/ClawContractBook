@@ -18,6 +18,8 @@ export function Select({ value, onChange, options, placeholder }: SelectProps) {
 
   const selectedOption = options.find((opt) => opt.value === value);
 
+  console.log('Select render', { value, isOpen, options });
+
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (ref.current && !ref.current.contains(event.target as Node)) {
@@ -32,7 +34,10 @@ export function Select({ value, onChange, options, placeholder }: SelectProps) {
     <div ref={ref} className="relative">
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
+        onMouseDown={(e) => {
+          e.preventDefault();
+          setIsOpen(!isOpen);
+        }}
         className="flex items-center justify-between gap-2 w-40 bg-[var(--color-bg-primary)] border border-[var(--color-border)] rounded-lg px-4 py-2.5 text-[var(--color-text-primary)] focus:border-[var(--color-accent)] focus:outline-none transition-colors hover:border-[var(--color-border-hover)]"
       >
         <span className={selectedOption ? "" : "text-[var(--color-text-muted)]"}>
@@ -49,16 +54,17 @@ export function Select({ value, onChange, options, placeholder }: SelectProps) {
       </button>
 
       {isOpen && (
-        <div className="absolute z-[100] mt-1 min-w-full bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg shadow-lg overflow-hidden animate-fade-in">
+        <div className="absolute top-full left-0 mt-1 w-full bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg shadow-lg">
           {options.map((option) => (
             <button
               key={option.value}
               type="button"
-              onClick={() => {
+              onMouseDown={(e) => {
+                e.preventDefault();
                 onChange(option.value);
                 setIsOpen(false);
               }}
-              className={`w-full text-left px-4 py-2.5 transition-colors ${
+              className={`w-full text-left px-4 py-2.5 transition-colors first:rounded-t-lg last:rounded-b-lg ${
                 option.value === value
                   ? "bg-[var(--color-accent-glow)] text-[var(--color-accent)]"
                   : "text-[var(--color-text-primary)] hover:bg-[var(--color-bg-card-hover)]"
