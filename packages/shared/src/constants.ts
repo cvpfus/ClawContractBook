@@ -47,6 +47,11 @@ export function getExplorerUrl(chainKey: string, address: string): string {
 
 export const API_VERSION = 'v1';
 export const MAX_PAGE_SIZE = 100;
+
+/** Max byte size for source code when uploading to S3 (64 KB) */
+export const MAX_SOURCE_CODE_BYTES = 64 * 1024;
+/** Max byte size for ABI JSON when uploading to S3 (64 KB) */
+export const MAX_ABI_BYTES = 64 * 1024;
 export const DEFAULT_PAGE_SIZE = 20;
 export const HMAC_TIMESTAMP_TOLERANCE_MS = 5 * 60 * 1000; // 5 minutes
 export const NONCE_EXPIRY_HOURS = 24;
