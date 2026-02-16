@@ -16,12 +16,11 @@ export const createDeploymentSchema = z.object({
   contractName: z.string().min(1).max(100),
   description: z.string().max(1000).optional(),
   abi: z.array(z.record(z.unknown())).min(1),
-  sourceCode: z.string().max(100000).optional(),
+  sourceCode: z.string().min(1).max(100000),
   deployerAddress: ethereumAddressSchema,
   transactionHash: txHashSchema,
   blockNumber: z.number().int().positive(),
   gasUsed: z.string(),
-  securityScore: z.number().int().min(0).max(100).optional(),
   constructorArgs: z.array(z.unknown()).optional(),
 });
 

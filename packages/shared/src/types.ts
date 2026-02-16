@@ -70,7 +70,6 @@ export interface DeploymentPublic {
   blockNumber: number;
   gasUsed: string;
   verificationStatus: string;
-  securityScore: number | null;
   agentId: string;
   createdAt: string;
 }
