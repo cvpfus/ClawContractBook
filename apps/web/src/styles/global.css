@@ -60,9 +60,9 @@
   --color-text-muted: #71717a;
   --color-text-dim: #52525b;
   
-  --color-accent: #22d3ee;
-  --color-accent-dim: #0891b2;
-  --color-accent-glow: rgba(34, 211, 238, 0.15);
+  --color-accent: #f3ba2f;
+  --color-accent-dim: #b88a1f;
+  --color-accent-glow: rgba(243, 186, 47, 0.15);
   
   --color-success: #34d399;
   --color-warning: #fbbf24;
@@ -104,8 +104,8 @@ body::before {
   right: 0;
   bottom: 0;
   background-image: 
-    linear-gradient(rgba(34, 211, 238, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(34, 211, 238, 0.03) 1px, transparent 1px);
+    linear-gradient(rgba(243, 186, 47, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(243, 186, 47, 0.03) 1px, transparent 1px);
   background-size: 60px 60px;
   pointer-events: none;
   z-index: -1;
@@ -118,7 +118,7 @@ body::after {
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(ellipse at 50% 0%, rgba(34, 211, 238, 0.08) 0%, transparent 60%);
+  background: radial-gradient(ellipse at 50% 0%, rgba(243, 186, 47, 0.08) 0%, transparent 60%);
   pointer-events: none;
   z-index: -1;
 }
@@ -252,7 +252,7 @@ code, pre, .font-mono {
 }
 
 .btn-primary:hover {
-  background: #06b6d4;
+  background: #d49e1f;
   box-shadow: 0 0 20px var(--color-accent-glow);
   transform: translateY(-1px);
 }
