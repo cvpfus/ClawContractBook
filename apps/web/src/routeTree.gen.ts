@@ -14,7 +14,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ContractsIndexRouteImport } from './routes/contracts/index'
 import { Route as AgentsIndexRouteImport } from './routes/agents/index'
 import { Route as DocsSetupRouteImport } from './routes/docs/setup'
-import { Route as DocsApiRouteImport } from './routes/docs/api'
 import { Route as ContractsIdRouteImport } from './routes/contracts/$id'
 import { Route as AgentsIdRouteImport } from './routes/agents/$id'
 import { Route as ApiV1DeploymentsIndexRouteImport } from './routes/api/v1/deployments/index'
@@ -25,6 +24,7 @@ import { Route as ApiV1DeploymentsIdRouteImport } from './routes/api/v1/deployme
 import { Route as ApiV1AgentsRotateKeyRouteImport } from './routes/api/v1/agents/rotate-key'
 import { Route as ApiV1AgentsRegisterRouteImport } from './routes/api/v1/agents/register'
 import { Route as ApiV1AgentsIdRouteImport } from './routes/api/v1/agents/$id'
+import { Route as ApiV1DeploymentsVerifiedIndexRouteImport } from './routes/api/v1/deployments/verified/index'
 import { Route as ApiV1DeploymentsIdInteractRouteImport } from './routes/api/v1/deployments/$id/interact'
 import { Route as ApiV1DeploymentsIdAbiRouteImport } from './routes/api/v1/deployments/$id/abi'
 import { Route as ApiV1AgentsIdDeploymentsRouteImport } from './routes/api/v1/agents/$id/deployments'
@@ -52,11 +52,6 @@ const AgentsIndexRoute = AgentsIndexRouteImport.update({
 const DocsSetupRoute = DocsSetupRouteImport.update({
   id: '/docs/setup',
   path: '/docs/setup',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DocsApiRoute = DocsApiRouteImport.update({
-  id: '/docs/api',
-  path: '/docs/api',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContractsIdRoute = ContractsIdRouteImport.update({
@@ -109,6 +104,12 @@ const ApiV1AgentsIdRoute = ApiV1AgentsIdRouteImport.update({
   path: '/api/v1/agents/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiV1DeploymentsVerifiedIndexRoute =
+  ApiV1DeploymentsVerifiedIndexRouteImport.update({
+    id: '/api/v1/deployments/verified/',
+    path: '/api/v1/deployments/verified/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiV1DeploymentsIdInteractRoute =
   ApiV1DeploymentsIdInteractRouteImport.update({
     id: '/interact',
@@ -132,7 +133,6 @@ export interface FileRoutesByFullPath {
   '/stats': typeof StatsRoute
   '/agents/$id': typeof AgentsIdRoute
   '/contracts/$id': typeof ContractsIdRoute
-  '/docs/api': typeof DocsApiRoute
   '/docs/setup': typeof DocsSetupRoute
   '/agents/': typeof AgentsIndexRoute
   '/contracts/': typeof ContractsIndexRoute
@@ -147,13 +147,13 @@ export interface FileRoutesByFullPath {
   '/api/v1/agents/$id/deployments': typeof ApiV1AgentsIdDeploymentsRoute
   '/api/v1/deployments/$id/abi': typeof ApiV1DeploymentsIdAbiRoute
   '/api/v1/deployments/$id/interact': typeof ApiV1DeploymentsIdInteractRoute
+  '/api/v1/deployments/verified/': typeof ApiV1DeploymentsVerifiedIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/stats': typeof StatsRoute
   '/agents/$id': typeof AgentsIdRoute
   '/contracts/$id': typeof ContractsIdRoute
-  '/docs/api': typeof DocsApiRoute
   '/docs/setup': typeof DocsSetupRoute
   '/agents': typeof AgentsIndexRoute
   '/contracts': typeof ContractsIndexRoute
@@ -168,6 +168,7 @@ export interface FileRoutesByTo {
   '/api/v1/agents/$id/deployments': typeof ApiV1AgentsIdDeploymentsRoute
   '/api/v1/deployments/$id/abi': typeof ApiV1DeploymentsIdAbiRoute
   '/api/v1/deployments/$id/interact': typeof ApiV1DeploymentsIdInteractRoute
+  '/api/v1/deployments/verified': typeof ApiV1DeploymentsVerifiedIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -175,7 +176,6 @@ export interface FileRoutesById {
   '/stats': typeof StatsRoute
   '/agents/$id': typeof AgentsIdRoute
   '/contracts/$id': typeof ContractsIdRoute
-  '/docs/api': typeof DocsApiRoute
   '/docs/setup': typeof DocsSetupRoute
   '/agents/': typeof AgentsIndexRoute
   '/contracts/': typeof ContractsIndexRoute
@@ -190,6 +190,7 @@ export interface FileRoutesById {
   '/api/v1/agents/$id/deployments': typeof ApiV1AgentsIdDeploymentsRoute
   '/api/v1/deployments/$id/abi': typeof ApiV1DeploymentsIdAbiRoute
   '/api/v1/deployments/$id/interact': typeof ApiV1DeploymentsIdInteractRoute
+  '/api/v1/deployments/verified/': typeof ApiV1DeploymentsVerifiedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -198,7 +199,6 @@ export interface FileRouteTypes {
     | '/stats'
     | '/agents/$id'
     | '/contracts/$id'
-    | '/docs/api'
     | '/docs/setup'
     | '/agents/'
     | '/contracts/'
@@ -213,13 +213,13 @@ export interface FileRouteTypes {
     | '/api/v1/agents/$id/deployments'
     | '/api/v1/deployments/$id/abi'
     | '/api/v1/deployments/$id/interact'
+    | '/api/v1/deployments/verified/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/stats'
     | '/agents/$id'
     | '/contracts/$id'
-    | '/docs/api'
     | '/docs/setup'
     | '/agents'
     | '/contracts'
@@ -234,13 +234,13 @@ export interface FileRouteTypes {
     | '/api/v1/agents/$id/deployments'
     | '/api/v1/deployments/$id/abi'
     | '/api/v1/deployments/$id/interact'
+    | '/api/v1/deployments/verified'
   id:
     | '__root__'
     | '/'
     | '/stats'
     | '/agents/$id'
     | '/contracts/$id'
-    | '/docs/api'
     | '/docs/setup'
     | '/agents/'
     | '/contracts/'
@@ -255,6 +255,7 @@ export interface FileRouteTypes {
     | '/api/v1/agents/$id/deployments'
     | '/api/v1/deployments/$id/abi'
     | '/api/v1/deployments/$id/interact'
+    | '/api/v1/deployments/verified/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -262,7 +263,6 @@ export interface RootRouteChildren {
   StatsRoute: typeof StatsRoute
   AgentsIdRoute: typeof AgentsIdRoute
   ContractsIdRoute: typeof ContractsIdRoute
-  DocsApiRoute: typeof DocsApiRoute
   DocsSetupRoute: typeof DocsSetupRoute
   AgentsIndexRoute: typeof AgentsIndexRoute
   ContractsIndexRoute: typeof ContractsIndexRoute
@@ -274,6 +274,7 @@ export interface RootRouteChildren {
   ApiV1StatsOverviewRoute: typeof ApiV1StatsOverviewRoute
   ApiV1StatsTrendingRoute: typeof ApiV1StatsTrendingRoute
   ApiV1DeploymentsIndexRoute: typeof ApiV1DeploymentsIndexRoute
+  ApiV1DeploymentsVerifiedIndexRoute: typeof ApiV1DeploymentsVerifiedIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -311,13 +312,6 @@ declare module '@tanstack/react-router' {
       path: '/docs/setup'
       fullPath: '/docs/setup'
       preLoaderRoute: typeof DocsSetupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/docs/api': {
-      id: '/docs/api'
-      path: '/docs/api'
-      fullPath: '/docs/api'
-      preLoaderRoute: typeof DocsApiRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contracts/$id': {
@@ -390,6 +384,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiV1AgentsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/v1/deployments/verified/': {
+      id: '/api/v1/deployments/verified/'
+      path: '/api/v1/deployments/verified'
+      fullPath: '/api/v1/deployments/verified/'
+      preLoaderRoute: typeof ApiV1DeploymentsVerifiedIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/v1/deployments/$id/interact': {
       id: '/api/v1/deployments/$id/interact'
       path: '/interact'
@@ -444,7 +445,6 @@ const rootRouteChildren: RootRouteChildren = {
   StatsRoute: StatsRoute,
   AgentsIdRoute: AgentsIdRoute,
   ContractsIdRoute: ContractsIdRoute,
-  DocsApiRoute: DocsApiRoute,
   DocsSetupRoute: DocsSetupRoute,
   AgentsIndexRoute: AgentsIndexRoute,
   ContractsIndexRoute: ContractsIndexRoute,
@@ -456,6 +456,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiV1StatsOverviewRoute: ApiV1StatsOverviewRoute,
   ApiV1StatsTrendingRoute: ApiV1StatsTrendingRoute,
   ApiV1DeploymentsIndexRoute: ApiV1DeploymentsIndexRoute,
+  ApiV1DeploymentsVerifiedIndexRoute: ApiV1DeploymentsVerifiedIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
