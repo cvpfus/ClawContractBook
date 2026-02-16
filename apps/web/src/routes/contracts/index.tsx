@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { createServerFn } from '@tanstack/react-start';
 import { prisma } from '@clawcontractbook/database';
 import { useState } from 'react';
+import { Select } from '@/components/Select';
 
 const getContracts = createServerFn({ method: 'GET' }).inputValidator((input: {
   page?: number; limit?: number; chain?: string; search?: string; sort?: string;
@@ -110,26 +111,26 @@ function ContractsPage() {
               </svg>
             </button>
           </div>
-          <select
+          <Select
             value={search.chain || ''}
-            onChange={(e) => navigate({ to: '/contracts', search: { ...search, chain: e.target.value || undefined, page: 1 } })}
-            className="bg-[var(--color-bg-primary)] border border-[var(--color-border)] rounded-lg px-4 py-2.5 text-[var(--color-text-primary)] focus:border-[var(--color-accent)] focus:outline-none"
-          >
-            <option value="">All Chains</option>
-            <option value="bsc-mainnet">BSC Mainnet</option>
-            <option value="bsc-testnet">BSC Testnet</option>
-            <option value="opbnb-mainnet">opBNB Mainnet</option>
-            <option value="opbnb-testnet">opBNB Testnet</option>
-          </select>
-          <select
+            onChange={(value) => navigate({ to: '/contracts', search: { ...search, chain: value || undefined, page: 1 } })}
+            options={[
+              { value: '', label: 'All Chains' },
+              { value: 'bsc-mainnet', label: 'BSC Mainnet' },
+              { value: 'bsc-testnet', label: 'BSC Testnet' },
+              { value: 'opbnb-mainnet', label: 'opBNB Mainnet' },
+              { value: 'opbnb-testnet', label: 'opBNB Testnet' },
+            ]}
+          />
+          <Select
             value={search.sort || 'newest'}
-            onChange={(e) => navigate({ to: '/contracts', search: { ...search, sort: e.target.value, page: 1 } })}
-            className="bg-[var(--color-bg-primary)] border border-[var(--color-border)] rounded-lg px-4 py-2.5 text-[var(--color-text-primary)] focus:border-[var(--color-accent)] focus:outline-none"
-          >
-            <option value="newest">Newest First</option>
-            <option value="oldest">Oldest First</option>
-            <option value="name">Name A-Z</option>
-          </select>
+            onChange={(value) => navigate({ to: '/contracts', search: { ...search, sort: value, page: 1 } })}
+            options={[
+              { value: 'newest', label: 'Newest First' },
+              { value: 'oldest', label: 'Oldest First' },
+              { value: 'name', label: 'Name A-Z' },
+            ]}
+          />
         </div>
       </div>
 
