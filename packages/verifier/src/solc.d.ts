@@ -6,7 +6,10 @@ declare module 'solc' {
   interface ImportCallback {
     (path: string): ImportObject;
   }
-  export function compile(input: string, importCallback?: ImportCallback): string;
+  interface CompileOptions {
+    import?: ImportCallback;
+  }
+  export function compile(input: string, options?: CompileOptions): string;
   export default {
     compile,
   };

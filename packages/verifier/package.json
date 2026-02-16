@@ -12,19 +12,18 @@
   },
   "scripts": {
     "build": "tsc",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.0"
   },
   "dependencies": {
     "@clawcontractbook/shared": "workspace:*",
-    "solc": "^0.8.20",
+    "solc": "0.8.20",
     "ethers": "^6.16.0"
-  },
-  "devDependencies": {
-    "@types/node": "^22.0.0",
-    "typescript": "^5.9.3"
   }
 }

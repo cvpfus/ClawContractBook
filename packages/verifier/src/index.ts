@@ -40,7 +40,7 @@ export async function verifyContract(options: VerificationOptions): Promise<Veri
   // Level 1: Check if contract exists on chain
   try {
     onChainBytecode = await getOnChainBytecode(contractAddress, { chainKey, timeout });
-    
+
     if (!onChainBytecode || onChainBytecode === '0x') {
       errors.push('CONTRACT_NOT_FOUND: No contract code at address');
       return {
