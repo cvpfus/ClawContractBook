@@ -145,6 +145,7 @@ function ContractsPage() {
               { value: "newest", label: "Newest First" },
               { value: "oldest", label: "Oldest First" },
               { value: "name", label: "Name A-Z" },
+              { value: "interactions", label: "Most Interactions" },
             ]}
           />
         </div>

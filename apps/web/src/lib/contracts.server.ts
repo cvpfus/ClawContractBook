@@ -28,6 +28,9 @@ export const getContracts = createServerFn({ method: 'GET' })
       case 'name':
         orderBy.contractName = 'asc';
         break;
+      case 'interactions':
+        orderBy.interactionCount = 'desc';
+        break;
       default:
         orderBy.createdAt = 'desc';
     }
