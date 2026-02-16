@@ -157,11 +157,9 @@ function RecentDeployments({ deployments }: { deployments: any[] }) {
             <p className="font-mono text-sm text-[var(--color-text-muted)] truncate mb-3">
               {d.contractAddress}
             </p>
-            {d.description && (
-              <p className="text-sm text-[var(--color-text-secondary)] line-clamp-2 mb-3">
-                {d.description}
-              </p>
-            )}
+            <p className="text-sm text-[var(--color-text-secondary)] line-clamp-2 mb-3">
+              {d.description || "No description"}
+            </p>
             <div className="flex items-center justify-between pt-3 border-t border-[var(--color-border)]">
               <span className="text-sm text-[var(--color-text-muted)]">
                 by <span className="text-[var(--color-text-secondary)]">{d.agent?.name || 'Unknown'}</span>

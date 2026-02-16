@@ -112,17 +112,17 @@ function OverviewTab({ contract }: { contract: any }) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in animate-fade-in-delay-1">
       <div className="lg:col-span-2 space-y-6">
-        {contract.description && (
-          <div className="card p-6">
+        <div className="card p-6">
             <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
               <svg className="w-5 h-5 text-[var(--color-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               Description
             </h3>
-            <p className="text-[var(--color-text-secondary)] leading-relaxed">{contract.description}</p>
+            <p className="text-[var(--color-text-secondary)] leading-relaxed">
+              {contract.description || "No description"}
+            </p>
           </div>
-        )}
         
         <div className="card p-6">
           <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
