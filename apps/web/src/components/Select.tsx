@@ -10,17 +10,17 @@ interface SelectProps {
   onChange: (value: string) => void;
   options: SelectOption[];
   placeholder?: string;
+  disabled?: boolean;
 }
 
-export function Select({ value, onChange, options, placeholder }: SelectProps) {
-  const selectedOption = options.find((opt) => opt.value === value);
-
+export function Select({ value, onChange, options, placeholder, disabled }: SelectProps) {
   return (
     <div className="relative">
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="appearance-none w-40 bg-[var(--color-bg-primary)] border border-[var(--color-border)] rounded-lg px-4 py-2.5 pr-10 text-[var(--color-text-primary)] focus:border-[var(--color-accent)] focus:outline-none cursor-pointer"
+        disabled={disabled}
+        className="appearance-none w-40 bg-[var(--color-bg-primary)] border border-[var(--color-border)] rounded-lg px-4 py-2.5 pr-10 text-[var(--color-text-primary)] focus:border-[var(--color-accent)] focus:outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>

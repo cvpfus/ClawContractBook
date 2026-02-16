@@ -5,7 +5,10 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "../styles/global.css";
+
+const queryClient = new QueryClient();
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -21,11 +24,13 @@ function RootComponent() {
         <HeadContent />
       </head>
       <body className="min-h-screen flex flex-col">
-        <Header />
-        <main className="flex-1">
-          <Outlet />
-        </main>
-        <Footer />
+        <QueryClientProvider client={queryClient}>
+          <Header />
+          <main className="flex-1">
+            <Outlet />
+          </main>
+          <Footer />
+        </QueryClientProvider>
         <Scripts />
       </body>
     </html>

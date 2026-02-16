@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Select } from "@/components/Select";
 import { getContracts } from "@/lib/contracts.server";
@@ -23,48 +24,34 @@ export const Route = createFileRoute("/contracts/")({
     searchQuery,
     sort,
   }),
-  loader: async ({ deps: { page, chain, searchQuery, sort } }) =>
-    getContracts({ data: { page, chain, search: searchQuery, sort } }),
-  pendingComponent: ContractsLoading,
+  loader: ({ deps }) => deps,
   component: ContractsPage,
 });
-
-function ContractsLoading() {
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
-          <span className="w-1 h-8 bg-[var(--color-accent)] rounded-full"></span>
-          Smart Contracts
-        </h1>
-        <p className="text-[var(--color-text-secondary)]">
-          Browse and discover contracts deployed by AI agents
-        </p>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="card p-5 animate-pulse">
-            <div className="flex items-start justify-between mb-3">
-              <div className="h-5 w-32 bg-[var(--color-border)] rounded"></div>
-              <div className="h-5 w-20 bg-[var(--color-border)] rounded"></div>
-            </div>
-            <div className="h-4 w-full bg-[var(--color-border)] rounded mb-3"></div>
-            <div className="h-4 w-3/4 bg-[var(--color-border)] rounded mb-3"></div>
-            <div className="pt-3 border-t border-[var(--color-border)]">
-              <div className="h-4 w-24 bg-[var(--color-border)] rounded"></div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 function ContractsPage() {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
-  const data = Route.useLoaderData();
+  const loaderData = Route.useLoaderData();
+  const { data, isFetching } = useQuery({
+    queryKey: [
+      "contracts",
+      loaderData.page,
+      loaderData.chain,
+      loaderData.searchQuery,
+      loaderData.sort,
+    ],
+    queryFn: () =>
+      getContracts({
+        data: {
+          page: loaderData.page,
+          chain: loaderData.chain,
+          search: loaderData.searchQuery,
+          sort: loaderData.sort,
+        },
+      }),
+  });
   const [searchInput, setSearchInput] = useState(search.search || "");
+  const isDropdownsReady = Boolean(data && !isFetching);
 
   const updateSearch = (updates: Partial<SearchParams>) => {
     navigate({
@@ -117,7 +104,10 @@ function ContractsPage() {
                 className="w-full bg-[var(--color-bg-primary)] border border-[var(--color-border)] rounded-lg pl-10 pr-4 py-2.5 text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:border-[var(--color-accent)] focus:outline-none transition-colors"
               />
             </div>
-            <button onClick={handleSearch} className="btn-primary cursor-pointer">
+            <button
+              onClick={handleSearch}
+              className="btn-primary cursor-pointer"
+            >
               <svg
                 className="w-5 h-5"
                 fill="none"
@@ -138,6 +128,7 @@ function ContractsPage() {
             onChange={(value) =>
               updateSearch({ chain: value || undefined, page: 1 })
             }
+            disabled={!isDropdownsReady}
             options={[
               { value: "", label: "All Chains" },
               { value: "bsc-mainnet", label: "BSC Mainnet" },
@@ -149,6 +140,7 @@ function ContractsPage() {
           <Select
             value={search.sort || "newest"}
             onChange={(value) => updateSearch({ sort: value, page: 1 })}
+            disabled={!isDropdownsReady}
             options={[
               { value: "newest", label: "Newest First" },
               { value: "oldest", label: "Oldest First" },
@@ -159,7 +151,23 @@ function ContractsPage() {
       </div>
 
       {/* Contract Grid */}
-      {!data?.deployments?.length ? (
+      {isFetching && !data ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="card p-5 animate-pulse">
+              <div className="flex items-start justify-between mb-3">
+                <div className="h-5 w-32 bg-[var(--color-border)] rounded"></div>
+                <div className="h-5 w-20 bg-[var(--color-border)] rounded"></div>
+              </div>
+              <div className="h-4 w-full bg-[var(--color-border)] rounded mb-3"></div>
+              <div className="h-4 w-3/4 bg-[var(--color-border)] rounded mb-3"></div>
+              <div className="pt-3 border-t border-[var(--color-border)]">
+                <div className="h-4 w-24 bg-[var(--color-border)] rounded"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : !data?.deployments?.length ? (
         <div className="card p-12 text-center animate-fade-in">
           <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--color-accent-glow)] flex items-center justify-center">
             <svg
