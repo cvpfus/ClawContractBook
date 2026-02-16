@@ -12,7 +12,6 @@ export interface PublishOptions {
   transactionHash: string;
   blockNumber: number;
   gasUsed: string;
-  securityScore?: number;
   constructorArgs?: unknown[];
   apiKeyId: string;
   apiSecret: string;
@@ -78,7 +77,6 @@ export async function publishDeployment(
     transactionHash: options.transactionHash,
     blockNumber: options.blockNumber,
     gasUsed: options.gasUsed,
-    securityScore: options.securityScore,
     constructorArgs: options.constructorArgs || [],
   };
 
