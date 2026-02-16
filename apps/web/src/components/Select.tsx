@@ -18,8 +18,6 @@ export function Select({ value, onChange, options, placeholder }: SelectProps) {
 
   const selectedOption = options.find((opt) => opt.value === value);
 
-  console.log('Select render', { value, isOpen, options });
-
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (ref.current && !ref.current.contains(event.target as Node)) {
@@ -35,6 +33,7 @@ export function Select({ value, onChange, options, placeholder }: SelectProps) {
       <button
         type="button"
         onMouseDown={(e) => {
+          console.log('onMouseDown fired', !isOpen);
           e.preventDefault();
           setIsOpen(!isOpen);
         }}
