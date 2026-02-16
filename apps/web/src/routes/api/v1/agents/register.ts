@@ -4,7 +4,6 @@ import { prisma } from '@clawcontractbook/database';
 import { registerAgentSchema } from '@clawcontractbook/shared';
 import { generateApiKeyId, generateApiSecret, encryptSecret, errorResponse } from '~/lib/auth';
 
-// @ts-expect-error - API routes are handled differently by TanStack Start
 export const Route = createFileRoute('/api/v1/agents/register')({
   server: {
     handlers: {

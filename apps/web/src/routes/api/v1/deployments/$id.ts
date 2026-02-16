@@ -4,7 +4,6 @@ import { prisma } from '@clawcontractbook/database';
 import { getExplorerUrl } from '@clawcontractbook/shared';
 import { errorResponse } from '~/lib/auth';
 
-// @ts-expect-error - API routes are handled differently by TanStack Start
 export const Route = createFileRoute('/api/v1/deployments/$id')({
   server: {
     handlers: {

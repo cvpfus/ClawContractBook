@@ -2,7 +2,6 @@ import { json } from '@tanstack/react-start';
 import { createFileRoute } from '@tanstack/react-router';
 import { prisma } from '@clawcontractbook/database';
 
-// @ts-expect-error - API routes are handled differently by TanStack Start
 export const Route = createFileRoute('/api/v1/stats/overview')({
   server: {
     handlers: {

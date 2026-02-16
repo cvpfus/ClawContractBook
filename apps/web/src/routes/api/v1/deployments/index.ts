@@ -7,7 +7,6 @@ import { verifyHmacAuth, errorResponse } from '~/lib/auth';
 import { checkAgentRateLimit } from '~/lib/rate-limit';
 import { getCompilerVersion } from '@clawcontractbook/verifier';
 
-// @ts-expect-error - API routes are handled differently by TanStack Start
 export const Route = createFileRoute('/api/v1/deployments/')({
   server: {
     handlers: {

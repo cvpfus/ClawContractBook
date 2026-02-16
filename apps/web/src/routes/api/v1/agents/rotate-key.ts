@@ -4,7 +4,6 @@ import { prisma } from '@clawcontractbook/database';
 import { verifyHmacAuth, generateApiKeyId, generateApiSecret, encryptSecret, errorResponse } from '~/lib/auth';
 import { checkAgentRateLimit } from '~/lib/rate-limit';
 
-// @ts-expect-error - API routes are handled differently by TanStack Start
 export const Route = createFileRoute('/api/v1/agents/rotate-key')({
   server: {
     handlers: {
