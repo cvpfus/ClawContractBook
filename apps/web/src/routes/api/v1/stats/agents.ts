@@ -16,9 +16,6 @@ export const Route = createFileRoute('/api/v1/stats/agents')({
           select: {
             id: true, name: true, isVerified: true,
             _count: { select: { deployments: true } },
-            deployments: {
-              select: { securityScore: true },
-            },
           },
         });
 
@@ -26,15 +23,11 @@ export const Route = createFileRoute('/api/v1/stats/agents')({
           success: true,
           data: {
             agents: agents.map(a => {
-              const scores = a.deployments.filter(d => d.securityScore !== null).map(d => d.securityScore!);
               return {
                 id: a.id,
                 name: a.name,
                 isVerified: a.isVerified,
                 deploymentCount: a._count.deployments,
-                averageSecurityScore: scores.length > 0
-                  ? Math.round(scores.reduce((s, v) => s + v, 0) / scores.length)
-                  : null,
               };
             }),
           },

@@ -11,17 +11,11 @@ const getStats = createServerFn({ method: 'GET' }).handler(async () => {
     prisma.deployment.aggregate({ _sum: { interactionCount: true } }),
   ]);
 
-  const avgScore = await prisma.deployment.aggregate({
-    _avg: { securityScore: true },
-    where: { securityScore: { not: null } },
-  });
-
   return {
     totalContracts,
     totalInteractions: totalInteractions._sum.interactionCount || 0,
     totalAgents,
     verifiedContracts,
-    averageSecurityScore: Math.round(avgScore._avg.securityScore || 0),
     chainBreakdown: Object.fromEntries(chainBreakdown.map(c => [c.chainKey, c._count.id])),
   };
 });
@@ -121,41 +115,9 @@ function StatsPage() {
         <div className="card p-6 animate-fade-in animate-fade-in-delay-4">
           <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
             <span className="w-2 h-2 bg-[var(--color-success)] rounded-full"></span>
-            Quality Metrics
+            Recent Activity
           </h2>
-          <div className="flex items-center gap-6">
-            <div className="relative w-24 h-24">
-              <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="45"
-                  fill="none"
-                  stroke="var(--color-border)"
-                  strokeWidth="8"
-                />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="45"
-                  fill="none"
-                  stroke="var(--color-accent)"
-                  strokeWidth="8"
-                  strokeDasharray={`${(stats.averageSecurityScore / 100) * 283} 283`}
-                  strokeLinecap="round"
-                />
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="stat-value text-2xl">{stats.averageSecurityScore}</span>
-              </div>
-            </div>
-            <div>
-              <p className="text-[var(--color-text-primary)] font-medium mb-1">Average Security Score</p>
-              <p className="text-sm text-[var(--color-text-muted)]">
-                Based on automated code analysis from ClawContract
-              </p>
-            </div>
-          </div>
+          <p className="text-[var(--color-text-muted)]">Activity metrics coming soon</p>
         </div>
       </div>
     </div>

@@ -136,14 +136,6 @@ function OverviewTab({ contract }: { contract: any }) {
             <DetailRow label="Transaction Hash" value={contract.transactionHash} mono truncate />
             <DetailRow label="Block Number" value={contract.blockNumber} />
             <DetailRow label="Gas Used" value={contract.gasUsed?.toLocaleString()} />
-            <DetailRow 
-              label="Security Score" 
-              value={contract.securityScore ?? 'N/A'}
-              valueColor={
-                (contract.securityScore || 0) >= 80 ? 'var(--color-success)' :
-                (contract.securityScore || 0) >= 50 ? 'var(--color-warning)' : 'var(--color-error)'
-              }
-            />
             <DetailRow label="Deployed" value={new Date(contract.createdAt).toLocaleDateString()} />
           </div>
         </div>

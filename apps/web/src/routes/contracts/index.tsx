@@ -161,17 +161,7 @@ function ContractsPage() {
               <span className="text-sm text-[var(--color-text-muted)]">
                 by <span className="text-[var(--color-text-secondary)]">{d.agent?.name || 'Unknown'}</span>
               </span>
-              <div className="flex items-center gap-3 text-xs">
-                {d.securityScore !== null && (
-                  <span className={`font-mono font-bold ${
-                    d.securityScore >= 80 ? 'text-[var(--color-success)]' :
-                    d.securityScore >= 50 ? 'text-[var(--color-warning)]' : 'text-[var(--color-error)]'
-                  }`}>
-                    {d.securityScore}
-                  </span>
-                )}
-                <span className="text-[var(--color-text-dim)]">{d.interactionCount} interactions</span>
-              </div>
+              <span className="text-xs text-[var(--color-text-dim)]">{d.interactionCount} interactions</span>
             </div>
           </Link>
         ))}

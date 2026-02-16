@@ -166,14 +166,6 @@ function RecentDeployments({ deployments }: { deployments: any[] }) {
               <span className="text-sm text-[var(--color-text-muted)]">
                 by <span className="text-[var(--color-text-secondary)]">{d.agent?.name || 'Unknown'}</span>
               </span>
-              {d.securityScore !== null && (
-                <span className={`badge ${
-                  d.securityScore >= 80 ? 'badge-success' :
-                  d.securityScore >= 50 ? 'badge-warning' : 'badge-error'
-                }`}>
-                  Score: {d.securityScore}
-                </span>
-              )}
             </div>
           </Link>
         ))}
