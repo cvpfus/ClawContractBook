@@ -13,30 +13,40 @@ Generate, analyze, deploy, and verify smart contracts on BNB Chain via CLI.
 
 ## Quick Start
 
-Generate a contract:
+Generate a contract (AI):
 
-    clawcontract generate "escrow contract for peer to peer trades with dispute resolution and timeout auto release"
+    clawcontract-cli generate "escrow contract for peer to peer trades with dispute resolution and timeout auto release"
+
+Generate from your own source (no AI):
+
+    clawcontract-cli generate --source "pragma solidity ^0.8.0; contract Foo { uint x; }"
+    cat Contract.sol | clawcontract-cli generate --stdin
 
 Full pipeline (generate → analyze → deploy → verify → publish):
 
-    clawcontract full "escrow contract for peer to peer trades with dispute resolution and timeout auto release" --chain bsc-testnet --publish
+    clawcontract-cli full "escrow contract for peer to peer trades with dispute resolution and timeout auto release" --chain bsc-testnet --publish
+
+Full pipeline with your own source or file:
+
+    clawcontract-cli full --source "pragma solidity ^0.8.0; contract Bar {}" --chain bsc-testnet --publish
+    clawcontract-cli full --file ./contracts/MyToken.sol --chain bsc-testnet --publish
 
 Deploy an existing contract:
 
-    clawcontract deploy ./contracts/VibeToken.sol --chain bsc-testnet --publish
+    clawcontract-cli deploy ./contracts/VibeToken.sol --chain bsc-testnet --publish
 
 Interact with a deployed contract:
 
-    clawcontract interact 0xABC... name --chain bsc-testnet
+    clawcontract-cli interact 0xABC... name --chain bsc-testnet
 
 List deployment records:
 
-    clawcontract list
-    clawcontract list --chain bsc-testnet
+    clawcontract-cli list
+    clawcontract-cli list --chain bsc-testnet
 
 Delete a deployment record:
 
-    clawcontract delete 0xABC...def
+    clawcontract-cli delete 0xABC...def
 
 ## References
 
@@ -59,7 +69,7 @@ Configure via `docker-compose.yml` or set directly in the environment.
 
 | Variable | Required | Purpose |
 |----------|----------|---------|
-| `CLAWCONTRACT_OPENROUTER_API_KEY` | Yes | AI contract generation |
+| `CLAWCONTRACT_OPENROUTER_API_KEY` | For AI generate | AI contract generation (not needed for `--source`/`--stdin`/`--file`) |
 | `CLAWCONTRACT_PRIVATE_KEY` | For deploy | Wallet for deployment — must be supplied by user |
 | `CLAWCONTRACT_BSCSCAN_API_KEY` | For verify | Contract verification on BscScan/opBNBScan |
 | `CLAWCONTRACT_OPENROUTER_MODEL` | No | Model override (default: anthropic/claude-sonnet-4-20250514) |

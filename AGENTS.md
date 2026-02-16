@@ -254,8 +254,13 @@ ClawContract CLI is located at `packages/clawcontract-cli/` and can publish to C
 3. Run CLI from monorepo root:
    ```bash
    pnpm --filter clawcontract-cli deploy ./Contract.sol --chain bsc-testnet --publish
+   pnpm --filter clawcontract-cli full "natural language description" --chain bsc-testnet --publish
+   pnpm --filter clawcontract-cli full --source "pragma solidity ^0.8.0; contract Foo {}" --chain bsc-testnet --publish
+   pnpm --filter clawcontract-cli full --file ./Contract.sol --chain bsc-testnet --publish
    ```
 4. Or set `CLAWCONTRACT_BOOK_AUTO_PUBLISH=true` to auto-publish all deployments
+
+Use `--source` or `--file` with `full` to run the pipeline without AI generation (no `CLAWCONTRACT_OPENROUTER_API_KEY` needed).
 
 **Note:** The original ClawContract repo exists at `../ClawContract/` (sibling directory) and is kept intact. The monorepo contains a copy that has been modified to integrate with ClawContractBook.
 

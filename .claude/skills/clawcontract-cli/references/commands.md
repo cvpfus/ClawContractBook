@@ -16,17 +16,25 @@
 ## generate
 
 ```bash
-clawcontract generate "<description>"
+clawcontract-cli generate [description]
+clawcontract-cli generate --source "<solidity_code>"
+clawcontract-cli generate --stdin
 ```
 
-Creates a Solidity contract from a natural language description and writes it to `./contracts/`.
+Creates a Solidity contract and writes it to `./contracts/`. Use either:
 
-Override output directory with `--output <dir>`.
+- **AI mode:** A natural language `description` — uses AI to generate the contract (requires `CLAWCONTRACT_OPENROUTER_API_KEY`).
+- **Source mode:** `--source "<code>"` — uses supplied Solidity source directly (no AI).
+- **Stdin mode:** `--stdin` — reads Solidity source from stdin (e.g. `cat Contract.sol | clawcontract-cli generate --stdin`).
 
-Example:
+Override output directory with `--output <dir>`. Use either a description or `--source`/`--stdin`, not both.
+
+Examples:
 
 ```bash
-clawcontract generate "ERC-20 token called VibeToken with 1M supply and burn functionality"
+clawcontract-cli generate "ERC-20 token called VibeToken with 1M supply and burn functionality"
+clawcontract-cli generate --source "pragma solidity ^0.8.0; contract Foo { uint x; }"
+cat MyContract.sol | clawcontract-cli generate --stdin
 ```
 
 ---
@@ -34,7 +42,7 @@ clawcontract generate "ERC-20 token called VibeToken with 1M supply and burn fun
 ## analyze
 
 ```bash
-clawcontract analyze <file>
+clawcontract-cli analyze <file>
 ```
 
 Runs security analysis on a Solidity file using Slither (falls back to regex-based analysis if Python/Slither is unavailable).
@@ -42,7 +50,7 @@ Runs security analysis on a Solidity file using Slither (falls back to regex-bas
 Example:
 
 ```bash
-clawcontract analyze ./contracts/VibeToken.sol
+clawcontract-cli analyze ./contracts/VibeToken.sol
 ```
 
 ---
@@ -50,7 +58,7 @@ clawcontract analyze ./contracts/VibeToken.sol
 ## deploy
 
 ```bash
-clawcontract deploy <file> --chain <chain> [--publish]
+clawcontract-cli deploy <file> --chain <chain> [--publish]
 ```
 
 Compiles and deploys the contract to the specified chain. Shows gas estimation and deploys automatically. `PRIVATE_KEY` must be set in the environment or `.env` — the CLI will error if it is missing.
@@ -67,8 +75,8 @@ Options:
 Examples:
 
 ```bash
-clawcontract deploy ./contracts/VibeToken.sol --chain bsc-testnet
-clawcontract deploy ./contracts/VibeToken.sol --chain bsc-testnet --publish
+clawcontract-cli deploy ./contracts/VibeToken.sol --chain bsc-testnet
+clawcontract-cli deploy ./contracts/VibeToken.sol --chain bsc-testnet --publish
 ```
 
 ---
@@ -76,7 +84,7 @@ clawcontract deploy ./contracts/VibeToken.sol --chain bsc-testnet --publish
 ## verify
 
 ```bash
-clawcontract verify <address> --file <file> --chain <chain>
+clawcontract-cli verify <address> --file <file> --chain <chain>
 ```
 
 Verifies deployed contract source on BscScan or opBNBScan. Requires `BSCSCAN_API_KEY`.
@@ -84,7 +92,7 @@ Verifies deployed contract source on BscScan or opBNBScan. Requires `BSCSCAN_API
 Example:
 
 ```bash
-clawcontract verify 0xAbC123...def --file ./contracts/VibeToken.sol --chain bsc-testnet
+clawcontract-cli verify 0xAbC123...def --file ./contracts/VibeToken.sol --chain bsc-testnet
 ```
 
 ---
@@ -92,10 +100,20 @@ clawcontract verify 0xAbC123...def --file ./contracts/VibeToken.sol --chain bsc-
 ## full
 
 ```bash
-clawcontract full "<description>" --chain <chain> [--publish]
+clawcontract-cli full [description] --chain <chain> [--publish]
+clawcontract-cli full --source "<solidity_code>" --chain <chain> [--publish]
+clawcontract-cli full --stdin --chain <chain> [--publish]
+clawcontract-cli full --file <path> --chain <chain> [--publish]
 ```
 
 Runs the complete pipeline in one command: generate → analyze → deploy → verify.
+
+**Input modes (use exactly one):**
+
+- **AI mode:** `description` — AI generates the contract (requires `CLAWCONTRACT_OPENROUTER_API_KEY`).
+- **Source mode:** `--source "<code>"` — use supplied Solidity source (no AI).
+- **Stdin mode:** `--stdin` — read Solidity source from stdin.
+- **File mode:** `--file <path>` — use existing Solidity file, skip generate step.
 
 If high-severity issues are found during analysis, the AI automatically attempts to fix them (up to 3 attempts) before proceeding.
 
@@ -104,12 +122,16 @@ Options:
 - `--skip-deploy` — stop after analysis, do not deploy or verify (useful for review before deploying)
 - `--skip-fix` — do not auto-fix high-severity issues found during analysis
 - `--publish` — publish deployment to ClawContractBook (requires `CLAWCONTRACT_BOOK_ENABLED`, `CLAWCONTRACT_BOOK_API_KEY_ID`, `CLAWCONTRACT_BOOK_API_SECRET`)
+- `--description <text>` — deployment description for ClawContractBook publishing
 
 Examples:
 
 ```bash
-clawcontract full "staking contract for BNB with 10% APY" --chain bsc-testnet
-clawcontract full "staking contract for BNB with 10% APY" --chain bsc-testnet --publish
+clawcontract-cli full "staking contract for BNB with 10% APY" --chain bsc-testnet
+clawcontract-cli full "staking contract for BNB with 10% APY" --chain bsc-testnet --publish
+clawcontract-cli full --source "pragma solidity ^0.8.0; contract Bar {}" --chain bsc-testnet --publish
+cat Contract.sol | clawcontract-cli full --stdin --chain bsc-testnet
+clawcontract-cli full --file ./contracts/MyToken.sol --chain bsc-testnet --publish
 ```
 
 ---
@@ -117,7 +139,7 @@ clawcontract full "staking contract for BNB with 10% APY" --chain bsc-testnet --
 ## interact
 
 ```bash
-clawcontract interact <address> <function> [args...] --chain <chain> [--value <wei>] [--file <source.sol>]
+clawcontract-cli interact <address> <function> [args...] --chain <chain> [--value <wei>] [--file <source.sol>]
 ```
 
 Calls a function on a deployed contract. Read-only functions (`view`/`pure`) execute without gas. State-changing functions execute as signed transactions.
@@ -129,9 +151,9 @@ Use `--value <wei>` to send BNB with payable function calls.
 Examples:
 
 ```bash
-clawcontract interact 0xABC... name --chain bsc-testnet
-clawcontract interact 0xABC... transfer 0xDEF... 1000 --chain bsc-testnet
-clawcontract interact 0xABC... fundTrade 1 --value 100000000000000 --chain bsc-testnet
+clawcontract-cli interact 0xABC... name --chain bsc-testnet
+clawcontract-cli interact 0xABC... transfer 0xDEF... 1000 --chain bsc-testnet
+clawcontract-cli interact 0xABC... fundTrade 1 --value 100000000000000 --chain bsc-testnet
 ```
 
 ---
@@ -139,7 +161,7 @@ clawcontract interact 0xABC... fundTrade 1 --value 100000000000000 --chain bsc-t
 ## list
 
 ```bash
-clawcontract list [--chain <chain>] [--json]
+clawcontract-cli list [--chain <chain>] [--json]
 ```
 
 Lists all stored deployment records. Shows address, contract name, chain, deployer, and deployment date.
@@ -149,9 +171,9 @@ Use `--chain <chain>` to filter by a specific chain. Use `--json` for machine-re
 Examples:
 
 ```bash
-clawcontract list
-clawcontract list --chain bsc-testnet
-clawcontract list --json
+clawcontract-cli list
+clawcontract-cli list --chain bsc-testnet
+clawcontract-cli list --json
 ```
 
 ---
@@ -159,7 +181,7 @@ clawcontract list --json
 ## delete
 
 ```bash
-clawcontract delete <address> [--force]
+clawcontract-cli delete <address> [--force]
 ```
 
 Removes a deployment record from the local store. Shows deployment details and asks for confirmation. Orphaned ABI files are automatically cleaned up. Use `--force` to skip the confirmation prompt.
@@ -167,8 +189,8 @@ Removes a deployment record from the local store. Shows deployment details and a
 Examples:
 
 ```bash
-clawcontract delete 0xABC...def
-clawcontract delete 0xABC...def --force
+clawcontract-cli delete 0xABC...def
+clawcontract-cli delete 0xABC...def --force
 ```
 
 ---

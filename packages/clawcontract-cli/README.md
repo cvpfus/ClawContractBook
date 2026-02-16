@@ -35,88 +35,98 @@ pnpm run build
 ### Generate a contract
 
 ```bash
-clawcontract generate "ERC-20 token called VibeToken with 1M supply"
+# AI generation (requires CLAWCONTRACT_OPENROUTER_API_KEY)
+clawcontract-cli generate "ERC-20 token called VibeToken with 1M supply"
+
+# From your own source (no AI)
+clawcontract-cli generate --source "pragma solidity ^0.8.0; contract Foo { uint x; }"
+cat MyContract.sol | clawcontract-cli generate --stdin
 ```
 
 ### Analyze a contract for vulnerabilities
 
 ```bash
-clawcontract analyze ./contracts/VibeToken.sol
+clawcontract-cli analyze ./contracts/VibeToken.sol
 ```
 
 ### Deploy to a chain
 
 ```bash
-clawcontract deploy ./contracts/VibeToken.sol --chain bsc-testnet
+clawcontract-cli deploy ./contracts/VibeToken.sol --chain bsc-testnet
 ```
 
 ### Verify on block explorer
 
 ```bash
-clawcontract verify 0xYourContractAddress --chain bsc-testnet --file ./contracts/VibeToken.sol
+clawcontract-cli verify 0xYourContractAddress --chain bsc-testnet --file ./contracts/VibeToken.sol
 ```
 
 ### Interact with a deployed contract
 
 ```bash
-clawcontract interact 0xYourContractAddress name --chain bsc-testnet
+clawcontract-cli interact 0xYourContractAddress name --chain bsc-testnet
 ```
 
 Call any function on a deployed contract. Read-only functions (`view`/`pure`) are called without gas. State-changing functions are sent as signed transactions.
 
 ```bash
 # Read-only call
-clawcontract interact 0xABC... balanceOf 0xDEF... --chain bsc-testnet
+clawcontract-cli interact 0xABC... balanceOf 0xDEF... --chain bsc-testnet
 
 # State-changing call
-clawcontract interact 0xABC... transfer 0xDEF... 1000 --chain bsc-testnet
+clawcontract-cli interact 0xABC... transfer 0xDEF... 1000 --chain bsc-testnet
 
 # Payable call (send BNB value in wei)
-clawcontract interact 0xABC... fundTrade 1 --value 100000000000000 --chain bsc-testnet
+clawcontract-cli interact 0xABC... fundTrade 1 --value 100000000000000 --chain bsc-testnet
 
 # Use ABI from source file instead of stored metadata
-clawcontract interact 0xABC... name --chain bsc-testnet --file ./contracts/VibeToken.sol
+clawcontract-cli interact 0xABC... name --chain bsc-testnet --file ./contracts/VibeToken.sol
 ```
 
 ### List deployments
 
 ```bash
-clawcontract list
+clawcontract-cli list
 ```
 
 List all stored deployment records. Shows address, contract name, chain, deployer, and deployment date.
 
 ```bash
 # List all deployments
-clawcontract list
+clawcontract-cli list
 
 # Filter by chain
-clawcontract list --chain bsc-testnet
+clawcontract-cli list --chain bsc-testnet
 
 # Output as JSON (for scripting)
-clawcontract list --json
+clawcontract-cli list --json
 ```
 
 ### Delete a deployment record
 
 ```bash
-clawcontract delete <address>
+clawcontract-cli delete <address>
 ```
 
 Remove a deployment record from the local store. Shows deployment details and asks for confirmation before deleting. Orphaned ABI files are automatically cleaned up.
 
 ```bash
 # Delete with confirmation prompt
-clawcontract delete 0xYourContractAddress
+clawcontract-cli delete 0xYourContractAddress
 
 # Skip confirmation
-clawcontract delete 0xYourContractAddress --force
+clawcontract-cli delete 0xYourContractAddress --force
 ```
 
 ### Full pipeline (generate → analyze → deploy → verify)
 
 ```bash
-clawcontract full "staking contract for BNB with 10% APY" --chain bsc-testnet
+# AI generation
+clawcontract-cli full "staking contract for BNB with 10% APY" --chain bsc-testnet
+
+# Your own source or file (no AI)
+clawcontract-cli full --source "pragma solidity ^0.8.0; contract Bar {}" --chain bsc-testnet
+clawcontract-cli full --file ./contracts/MyToken.sol --chain bsc-testnet
 ```
 
 Optional flags:
@@ -126,7 +136,7 @@ Optional flags:
 
 ```bash
 # Generate and analyze only — review before deploying
-clawcontract full "staking contract for BNB with 10% APY" --chain bsc-testnet --skip-deploy
+clawcontract-cli full "staking contract for BNB with 10% APY" --chain bsc-testnet --skip-deploy
 ```
 
 ### Global options
@@ -191,7 +201,7 @@ Environment variables are configured via `docker-compose.yml` or set directly in
 | Variable | Description | Required |
 |---|---|---|
 | `CLAWCONTRACT_PRIVATE_KEY` | Wallet private key for deployment (required for deploy/full) | Yes (for deploy) |
-| `CLAWCONTRACT_OPENROUTER_API_KEY` | OpenRouter API key for AI contract generation | Yes |
+| `CLAWCONTRACT_OPENROUTER_API_KEY` | OpenRouter API key for AI contract generation (not needed for `--source`/`--stdin`/`--file`) | For AI generate |
 | `CLAWCONTRACT_OPENROUTER_MODEL` | OpenRouter model (default: `anthropic/claude-sonnet-4-20250514`) | No |
 | `CLAWCONTRACT_BSCSCAN_API_KEY` | BscScan / opBNBScan API key for contract verification | No |
 
