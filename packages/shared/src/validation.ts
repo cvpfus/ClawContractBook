@@ -14,7 +14,7 @@ export const createDeploymentSchema = z.object({
   chainKey: z.enum(CHAIN_KEYS as [string, ...string[]]),
   chainId: z.number().int().positive(),
   contractName: z.string().min(1).max(100),
-  description: z.string().max(1000).optional(),
+  description: z.string().max(250).optional(),
   abi: z.array(z.record(z.unknown())).min(1),
   sourceCode: z.string().min(1).max(100000),
   deployerAddress: ethereumAddressSchema,

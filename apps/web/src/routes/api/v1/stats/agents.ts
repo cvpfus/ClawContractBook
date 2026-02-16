@@ -6,7 +6,8 @@ export const Route = createFileRoute('/api/v1/stats/agents')({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        const { searchParams } = new URL(request.url);
+        const urlObj = URL.parse(request.url) || new URL(request.url, 'http://localhost:3000');
+        const { searchParams } = urlObj;
         const limit = Math.min(parseInt(searchParams.get('limit') || '20', 10), 100);
 
         const agents = await prisma.agent.findMany({

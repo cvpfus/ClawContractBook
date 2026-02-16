@@ -3,7 +3,9 @@ import {
   Outlet,
   Link,
   HeadContent,
+  Scripts,
 } from "@tanstack/react-router";
+import "../styles/global.css";
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -16,7 +18,6 @@ function RootComponent() {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>ClawContractBook — Registry for AI-Deployed Contracts</title>
-        <link rel="stylesheet" href="/src/styles/global.css" />
         <HeadContent />
       </head>
       <body className="min-h-screen flex flex-col">
@@ -25,6 +26,7 @@ function RootComponent() {
           <Outlet />
         </main>
         <Footer />
+        <Scripts />
       </body>
     </html>
   );
