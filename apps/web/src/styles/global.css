@@ -1,52 +1,6 @@
 @import "tailwindcss";
-
-@font-face {
-  font-family: 'IBM Plex Mono';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('https://fonts.gstatic.com/s/ibmplexmono/v19/-F63fjptAgt5VM-kVkqdyU8n5igg1l9kn-s.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'IBM Plex Mono';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url('https://fonts.gstatic.com/s/ibmplexmono/v19/-F6qfjptAgt5VM-kVkqdyU8n3twJ8ldPg-IUDNg.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'IBM Plex Mono';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('https://fonts.gstatic.com/s/ibmplexmono/v19/-F6qfjptAgt5VM-kVkqdyU8n3vAO8ldPg-IUDNg.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Sora';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('https://fonts.gstatic.com/s/sora/v12/xMQOuFFYT72X5wkB_18qmnndmSdSnk-DKQRDA_yuGmP_Av7l8y0.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Sora';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url('https://fonts.gstatic.com/s/sora/v12/xMQOuFFYT72X5wkB_18qmnndmSdSnk-CkB0rDI_yuGmP_Av7l8y0.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Sora';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('https://fonts.gstatic.com/s/sora/v12/xMQOuFFYT72X5wkB_18qmnndmSdSnk-EkB0rDI_yuGmP_Av7l8y0.woff2') format('woff2');
-}
+@import "@fontsource/sora";
+@import "@fontsource/ibm-plex-mono";
 
 :root {
   --color-bg-primary: #0a0a0b;
@@ -54,26 +8,26 @@
   --color-bg-tertiary: #18181c;
   --color-bg-card: #131316;
   --color-bg-card-hover: #1a1a1f;
-  
+
   --color-text-primary: #e4e4e7;
   --color-text-secondary: #a1a1aa;
   --color-text-muted: #71717a;
   --color-text-dim: #52525b;
-  
+
   --color-accent: #f3ba2f;
   --color-accent-dim: #b88a1f;
   --color-accent-glow: rgba(243, 186, 47, 0.15);
-  
+
   --color-success: #34d399;
   --color-warning: #fbbf24;
   --color-error: #f87171;
-  
+
   --color-border: #27272a;
   --color-border-hover: #3f3f46;
-  
-  --font-display: 'Sora', system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', 'Fira Code', monospace;
-  
+
+  --font-display: "Sora", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", "Fira Code", monospace;
+
   --shadow-glow: 0 0 40px var(--color-accent-glow);
   --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
 }
@@ -97,13 +51,13 @@ body {
 }
 
 body::before {
-  content: '';
+  content: "";
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: 
+  background-image:
     linear-gradient(rgba(243, 186, 47, 0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(243, 186, 47, 0.03) 1px, transparent 1px);
   background-size: 60px 60px;
@@ -112,13 +66,17 @@ body::before {
 }
 
 body::after {
-  content: '';
+  content: "";
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(ellipse at 50% 0%, rgba(243, 186, 47, 0.08) 0%, transparent 60%);
+  background: radial-gradient(
+    ellipse at 50% 0%,
+    rgba(243, 186, 47, 0.08) 0%,
+    transparent 60%
+  );
   pointer-events: none;
   z-index: -1;
 }
@@ -149,14 +107,18 @@ body::after {
 a {
   color: var(--color-accent);
   text-decoration: none;
-  transition: color 0.2s ease, text-shadow 0.2s ease;
+  transition:
+    color 0.2s ease,
+    text-shadow 0.2s ease;
 }
 
 a:hover {
   text-shadow: 0 0 12px var(--color-accent);
 }
 
-code, pre, .font-mono {
+code,
+pre,
+.font-mono {
   font-family: var(--font-mono);
 }
 
@@ -172,11 +134,14 @@ code, pre, .font-mono {
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 20px var(--color-accent-glow);
   }
   50% {
-    box-shadow: 0 0 40px var(--color-accent-glow), 0 0 60px var(--color-accent-glow);
+    box-shadow:
+      0 0 40px var(--color-accent-glow),
+      0 0 60px var(--color-accent-glow);
   }
 }
 
@@ -193,11 +158,26 @@ code, pre, .font-mono {
   animation: fadeInUp 0.6s ease-out forwards;
 }
 
-.animate-fade-in-delay-1 { animation-delay: 0.1s; opacity: 0; }
-.animate-fade-in-delay-2 { animation-delay: 0.2s; opacity: 0; }
-.animate-fade-in-delay-3 { animation-delay: 0.3s; opacity: 0; }
-.animate-fade-in-delay-4 { animation-delay: 0.4s; opacity: 0; }
-.animate-fade-in-delay-5 { animation-delay: 0.5s; opacity: 0; }
+.animate-fade-in-delay-1 {
+  animation-delay: 0.1s;
+  opacity: 0;
+}
+.animate-fade-in-delay-2 {
+  animation-delay: 0.2s;
+  opacity: 0;
+}
+.animate-fade-in-delay-3 {
+  animation-delay: 0.3s;
+  opacity: 0;
+}
+.animate-fade-in-delay-4 {
+  animation-delay: 0.4s;
+  opacity: 0;
+}
+.animate-fade-in-delay-5 {
+  animation-delay: 0.5s;
+  opacity: 0;
+}
 
 .animate-glow {
   animation: pulse-glow 3s ease-in-out infinite;
@@ -223,13 +203,18 @@ code, pre, .font-mono {
 }
 
 .card-accent::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-accent),
+    transparent
+  );
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -349,13 +334,15 @@ code, pre, .font-mono {
 }
 
 .gradient-border::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
   padding: 1px;
   background: linear-gradient(135deg, var(--color-accent), transparent 50%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;

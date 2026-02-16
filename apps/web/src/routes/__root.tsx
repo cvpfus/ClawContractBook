@@ -43,7 +43,9 @@ function Header() {
             </div>
             <span className="text-lg font-bold tracking-tight">
               <span className="text-[var(--color-accent)]">Claw</span>
-              <span className="text-[var(--color-text-primary)]">ContractBook</span>
+              <span className="text-[var(--color-text-primary)]">
+                ContractBook
+              </span>
             </span>
           </Link>
           <nav className="hidden md:flex items-center gap-1">
