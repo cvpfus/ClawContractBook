@@ -29,7 +29,7 @@
   --font-mono: "IBM Plex Mono", "Fira Code", monospace;
 
   --shadow-glow: 0 0 40px var(--color-accent-glow);
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3);
 }
 
 * {
@@ -195,6 +195,11 @@ pre,
   border-color: var(--color-border-hover);
   transform: translateY(-2px);
   box-shadow: var(--shadow-card);
+}
+
+/* Reduce text blur on card hover (links wrap entire card) */
+a.card:hover {
+  text-shadow: 0 0 2px var(--color-accent);
 }
 
 .card-accent {
