@@ -41,21 +41,35 @@ export const getAgents = createServerFn({ method: 'GET' })
     }));
   });
 
+const DEPLOYMENTS_PER_PAGE = 20;
+
 export const getAgent = createServerFn({ method: 'GET' })
-  .inputValidator((input: { id: string }) => input)
-  .handler(async ({ data }: { data: { id: string } }) => {
+  .inputValidator((input: { id: string; page?: number }) => input)
+  .handler(async ({ data }: { data: { id: string; page?: number } }) => {
+    const page = data.page ?? 1;
     const agent = await prisma.agent.findUnique({
       where: { id: data.id },
-      include: {
-        deployments: {
-          orderBy: { createdAt: 'desc' },
-          take: 20,
-        },
+      select: {
+        id: true,
+        name: true,
+        isVerified: true,
+        publicKey: true,
+        createdAt: true,
         _count: { select: { deployments: true } },
       },
     });
 
     if (!agent) throw new Error('Agent not found');
+
+    const [deployments, total] = await Promise.all([
+      prisma.deployment.findMany({
+        where: { agentId: data.id },
+        orderBy: { createdAt: 'desc' },
+        skip: (page - 1) * DEPLOYMENTS_PER_PAGE,
+        take: DEPLOYMENTS_PER_PAGE,
+      }),
+      prisma.deployment.count({ where: { agentId: data.id } }),
+    ]);
 
     return {
       id: agent.id,
@@ -64,10 +78,18 @@ export const getAgent = createServerFn({ method: 'GET' })
       publicKey: agent.publicKey,
       deploymentCount: agent._count.deployments,
       createdAt: agent.createdAt.toISOString(),
-      deployments: agent.deployments.map(d => ({
+      deployments: deployments.map(d => ({
         ...d,
         createdAt: d.createdAt.toISOString(),
         updatedAt: d.updatedAt.toISOString(),
       })),
+      pagination: {
+        page,
+        limit: DEPLOYMENTS_PER_PAGE,
+        total,
+        totalPages: Math.ceil(total / DEPLOYMENTS_PER_PAGE),
+        hasNext: page * DEPLOYMENTS_PER_PAGE < total,
+        hasPrev: page > 1,
+      },
     };
   });
