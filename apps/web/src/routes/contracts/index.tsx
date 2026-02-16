@@ -1,69 +1,28 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
-import { createServerFn } from '@tanstack/react-start';
-import { prisma } from '@clawcontractbook/database';
 import { useState } from 'react';
 import { Select } from '@/components/Select';
 
-const getContracts = createServerFn({ method: 'GET' }).inputValidator((input: {
-  page?: number; limit?: number; chain?: string; search?: string; sort?: string;
-}) => input).handler(async ({ data }: { data: { page?: number; limit?: number; chain?: string; search?: string; sort?: string } }) => {
-  const page = data.page || 1;
-  const limit = Math.min(data.limit || 20, 100);
-  const where: any = {};
-
-  if (data.chain) where.chainKey = data.chain;
-  if (data.search) {
-    where.OR = [
-      { contractName: { contains: data.search, mode: 'insensitive' } },
-      { description: { contains: data.search, mode: 'insensitive' } },
-      { contractAddress: { contains: data.search, mode: 'insensitive' } },
-    ];
-  }
-
-  const orderBy: any = {};
-  switch (data.sort) {
-    case 'oldest': orderBy.createdAt = 'asc'; break;
-    case 'name': orderBy.contractName = 'asc'; break;
-    default: orderBy.createdAt = 'desc';
-  }
-
-  const [deployments, total] = await Promise.all([
-    prisma.deployment.findMany({
-      where, orderBy,
-      skip: (page - 1) * limit,
-      take: limit,
-      include: {
-        agent: { select: { id: true, name: true } },
-      },
-    }),
-    prisma.deployment.count({ where }),
-  ]);
-
-  return {
-    deployments: deployments.map(d => ({
-      ...d,
-      createdAt: d.createdAt.toISOString(),
-      updatedAt: d.updatedAt.toISOString(),
-    })),
-    pagination: {
-      page, limit, total,
-      totalPages: Math.ceil(total / limit),
-      hasNext: page * limit < total,
-      hasPrev: page > 1,
-    },
-  };
-});
+const getContracts = async (params: { page?: number; limit?: number; chain?: string; search?: string; sort?: string }) => {
+  const searchParams = new URLSearchParams();
+  if (params.page) searchParams.set('page', params.page.toString());
+  if (params.chain) searchParams.set('chain', params.chain);
+  if (params.search) searchParams.set('search', params.search);
+  if (params.sort) searchParams.set('sort', params.sort);
+  
+  const res = await fetch(`/api/v1/deployments?${searchParams.toString()}`);
+  const json = await res.json();
+  return json.data;
+};
 
 export const Route = createFileRoute('/contracts/')({
-  component: ContractsPage,
   validateSearch: (search: Record<string, unknown>) => ({
     page: Number(search.page) || 1,
     chain: (search.chain as string) || undefined,
     search: (search.search as string) || undefined,
     sort: (search.sort as string) || 'newest',
   }),
-  loaderDeps: ({ search }) => search,
-  loader: ({ deps }) => getContracts({ data: deps }),
+  loader: async ({ deps }) => getContracts(deps as any),
+  component: ContractsPage,
 });
 
 function ContractsPage() {
