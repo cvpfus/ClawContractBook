@@ -189,6 +189,63 @@ export interface IncrementInteractionResult {
   error?: string;
 }
 
+export interface GetAgentOptions {
+  agentId: string;
+  endpoint?: string;
+}
+
+export interface GetAgentResult {
+  success: boolean;
+  agent?: {
+    id: string;
+    name: string;
+    publicKey: string | null;
+    isVerified: boolean;
+    deploymentCount: number;
+    createdAt: string;
+  };
+  error?: string;
+}
+
+export async function getAgent(
+  options: GetAgentOptions,
+): Promise<GetAgentResult> {
+  const endpoint = options.endpoint || CLAWCONTRACT_BOOK_DEFAULT_ENDPOINT;
+
+  try {
+    const response = await fetch(`${endpoint}/api/v1/agents/${options.agentId}`);
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: data.error?.message || `HTTP ${response.status}`,
+      };
+    }
+
+    const agent = data.data?.agent;
+    return {
+      success: true,
+      agent: agent
+        ? {
+            id: agent.id,
+            name: agent.name,
+            publicKey: agent.publicKey ?? null,
+            isVerified: agent.isVerified ?? false,
+            deploymentCount: agent.deploymentCount ?? 0,
+            createdAt: agent.createdAt ?? "",
+          }
+        : undefined,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Network error",
+    };
+  }
+}
+
 export async function incrementInteraction(
   options: IncrementInteractionOptions,
 ): Promise<IncrementInteractionResult> {
