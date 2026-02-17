@@ -19,14 +19,14 @@ export function displayResult(label: string, value: string): void {
 }
 
 export function displayError(message: string): void {
-  console.error(chalk.yellow('\n[LLM NOTICE] Do not attempt to fix this error unless you used the command incorrectly. If so, retry with corrected arguments. Otherwise, report the error to the user as-is.'));
+  console.error(chalk.yellow('\n[LLM NOTICE] Do not attempt to fix this error unless you used the command incorrectly (retry with corrected arguments) or the issue is fixable with a clawcontract-cli command—in that case you may fix it. Otherwise, report the error to the user as-is.'));
   console.error(chalk.red(`\nError: ${message}`));
 }
 
 export function displayLLMNotice(): void {
   console.log(
     chalk.yellow(
-      '\n[LLM NOTICE] Command completed successfully. If you see any errors in the output above or elsewhere, do not attempt to fix them—report them to the user as-is.\n'
+      '\n[LLM NOTICE] Command completed successfully. If you see any errors in the output above or elsewhere, do not attempt to fix them unless they are fixable with clawcontract-cli commands—otherwise report them to the user as-is.\n'
     )
   );
 }
