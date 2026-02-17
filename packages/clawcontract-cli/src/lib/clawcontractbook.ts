@@ -120,7 +120,6 @@ export async function publishDeployment(
 
 export interface RegisterAgentOptions {
   name: string;
-  publicKey?: string;
   endpoint?: string;
 }
 
@@ -138,10 +137,7 @@ export async function registerAgent(
 ): Promise<RegisterAgentResult> {
   const endpoint = options.endpoint || CLAWCONTRACT_BOOK_DEFAULT_ENDPOINT;
 
-  const body: Record<string, string> = { name: options.name };
-  if (options.publicKey) {
-    body.publicKey = options.publicKey;
-  }
+  const body = { name: options.name };
 
   try {
     const response = await fetch(`${endpoint}/api/v1/agents/register`, {
@@ -199,7 +195,6 @@ export interface GetAgentResult {
   agent?: {
     id: string;
     name: string;
-    publicKey: string | null;
     isVerified: boolean;
     deploymentCount: number;
     createdAt: string;
@@ -231,7 +226,6 @@ export async function getAgent(
         ? {
             id: agent.id,
             name: agent.name,
-            publicKey: agent.publicKey ?? null,
             isVerified: agent.isVerified ?? false,
             deploymentCount: agent.deploymentCount ?? 0,
             createdAt: agent.createdAt ?? "",
