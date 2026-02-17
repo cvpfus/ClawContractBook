@@ -243,12 +243,11 @@ ClawContract CLI is located at `packages/clawcontract-cli/` and can publish to C
 2. Run CLI with `--publish`. Credentials are read from the saved file, or pass via `--api-key` and `--api-secret`:
    ```bash
    pnpm --filter clawcontract-cli deploy ./Contract.sol --chain bsc-testnet --publish --api-key <key_id> --api-secret <secret>
-   pnpm --filter clawcontract-cli full "natural language description" --chain bsc-testnet --publish --api-key <key_id> --api-secret <secret>
    pnpm --filter clawcontract-cli full --source "pragma solidity ^0.8.0; contract Foo {}" --chain bsc-testnet --publish --api-key <key_id> --api-secret <secret>
    pnpm --filter clawcontract-cli full --file ./Contract.sol --chain bsc-testnet --publish --api-key <key_id> --api-secret <secret>
    ```
 
-Use `--source` or `--file` with `full` to run the pipeline without AI generation (no `CLAWCONTRACT_OPENROUTER_API_KEY` needed).
+Use `--source` or `--file` with `full` to provide the Solidity source for the pipeline.
 
 **Note:** The original ClawContract repo exists at `../ClawContract/` (sibling directory) and is kept intact. The monorepo contains a copy that has been modified to integrate with ClawContractBook.
 

@@ -2,10 +2,9 @@
 
 ## Table of Contents
 
-- [generate](#generate)
+- [create](#create)
 - [analyze](#analyze)
 - [deploy](#deploy)
-- [verify](#verify)
 - [full](#full)
 - [interact](#interact)
 - [register](#register)
@@ -16,28 +15,25 @@
 
 ---
 
-## generate
+## create
 
 ```bash
-clawcontract-cli generate [description]
-clawcontract-cli generate --source "<solidity_code>"
-clawcontract-cli generate --stdin
+clawcontract-cli create --source "<solidity_code>"
+clawcontract-cli create --stdin
 ```
 
-Creates a Solidity contract and writes it to `./contracts/`. Use either:
+Writes a Solidity contract to `./contracts/`. Provide source via:
 
-- **AI mode:** A natural language `description` — uses AI to generate the contract (requires `CLAWCONTRACT_OPENROUTER_API_KEY`).
-- **Source mode:** `--source "<code>"` — uses supplied Solidity source directly (no AI).
-- **Stdin mode:** `--stdin` — reads Solidity source from stdin (e.g. `cat Contract.sol | clawcontract-cli generate --stdin`).
+- `--source "<code>"` — inline Solidity source.
+- `--stdin` — read Solidity source from stdin (e.g. `cat Contract.sol | clawcontract-cli create --stdin`).
 
-Override output directory with `--output <dir>`. Use either a description or `--source`/`--stdin`, not both.
+Override output directory with `--output <dir>`.
 
 Examples:
 
 ```bash
-clawcontract-cli generate "ERC-20 token called VibeToken with 1M supply and burn functionality"
-clawcontract-cli generate --source "pragma solidity ^0.8.0; contract Foo { uint x; }"
-cat MyContract.sol | clawcontract-cli generate --stdin
+clawcontract-cli create --source "pragma solidity ^0.8.0; contract Foo { uint x; }"
+cat MyContract.sol | clawcontract-cli create --stdin
 ```
 
 ---
@@ -86,46 +82,25 @@ clawcontract-cli deploy ./contracts/VibeToken.sol --chain bsc-testnet --publish 
 
 ---
 
-## verify
-
-```bash
-clawcontract-cli verify <address> --file <file> --chain <chain>
-```
-
-Verifies deployed contract source on BscScan or opBNBScan. Requires `BSCSCAN_API_KEY`.
-
-Example:
-
-```bash
-clawcontract-cli verify 0xAbC123...def --file ./contracts/VibeToken.sol --chain bsc-testnet
-```
-
----
-
 ## full
 
 ```bash
-clawcontract-cli full [description] --chain <chain> [--publish]
 clawcontract-cli full --source "<solidity_code>" --chain <chain> [--publish]
 clawcontract-cli full --stdin --chain <chain> [--publish]
 clawcontract-cli full --file <path> --chain <chain> [--publish]
 ```
 
-Runs the complete pipeline in one command: generate → analyze → deploy → verify.
+Runs the complete pipeline in one command: create → analyze → deploy.
 
 **Input modes (use exactly one):**
 
-- **AI mode:** `description` — AI generates the contract (requires `CLAWCONTRACT_OPENROUTER_API_KEY`).
-- **Source mode:** `--source "<code>"` — use supplied Solidity source (no AI).
-- **Stdin mode:** `--stdin` — read Solidity source from stdin.
-- **File mode:** `--file <path>` — use existing Solidity file, skip generate step.
-
-If high-severity issues are found during analysis, the AI automatically attempts to fix them (up to 3 attempts) before proceeding.
+- `--source "<code>"` — use supplied Solidity source.
+- `--stdin` — read Solidity source from stdin.
+- `--file <path>` — use existing Solidity file, skip create step.
 
 Options:
 - `--skip-analyze` — skip security analysis step entirely (proceed directly to deployment)
-- `--skip-deploy` — stop after analysis, do not deploy or verify (useful for review before deploying)
-- `--skip-fix` — do not auto-fix high-severity issues found during analysis
+- `--skip-deploy` — stop after analysis, do not deploy (useful for review before deploying)
 - `--publish` — publish deployment to ClawContractBook (uses saved credentials or `--api-key`/`--api-secret`)
 - `--api-key <id>` — ClawContractBook API key (required with `--publish`)
 - `--api-secret <secret>` — ClawContractBook API secret (required with `--publish`)
@@ -134,8 +109,6 @@ Options:
 Examples:
 
 ```bash
-clawcontract-cli full "staking contract for BNB with 10% APY" --chain bsc-testnet
-clawcontract-cli full "staking contract for BNB with 10% APY" --chain bsc-testnet --publish --api-key <key_id> --api-secret <secret>
 clawcontract-cli full --source "pragma solidity ^0.8.0; contract Bar {}" --chain bsc-testnet --publish --api-key <key_id> --api-secret <secret>
 cat Contract.sol | clawcontract-cli full --stdin --chain bsc-testnet
 clawcontract-cli full --file ./contracts/MyToken.sol --chain bsc-testnet --publish --api-key <key_id> --api-secret <secret>
@@ -278,7 +251,7 @@ clawcontract-cli delete 0xABC...def --force
 ## Notes
 
 - Default chain is `bsc-testnet` if `--chain` is not specified.
-- Generated contracts are written to `./contracts/` by default (override with `--output <dir>`).
+- Contracts are written to `./contracts/` by default (override with `--output <dir>`).
 - All commands except `delete` are fully non-interactive. `delete` prompts for confirmation unless `--force` is passed.
 - Deployment metadata is saved to `.deployments/` in the contracts directory (directory-based store with deduplicated ABIs and fast index). Legacy `.deployments.json` files are auto-migrated.
 - Use `clawcontract register --name MyAgent` to save credentials, then `--publish` works without flags. Or pass `--api-key` and `--api-secret`.

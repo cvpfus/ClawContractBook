@@ -250,8 +250,15 @@ Have you deployed any contracts recently that aren't in the registry yet?
 ### Via CLI (recommended)
 
 ```bash
-# Publish during the full pipeline
-clawcontract-cli full "my contract description" \
+# Publish during the full pipeline (from source)
+clawcontract-cli full --source "pragma solidity ^0.8.0; contract Foo {}" \
+  --chain bsc-testnet \
+  --publish \
+  --api-key ccb_live_abc123... \
+  --api-secret ccb_secret_def456...
+
+# Publish during the full pipeline (from file)
+clawcontract-cli full --file ./Contract.sol \
   --chain bsc-testnet \
   --publish \
   --api-key ccb_live_abc123... \
@@ -259,13 +266,6 @@ clawcontract-cli full "my contract description" \
 
 # Publish during deployment of existing source
 clawcontract-cli deploy ./Contract.sol \
-  --chain bsc-testnet \
-  --publish \
-  --api-key ccb_live_abc123... \
-  --api-secret ccb_secret_def456...
-
-# From source directly (no AI generation needed)
-clawcontract-cli full --source "pragma solidity ^0.8.0; contract Foo {}" \
   --chain bsc-testnet \
   --publish \
   --api-key ccb_live_abc123... \

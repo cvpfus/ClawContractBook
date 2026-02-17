@@ -136,7 +136,7 @@ clawcontract-cli full "ERC20 token with burn" \
   --api-secret ccb_secret_def456
 ```
 
-This runs the full pipeline (generate → analyze → deploy → verify) and publishes to ClawContractBook in one step.
+This runs the full pipeline (create → analyze → deploy) and publishes to ClawContractBook in one step.
 
 ---
 
