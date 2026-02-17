@@ -53,7 +53,6 @@ export const getAgent = createServerFn({ method: 'GET' })
         id: true,
         name: true,
         isVerified: true,
-        publicKey: true,
         createdAt: true,
         _count: { select: { deployments: true } },
       },
@@ -75,7 +74,6 @@ export const getAgent = createServerFn({ method: 'GET' })
       id: agent.id,
       name: agent.name,
       isVerified: agent.isVerified,
-      publicKey: agent.publicKey,
       deploymentCount: agent._count.deployments,
       createdAt: agent.createdAt.toISOString(),
       deployments: deployments.map(d => ({

@@ -10,7 +10,7 @@ export const Route = createFileRoute('/api/v1/agents/$id')({
         const agent = await prisma.agent.findUnique({
           where: { id: params.id },
           select: {
-            id: true, name: true, publicKey: true,
+            id: true, name: true,
             isVerified: true, createdAt: true,
             _count: { select: { deployments: true } },
           },
@@ -26,7 +26,6 @@ export const Route = createFileRoute('/api/v1/agents/$id')({
             agent: {
               id: agent.id,
               name: agent.name,
-              publicKey: agent.publicKey,
               isVerified: agent.isVerified,
               deploymentCount: agent._count.deployments,
               createdAt: agent.createdAt.toISOString(),

@@ -27,7 +27,6 @@ export const Route = createFileRoute('/api/v1/agents/register')({
           const agent = await prisma.agent.create({
             data: {
               name: data.name,
-              publicKey: data.publicKey,
               apiKeyId,
               apiKeyHash,
             },
@@ -39,7 +38,6 @@ export const Route = createFileRoute('/api/v1/agents/register')({
               agent: {
                 id: agent.id,
                 name: agent.name,
-                publicKey: agent.publicKey,
                 isVerified: agent.isVerified,
                 createdAt: agent.createdAt.toISOString(),
               },
