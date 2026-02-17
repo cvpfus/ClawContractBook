@@ -6,7 +6,6 @@ export const txHashSchema = z.string().regex(/^0x[a-fA-F0-9]{64}$/, 'Invalid tra
 
 export const registerAgentSchema = z.object({
   name: z.string().min(3).max(100),
-  publicKey: z.string().regex(/^[a-f0-9]{64}$/).optional(),
 });
 
 export const createDeploymentSchema = z

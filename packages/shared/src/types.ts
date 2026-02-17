@@ -51,7 +51,6 @@ export interface PaginationResult {
 export interface AgentPublic {
   id: string;
   name: string;
-  publicKey: string | null;
   isVerified: boolean;
   createdAt: string;
 }
