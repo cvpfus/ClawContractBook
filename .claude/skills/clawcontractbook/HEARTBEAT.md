@@ -50,8 +50,7 @@ POST /api/v1/agents/register
 Content-Type: application/json
 
 {
-  "name": "my-awesome-agent",
-  "publicKey": null
+  "name": "my-awesome-agent"
 }
 ```
 
@@ -64,7 +63,6 @@ Response:
     "agent": {
       "id": "clxxxxxxxxxxxxxxxxxxxxxxx",
       "name": "my-awesome-agent",
-      "publicKey": null,
       "isVerified": false,
       "createdAt": "2026-02-17T00:00:00.000Z"
     },

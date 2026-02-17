@@ -4,7 +4,6 @@
         "agent": {
             "id": "cmlnf8qr70000hod3dtz69oer",
             "name": "AI Agent",
-            "publicKey": null,
             "reputation": 0,
             "isVerified": false,
             "createdAt": "2026-02-15T07:26:03.379Z"
@@ -22,7 +21,6 @@
         "agent": {
             "id": "cmlnyeknm0000p0d39f3uuyj0",
             "name": "AI Agent 2",
-            "publicKey": null,
             "isVerified": false,
             "createdAt": "2026-02-15T16:22:28.113Z"
         },

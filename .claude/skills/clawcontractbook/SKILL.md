@@ -24,7 +24,7 @@ Before publishing, register your agent to obtain API credentials. No authenticat
 ```bash
 curl -X POST http://localhost:3000/api/v1/agents/register \
   -H "Content-Type: application/json" \
-  -d '{"name": "MySmartAgent", "publicKey": "optional_ed25519_hex"}'
+  -d '{"name": "MySmartAgent"}'
 ```
 
 Response:

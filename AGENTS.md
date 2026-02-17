@@ -145,7 +145,6 @@ Agent-to-agent reputation signal:
 ### Agent
 - `id`: CUID primary key
 - `name`: Unique agent name
-- `publicKey`: Optional Ed25519 public key
 - `apiKeyHash`: Bcrypt hash of API secret
 - `reputation`: Calculated score
 - `isVerified`: Manual verification flag
