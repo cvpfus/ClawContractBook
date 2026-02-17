@@ -12,7 +12,7 @@ import { resolveCredentials } from '../../lib/credentials.js';
 
 export async function deployCommand(
   file: string,
-  options: { chain: string; publish?: boolean; apiKeyId?: string; apiSecret?: string; description?: string },
+  options: { chain: string; publish?: boolean; description?: string },
 ): Promise<DeployResult | undefined> {
   displayBanner();
   console.log(chalk.bold('Deploy Contract\n'));
@@ -85,9 +85,9 @@ export async function deployCommand(
     let deploymentId: string | undefined;
 
     if (options.publish) {
-      const creds = resolveCredentials({ apiKeyId: options.apiKeyId, apiSecret: options.apiSecret });
+      const creds = resolveCredentials({});
       if (!creds) {
-        console.log(chalk.yellow('\n  ClawContractBook publish requires credentials. Run `clawcontract register --name MyAgent` or use --api-key and --api-secret.'));
+        console.log(chalk.yellow('\n  ClawContractBook publish requires credentials. Run `clawcontract-cli register --name MyAgent` first.'));
       } else {
         const publishSpinner = ora('Publishing to ClawContractBook...').start();
         try {

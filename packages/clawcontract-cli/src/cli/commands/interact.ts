@@ -52,7 +52,7 @@ export async function interactCommand(
   address: string,
   functionName: string,
   args: string[],
-  options: { chain: string; file?: string; abiUrl?: string; value?: string; apiKeyId?: string; apiSecret?: string },
+  options: { chain: string; file?: string; abiUrl?: string; value?: string },
 ): Promise<void> {
   displayBanner();
   console.log(chalk.bold('Interact with Contract\n'));
@@ -75,7 +75,13 @@ export async function interactCommand(
       if (!res.ok) {
         throw new Error(`Failed to fetch ABI: ${res.status} ${res.statusText}`);
       }
-      abi = await res.json() as readonly Record<string, unknown>[];
+      const raw = (await res.json()) as unknown;
+      abi = Array.isArray(raw)
+        ? (raw as readonly Record<string, unknown>[])
+        : ((raw as { abi?: unknown[] }).abi as readonly Record<string, unknown>[] ?? raw);
+      if (!Array.isArray(abi)) {
+        throw new Error('ABI from URL must be an array or object with abi property');
+      }
       spinner.succeed('ABI resolved from URL');
     } catch (error) {
       spinner.fail('ABI fetch failed');
@@ -173,7 +179,7 @@ export async function interactCommand(
         `${chainConfig.explorerUrl}/tx/${receipt.hash}`,
       );
 
-      const creds = resolveCredentials({ apiKeyId: options.apiKeyId, apiSecret: options.apiSecret });
+      const creds = resolveCredentials({});
       if (creds && deployment?.deploymentId) {
         const result = await incrementInteraction({
           deploymentId: deployment.deploymentId,

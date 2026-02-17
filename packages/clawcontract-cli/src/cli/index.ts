@@ -57,16 +57,12 @@ program
   .command('deploy <file>')
   .description('Deploy a contract to BSC/opBNB')
   .option('--publish', 'Publish to ClawContractBook')
-  .option('--api-key <id>', 'ClawContractBook API key (or use saved credentials from register)')
-  .option('--api-secret <secret>', 'ClawContractBook API secret (or use saved credentials from register)')
   .option('--description <text>', 'Deployment description')
-  .action(async (file: string, cmdOpts: { publish?: boolean; apiKey?: string; apiSecret?: string; description?: string }) => {
+  .action(async (file: string, cmdOpts: { publish?: boolean; description?: string }) => {
     const opts = program.opts<{ chain: string; output: string }>();
     await deployCommand(file, {
       chain: opts.chain,
       publish: cmdOpts.publish,
-      apiKeyId: cmdOpts.apiKey,
-      apiSecret: cmdOpts.apiSecret,
       description: cmdOpts.description,
     });
     displayLLMNotice();
@@ -81,10 +77,8 @@ program
   .option('--skip-deploy', 'Stop after analysis — do not deploy')
   .option('--skip-analyze', 'Skip security analysis step entirely')
   .option('--publish', 'Publish to ClawContractBook')
-  .option('--api-key <id>', 'ClawContractBook API key (or use saved credentials from register)')
-  .option('--api-secret <secret>', 'ClawContractBook API secret (or use saved credentials from register)')
   .option('--description <text>', 'Deployment description')
-  .action(async (cmdOpts: { source?: string; stdin?: boolean; file?: string; skipDeploy?: boolean; skipAnalyze?: boolean; publish?: boolean; apiKey?: string; apiSecret?: string; description?: string }) => {
+  .action(async (cmdOpts: { source?: string; stdin?: boolean; file?: string; skipDeploy?: boolean; skipAnalyze?: boolean; publish?: boolean; description?: string }) => {
     const opts = program.opts<{ chain: string; output: string }>();
     const hasInput = !!cmdOpts.source || !!cmdOpts.stdin || !!cmdOpts.file;
     if (!hasInput) {
@@ -93,7 +87,7 @@ program
     }
     await fullCommand(
       { source: cmdOpts.source, stdin: cmdOpts.stdin, file: cmdOpts.file },
-      { ...opts, skipDeploy: cmdOpts.skipDeploy, skipAnalyze: cmdOpts.skipAnalyze, publish: cmdOpts.publish, apiKeyId: cmdOpts.apiKey, apiSecret: cmdOpts.apiSecret, description: cmdOpts.description },
+      { ...opts, skipDeploy: cmdOpts.skipDeploy, skipAnalyze: cmdOpts.skipAnalyze, publish: cmdOpts.publish, description: cmdOpts.description },
     );
     displayLLMNotice();
   });
@@ -104,11 +98,9 @@ program
   .option('--file <file>', 'source Solidity file for ABI resolution')
   .option('--abi-url <url>', 'fetch ABI from URL (e.g. from verified/featured output)')
   .option('--value <value>', 'BNB value to send (in wei) for payable functions')
-  .option('--api-key <id>', 'ClawContractBook API key (to record interaction)')
-  .option('--api-secret <secret>', 'ClawContractBook API secret (to record interaction)')
-  .action(async (address: string, fn: string, args: string[], cmdOpts: { file?: string; abiUrl?: string; value?: string; apiKey?: string; apiSecret?: string }) => {
+  .action(async (address: string, fn: string, args: string[], cmdOpts: { file?: string; abiUrl?: string; value?: string }) => {
     const opts = program.opts<{ chain: string; output: string }>();
-    await interactCommand(address, fn, args, { chain: opts.chain, file: cmdOpts.file, abiUrl: cmdOpts.abiUrl, value: cmdOpts.value, apiKeyId: cmdOpts.apiKey, apiSecret: cmdOpts.apiSecret });
+    await interactCommand(address, fn, args, { chain: opts.chain, file: cmdOpts.file, abiUrl: cmdOpts.abiUrl, value: cmdOpts.value });
     displayLLMNotice();
   });
 
