@@ -1,15 +1,21 @@
-import { getChain } from '../config/chains.js';
+import { SUPPORTED_CHAINS, type ChainKey } from '@clawcontractbook/shared';
 
 export interface SubmitVerificationOptions {
   contractAddress: string;
   sourceCode: string;
   contractName: string;
-  chainKey: string;
+  chainKey: ChainKey;
   constructorArgs?: string;
   compilerVersion?: string;
   optimizationUsed?: boolean;
   runs?: number;
   codeFormat?: string;
+}
+
+export interface ExplorerVerifyResult {
+  success: boolean;
+  message: string;
+  explorerUrl: string;
 }
 
 interface ExplorerApiResponse {
@@ -21,20 +27,21 @@ interface ExplorerApiResponse {
 const ETHERSCAN_V2_BASE = 'https://api.etherscan.io/v2/api';
 const DEFAULT_COMPILER_VERSION = 'v0.8.20+commit.a1b79de6';
 const DEFAULT_RUNS = 200;
-const MAX_RETRIES = 5;
+const MAX_POLL_RETRIES = 5;
 const INITIAL_POLL_INTERVAL_MS = 5_000;
 
 const SUBMIT_MAX_RETRIES = 5;
 const SUBMIT_INITIAL_DELAY_MS = 5_000;
 
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export async function submitVerification(
   options: SubmitVerificationOptions,
+  apiKey: string,
 ): Promise<string> {
-  const chain = getChain(options.chainKey);
-  const apiKey = process.env['CLAWCONTRACT_BSCSCAN_API_KEY'];
-  if (!apiKey) {
-    throw new Error('CLAWCONTRACT_BSCSCAN_API_KEY environment variable is not set');
-  }
+  const chain = SUPPORTED_CHAINS[options.chainKey];
 
   const params = new URLSearchParams({
     module: 'contract',
@@ -87,13 +94,10 @@ export async function submitVerification(
 
 export async function checkVerificationStatus(
   guid: string,
-  chainKey: string,
+  chainKey: ChainKey,
+  apiKey: string,
 ): Promise<{ success: boolean; message: string }> {
-  const chain = getChain(chainKey);
-  const apiKey = process.env['CLAWCONTRACT_BSCSCAN_API_KEY'];
-  if (!apiKey) {
-    throw new Error('CLAWCONTRACT_BSCSCAN_API_KEY environment variable is not set');
-  }
+  const chain = SUPPORTED_CHAINS[chainKey];
 
   const params = new URLSearchParams({
     module: 'contract',
@@ -119,14 +123,15 @@ export async function checkVerificationStatus(
 
 export async function pollVerificationStatus(
   guid: string,
-  chainKey: string,
+  chainKey: ChainKey,
+  apiKey: string,
 ): Promise<{ success: boolean; message: string }> {
   let delay = INITIAL_POLL_INTERVAL_MS;
 
-  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+  for (let attempt = 0; attempt < MAX_POLL_RETRIES; attempt++) {
     await sleep(delay);
 
-    const result = await checkVerificationStatus(guid, chainKey);
+    const result = await checkVerificationStatus(guid, chainKey, apiKey);
     if (result.success || (result.message !== 'Pending in queue')) {
       return result;
     }
@@ -137,6 +142,35 @@ export async function pollVerificationStatus(
   return { success: false, message: 'Verification timed out after maximum retries' };
 }
 
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+/**
+ * Submit source code to BscScan/opBNBScan for verification and poll for result.
+ */
+export async function verifyOnExplorer(
+  options: {
+    contractAddress: string;
+    chainKey: ChainKey;
+    sourceCode: string;
+    contractName: string;
+    compilerVersion?: string;
+  },
+  apiKey: string,
+): Promise<ExplorerVerifyResult> {
+  const chain = SUPPORTED_CHAINS[options.chainKey];
+
+  const guid = await submitVerification({
+    contractAddress: options.contractAddress,
+    sourceCode: options.sourceCode,
+    contractName: options.contractName,
+    chainKey: options.chainKey,
+    compilerVersion: options.compilerVersion,
+    codeFormat: 'solidity-single-file',
+  }, apiKey);
+
+  const result = await pollVerificationStatus(guid, options.chainKey, apiKey);
+
+  return {
+    success: result.success,
+    message: result.message,
+    explorerUrl: `${chain.explorerUrl}/address/${options.contractAddress}#code`,
+  };
 }

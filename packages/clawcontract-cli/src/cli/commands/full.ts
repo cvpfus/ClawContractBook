@@ -6,7 +6,6 @@ import { displayBanner, displayError } from '../utils.js';
 import { generateCommand } from './generate.js';
 import { analyzeCommand } from './analyze.js';
 import { deployCommand } from './deploy.js';
-import { verifyCommand } from './verify.js';
 import { createLLMClient } from '../../generator/index.js';
 
 const MAX_FIX_ATTEMPTS = 3;
@@ -71,7 +70,7 @@ export async function fullCommand(
   options: { chain: string; output: string; skipDeploy?: boolean; skipFix?: boolean; skipAnalyze?: boolean; publish?: boolean; apiKeyId?: string; apiSecret?: string; description?: string },
 ): Promise<void> {
   displayBanner();
-  console.log(chalk.bold('Full Pipeline: Generate → Analyze → Deploy → Verify\n'));
+  console.log(chalk.bold('Full Pipeline: Generate → Analyze → Deploy\n'));
 
   let filePath: string;
 
@@ -81,11 +80,11 @@ export async function fullCommand(
       displayError(`File not found: ${filePath}`);
       process.exit(1);
     }
-    console.log(chalk.bold.blue('\n━━━ Step 1/4: Generate Contract ━━━\n'));
+    console.log(chalk.bold.blue('\n━━━ Step 1/3: Generate Contract ━━━\n'));
     console.log(chalk.yellow.bold('  ⏭ Using existing file (--file). Skipping generate.\n'));
   } else {
     // Step 1: Generate (AI or user-supplied source)
-    console.log(chalk.bold.blue('\n━━━ Step 1/4: Generate Contract ━━━\n'));
+    console.log(chalk.bold.blue('\n━━━ Step 1/3: Generate Contract ━━━\n'));
     filePath = await generateCommand(input.description, {
       chain: options.chain,
       output: options.output,
@@ -96,10 +95,10 @@ export async function fullCommand(
 
   // Step 2: Analyze
   if (options.skipAnalyze) {
-    console.log(chalk.bold.blue('\n━━━ Step 2/4: Security Analysis ━━━\n'));
+    console.log(chalk.bold.blue('\n━━━ Step 2/3: Security Analysis ━━━\n'));
     console.log(chalk.yellow.bold('  ⏭ Skipped security analysis (--skip-analyze).\n'));
   } else {
-    console.log(chalk.bold.blue('\n━━━ Step 2/4: Security Analysis ━━━\n'));
+    console.log(chalk.bold.blue('\n━━━ Step 2/3: Security Analysis ━━━\n'));
     const analysisResult = await analyzeCommand(filePath);
 
     if (!analysisResult.passed) {
@@ -129,7 +128,7 @@ export async function fullCommand(
   }
 
   // Step 3: Deploy
-  console.log(chalk.bold.blue('\n━━━ Step 3/4: Deploy Contract ━━━\n'));
+  console.log(chalk.bold.blue('\n━━━ Step 3/3: Deploy Contract ━━━\n'));
   const deployResult = await deployCommand(filePath, {
     chain: options.chain,
     publish: options.publish,
@@ -145,16 +144,6 @@ export async function fullCommand(
 
   console.log(chalk.gray(`\n  Tip: interact with your contract using:`));
   console.log(chalk.gray(`    clawcontract-cli interact ${deployResult.contractAddress} <function> --chain ${options.chain}\n`));
-
-  // Step 4: Verify
-  console.log(chalk.bold.blue('\n━━━ Step 4/4: Verify Contract ━━━\n'));
-  await verifyCommand(deployResult.contractAddress, {
-    chain: options.chain,
-    file: filePath,
-    standardJsonInput: deployResult.standardJsonInput,
-    solcLongVersion: deployResult.solcLongVersion,
-    fullyQualifiedName: deployResult.fullyQualifiedName,
-  });
 
   console.log(chalk.bold.green('\n✔ Full pipeline complete!\n'));
 }
