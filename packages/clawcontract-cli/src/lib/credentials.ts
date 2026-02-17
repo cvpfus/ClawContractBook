@@ -12,6 +12,8 @@ export interface ClawContractBookCredentials {
   endpoint?: string;
   agentId?: string;
   name?: string;
+  /** Wallet private key for deployment (created by `clawcontract register`) */
+  privateKey?: string;
 }
 
 /** Default path: <cwd>/clawcontractbook/credentials.json */
@@ -71,6 +73,7 @@ export function saveCredentials(
       endpoint: credentials.endpoint ?? CLAWCONTRACT_BOOK_DEFAULT_ENDPOINT,
       ...(credentials.agentId && { agentId: credentials.agentId }),
       ...(credentials.name && { name: credentials.name }),
+      ...(credentials.privateKey && { privateKey: credentials.privateKey }),
     },
     null,
     2,

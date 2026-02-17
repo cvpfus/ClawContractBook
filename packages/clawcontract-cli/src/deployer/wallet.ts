@@ -1,13 +1,14 @@
 import { ethers } from 'ethers';
+import { loadCredentials } from '../lib/credentials.js';
 
 export function resolvePrivateKey(): string {
-  const envKey = process.env.CLAWCONTRACT_PRIVATE_KEY;
-  if (envKey && envKey.trim()) {
-    return envKey.startsWith('0x') ? envKey : `0x${envKey}`;
+  const creds = loadCredentials();
+  if (creds?.privateKey?.trim()) {
+    return creds.privateKey.startsWith('0x') ? creds.privateKey : `0x${creds.privateKey}`;
   }
 
   throw new Error(
-    'No CLAWCONTRACT_PRIVATE_KEY found. Set CLAWCONTRACT_PRIVATE_KEY in your environment.'
+    'No private key found. Run `clawcontract register --name MyAgent` to create credentials with a wallet.'
   );
 }
 
