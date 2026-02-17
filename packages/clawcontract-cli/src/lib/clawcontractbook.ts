@@ -1,4 +1,5 @@
 import { createHmac, createHash, randomUUID } from "crypto";
+import { CLAWCONTRACT_BOOK_DEFAULT_ENDPOINT } from "../config/index.js";
 
 export interface PublishOptions {
   contractAddress: string;
@@ -63,7 +64,7 @@ function signRequest(
 export async function publishDeployment(
   options: PublishOptions,
 ): Promise<PublishResult> {
-  const endpoint = options.endpoint || "http://localhost:3000";
+  const endpoint = options.endpoint || CLAWCONTRACT_BOOK_DEFAULT_ENDPOINT;
 
   const payload = {
     contractAddress: options.contractAddress,
@@ -117,28 +118,63 @@ export async function publishDeployment(
   }
 }
 
-export interface ClawContractBookConfig {
-  enabled: boolean;
-  apiKeyId?: string;
-  apiSecret?: string;
+export interface RegisterAgentOptions {
+  name: string;
+  publicKey?: string;
   endpoint?: string;
-  autoPublish?: boolean;
 }
 
-export function getClawContractBookConfig(): ClawContractBookConfig {
-  const envEnabled = process.env.CLAWCONTRACT_BOOK_ENABLED;
-  const envApiKeyId = process.env.CLAWCONTRACT_BOOK_API_KEY_ID;
-  const envApiSecret = process.env.CLAWCONTRACT_BOOK_API_SECRET;
-  const envEndpoint = process.env.CLAWCONTRACT_BOOK_ENDPOINT;
-  const envAutoPublish = process.env.CLAWCONTRACT_BOOK_AUTO_PUBLISH;
+export interface RegisterAgentResult {
+  success: boolean;
+  agentId?: string;
+  name?: string;
+  apiKeyId?: string;
+  apiSecret?: string;
+  error?: string;
+}
 
-  return {
-    enabled: envEnabled === "true",
-    apiKeyId: envApiKeyId,
-    apiSecret: envApiSecret,
-    endpoint: envEndpoint,
-    autoPublish: envAutoPublish === "true",
-  };
+export async function registerAgent(
+  options: RegisterAgentOptions,
+): Promise<RegisterAgentResult> {
+  const endpoint = options.endpoint || CLAWCONTRACT_BOOK_DEFAULT_ENDPOINT;
+
+  const body: Record<string, string> = { name: options.name };
+  if (options.publicKey) {
+    body.publicKey = options.publicKey;
+  }
+
+  try {
+    const response = await fetch(`${endpoint}/api/v1/agents/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: data.error?.message || `HTTP ${response.status}`,
+      };
+    }
+
+    const agent = data.data?.agent;
+    const creds = data.data?.credentials;
+
+    return {
+      success: true,
+      agentId: agent?.id,
+      name: agent?.name,
+      apiKeyId: creds?.apiKeyId,
+      apiSecret: creds?.apiSecret,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Network error",
+    };
+  }
 }
 
 export interface IncrementInteractionOptions {
@@ -156,7 +192,7 @@ export interface IncrementInteractionResult {
 export async function incrementInteraction(
   options: IncrementInteractionOptions,
 ): Promise<IncrementInteractionResult> {
-  const endpoint = options.endpoint || "http://localhost:3000";
+  const endpoint = options.endpoint || CLAWCONTRACT_BOOK_DEFAULT_ENDPOINT;
 
   const { headers } = signRequest(
     "POST",
