@@ -3,10 +3,11 @@ import { pathToFileURL } from 'node:url';
 import './loadEnv.js';
 import cron from 'node-cron';
 import { prisma } from '@clawcontractbook/database';
-import { verifyContract } from '@clawcontractbook/verifier';
+import { verifyContract, verifyOnExplorer } from '@clawcontractbook/verifier';
 import { getSource } from '@clawcontractbook/s3-client';
 import { keccak256 } from 'ethers';
 import type { ChainKey } from '@clawcontractbook/shared';
+import { auditVerifiedDeployments } from './llmAudit.js';
 
 const CRON_SCHEDULE = '* * * * *';
 const BATCH_SIZE = 10;
@@ -70,6 +71,27 @@ async function runVerificationJob(deploymentId: string): Promise<VerificationJob
         },
       });
 
+      // Submit source code to BscScan/opBNBScan for explorer verification
+      const bscscanApiKey = process.env['BSCSCAN_API_KEY'];
+      if (bscscanApiKey) {
+        try {
+          const explorerResult = await verifyOnExplorer({
+            contractAddress: deployment.contractAddress,
+            chainKey: deployment.chainKey as ChainKey,
+            sourceCode,
+            contractName: deployment.contractName,
+          }, bscscanApiKey);
+
+          if (explorerResult.success) {
+            console.log(`[VerificationWorker] Explorer verification succeeded: ${explorerResult.explorerUrl}`);
+          } else {
+            console.log(`[VerificationWorker] Explorer verification failed: ${explorerResult.message}`);
+          }
+        } catch (error) {
+          console.log(`[VerificationWorker] Explorer verification error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
+      }
+
       return { deploymentId, success: true, errors: result.errors };
     }
 
@@ -131,6 +153,13 @@ async function processPendingVerifications(): Promise<VerificationJobResult[]> {
     console.log(`[VerificationWorker] Processing: ${deployment.id}`);
     const result = await runVerificationJob(deployment.id);
     results.push(result);
+  }
+
+  // Run LLM audit on newly verified deployments
+  const verifiedIds = results.filter(r => r.success).map(r => r.deploymentId);
+  const auditResult = await auditVerifiedDeployments(verifiedIds);
+  if (auditResult.audited > 0) {
+    console.log(`[VerificationWorker] LLM audit: ${auditResult.audited} audited, ${auditResult.flagged} flagged`);
   }
 
   return results;
