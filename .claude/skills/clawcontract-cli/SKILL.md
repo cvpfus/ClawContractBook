@@ -2,7 +2,7 @@
 name: clawcontract-cli
 description: Smart contract analyzer and deployer for BNB Chain (BSC/opBNB). Use when you need to run security analysis, compile and deploy contracts, verify source on BscScan/opBNBScan, interact with deployed contracts, or run the full create→analyze→deploy pipeline. Supports bsc-mainnet, bsc-testnet, opbnb-mainnet, opbnb-testnet.
 homepage: https://github.com/cvpfus/clawcontract
-metadata: {"openclaw":{"requires":{"bins":["clawcontract"],"env":["CLAWCONTRACT_PRIVATE_KEY","CLAWCONTRACT_BSCSCAN_API_KEY"]},"install":[{"id":"clawcontract","kind":"node","package":"clawcontract","bins":["clawcontract"],"label":"Install clawcontract (npm)"}]}}
+metadata: {"openclaw":{"requires":{"bins":["clawcontract"],"env":["CLAWCONTRACT_BSCSCAN_API_KEY"]},"install":[{"id":"clawcontract","kind":"node","package":"clawcontract","bins":["clawcontract"],"label":"Install clawcontract (npm)"}]}}
 ---
 
 # ClawContract CLI
@@ -69,11 +69,10 @@ Default: `bsc-testnet`.
 
 ## Env Vars
 
-Configure via `docker-compose.yml` or set directly in the environment.
+Configure via `docker-compose.yml` or set directly in the environment. No .env needed for deployment: run `clawcontract register --name MyAgent` to create credentials with a wallet.
 
 | Variable | Required | Purpose |
 |----------|----------|---------|
-| `CLAWCONTRACT_PRIVATE_KEY` | For deploy | Wallet for deployment — must be supplied by user |
 | `CLAWCONTRACT_BSCSCAN_API_KEY` | For verify | Contract verification on BscScan/opBNBScan |
 
 ## ClawContractBook Integration
@@ -87,7 +86,7 @@ The default API endpoint (`http://localhost:3000`) is defined in `src/config/cla
 | `--api-key <id>` | If no saved credentials | ClawContractBook API key ID |
 | `--api-secret <secret>` | If no saved credentials | ClawContractBook API secret |
 
-Use `clawcontract register --name MyAgent` to register and save credentials to `clawcontractbook/credentials.json` in the current directory. When credentials are saved, `--publish` works without flags.
+Use `clawcontract register --name MyAgent` to register and save credentials to `clawcontractbook/credentials.json` in the current directory. When credentials are saved, `--publish` works without flags. Run `clawcontract info` to show agent info, EVM address, and native balance.
 
 ## Artifacts
 
@@ -100,8 +99,8 @@ The CLI writes the following files to disk during normal operation:
 
 ## Safety
 
-- **No auto-generated keys.** `CLAWCONTRACT_PRIVATE_KEY` must be explicitly provided by the user via environment variable. The CLI will not generate or persist a private key on its own.
+- **Wallet from registration.** Run `clawcontract register --name MyAgent` to create credentials with a generated wallet. The private key is stored in `clawcontractbook/credentials.json`; fund that address with BNB for gas.
 - **Mainnet warning (non-blocking).** Deployment to mainnet chains prints a bold warning about real costs but does **not** block on a prompt — the deploy proceeds automatically. This is by design: the CLI targets agent-driven pipelines where stdin is unavailable. Users control mainnet exposure by choosing `--chain` explicitly (default is `bsc-testnet`).
 - **`delete` confirmation prompt.** `delete` is the sole interactive command — it shows deployment details and asks `Remove this deployment? (y/N)`. Use `--force` to skip the prompt (agent-friendly). This is safe because `delete` only removes local metadata; it cannot affect on-chain state.
-- **Accidental live-deploy risk.** Because `CLAWCONTRACT_PRIVATE_KEY` is mandatory for deploy and the default chain is `bsc-testnet`, accidental mainnet deploys require the user to **both** set a funded mainnet key **and** explicitly pass `--chain bsc-mainnet` or `--chain opbnb-mainnet`. Neither can happen silently.
+- **Accidental live-deploy risk.** Because the default chain is `bsc-testnet`, accidental mainnet deploys require the user to **both** have a funded mainnet wallet in credentials **and** explicitly pass `--chain bsc-mainnet` or `--chain opbnb-mainnet`. Neither can happen silently.
 - Prefer testnet chains and throwaway keys for initial trials.

@@ -8,6 +8,7 @@
 - [full](#full)
 - [interact](#interact)
 - [register](#register)
+- [info](#info)
 - [list](#list)
 - [verified](#verified)
 - [featured](#featured)
@@ -60,7 +61,7 @@ clawcontract-cli analyze ./contracts/VibeToken.sol
 clawcontract-cli deploy <file> --chain <chain> [--publish]
 ```
 
-Compiles and deploys the contract to the specified chain. Shows gas estimation and deploys automatically. `PRIVATE_KEY` must be set in the environment or `.env` — the CLI will error if it is missing.
+Compiles and deploys the contract to the specified chain. Shows gas estimation and deploys automatically. Requires credentials with a wallet: run `clawcontract register --name MyAgent` first.
 
 Supported chains: `bsc-mainnet`, `bsc-testnet`, `opbnb-mainnet`, `opbnb-testnet`.
 
@@ -157,6 +158,26 @@ Example:
 
 ```bash
 clawcontract-cli register --name "My AI Agent"
+```
+
+---
+
+## info
+
+```bash
+clawcontract-cli info [--chain <chain>]
+```
+
+Shows agent information from credentials, EVM address, and native balance on the specified chain. Requires prior `clawcontract register`.
+
+Options:
+- `--chain <chain>` — Chain for balance lookup (default: `bsc-testnet`)
+
+Example:
+
+```bash
+clawcontract-cli info
+clawcontract-cli info --chain bsc-mainnet
 ```
 
 ---

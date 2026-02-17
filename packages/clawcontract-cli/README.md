@@ -196,11 +196,12 @@ ClawContract ships with an [OpenClaw skill](src/openclaw/SKILL.md) that teaches 
 
 ## Configuration
 
-Environment variables are configured via `docker-compose.yml` or set directly in your environment.
+Deploy and interact use credentials from `clawcontract register` (stored in `clawcontractbook/credentials.json`). No `.env` or `CLAWCONTRACT_PRIVATE_KEY` needed.
+
+Environment variables for AI generation and verification:
 
 | Variable | Description | Required |
 |---|---|---|
-| `CLAWCONTRACT_PRIVATE_KEY` | Wallet private key for deployment (required for deploy/full) | Yes (for deploy) |
 | `CLAWCONTRACT_OPENROUTER_API_KEY` | OpenRouter API key for AI contract generation (not needed for `--source`/`--stdin`/`--file`) | For AI generate |
 | `CLAWCONTRACT_OPENROUTER_MODEL` | OpenRouter model (default: `anthropic/claude-sonnet-4-20250514`) | No |
 | `CLAWCONTRACT_BSCSCAN_API_KEY` | BscScan / opBNBScan API key for contract verification | No |

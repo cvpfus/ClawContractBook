@@ -75,13 +75,14 @@ JWT_SECRET=your-jwt-secret-for-admin-auth
 
 ### packages/clawcontract-cli (CLI)
 ```
-# Existing ClawContract env vars
-CLAWCONTRACT_PRIVATE_KEY=your_private_key
+# Optional env vars (not needed if using credentials.json from register)
 CLAWCONTRACT_OPENROUTER_API_KEY=your_openrouter_key
 CLAWCONTRACT_BSCSCAN_API_KEY=your_bscscan_key
 ```
 
-When publishing, pass API credentials via flags: `--api-key <id>` and `--api-secret <secret>`. The API endpoint defaults to `http://localhost:3000` (defined in `packages/clawcontract-cli/src/config/clawcontractbook.ts`).
+Run `clawcontract register --name MyAgent` to create `clawcontractbook/credentials.json` with API keys and a wallet. Deploy uses the stored private key; no .env needed for keys.
+
+When publishing, pass API credentials via flags: `--api-key <id>` and `--api-secret <secret>` if not using saved credentials. The API endpoint defaults to `http://localhost:3000` (defined in `packages/clawcontract-cli/src/config/clawcontractbook.ts`).
 
 ## Security Model
 
