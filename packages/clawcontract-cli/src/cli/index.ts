@@ -6,12 +6,13 @@ import { displayBanner, displayLLMNotice } from './utils.js';
 import { generateCommand } from './commands/generate.js';
 import { analyzeCommand } from './commands/analyze.js';
 import { deployCommand } from './commands/deploy.js';
-import { verifyCommand } from './commands/verify.js';
 import { fullCommand } from './commands/full.js';
 import { interactCommand } from './commands/interact.js';
 import { listCommand } from './commands/list.js';
 import { deleteCommand } from './commands/delete.js';
 import { registerCommand } from './commands/register.js';
+import { featuredCommand } from './commands/featured.js';
+import { verifiedCommand } from './commands/verified.js';
 
 const require = createRequire(import.meta.url);
 const pkg = require('../../package.json') as { version: string };
@@ -76,18 +77,8 @@ program
   });
 
 program
-  .command('verify <address>')
-  .description('Verify a deployed contract on block explorer')
-  .option('--file <file>', 'source Solidity file')
-  .action(async (address: string, cmdOpts: { file?: string }) => {
-    const opts = program.opts<{ chain: string; output: string }>();
-    await verifyCommand(address, { chain: opts.chain, file: cmdOpts.file ?? '' });
-    displayLLMNotice();
-  });
-
-program
   .command('full [description]')
-  .description('Full pipeline: generate → analyze → deploy → verify')
+  .description('Full pipeline: generate → analyze → deploy')
   .option('--source <code>', 'use supplied Solidity source instead of AI generation')
   .option('--stdin', 'read Solidity source from stdin')
   .option('--file <path>', 'use existing Solidity file (skip generate step)')
@@ -120,12 +111,13 @@ program
   .command('interact <address> <function> [args...]')
   .description('Interact with a deployed contract (call read/write functions)')
   .option('--file <file>', 'source Solidity file for ABI resolution')
+  .option('--abi-url <url>', 'fetch ABI from URL (e.g. from verified/featured output)')
   .option('--value <value>', 'BNB value to send (in wei) for payable functions')
   .option('--api-key <id>', 'ClawContractBook API key (to record interaction)')
   .option('--api-secret <secret>', 'ClawContractBook API secret (to record interaction)')
-  .action(async (address: string, fn: string, args: string[], cmdOpts: { file?: string; value?: string; apiKey?: string; apiSecret?: string }) => {
+  .action(async (address: string, fn: string, args: string[], cmdOpts: { file?: string; abiUrl?: string; value?: string; apiKey?: string; apiSecret?: string }) => {
     const opts = program.opts<{ chain: string; output: string }>();
-    await interactCommand(address, fn, args, { chain: opts.chain, file: cmdOpts.file, value: cmdOpts.value, apiKeyId: cmdOpts.apiKey, apiSecret: cmdOpts.apiSecret });
+    await interactCommand(address, fn, args, { chain: opts.chain, file: cmdOpts.file, abiUrl: cmdOpts.abiUrl, value: cmdOpts.value, apiKeyId: cmdOpts.apiKey, apiSecret: cmdOpts.apiSecret });
     displayLLMNotice();
   });
 
@@ -146,6 +138,36 @@ program
   .action(async (cmdOpts: { json?: boolean; chain?: string }) => {
     const opts = program.opts<{ chain: string; output: string }>();
     await listCommand({ chain: cmdOpts.chain, json: cmdOpts.json, output: opts.output });
+    displayLLMNotice();
+  });
+
+program
+  .command('verified')
+  .description('Browse verified deployments from ClawContractBook')
+  .option('--page <number>', 'page number', '1')
+  .option('--limit <number>', 'results per page', '20')
+  .option('--chain <chain>', 'filter by chain')
+  .option('--search <query>', 'search by name or description')
+  .option('--sort <sort>', 'sort order: newest, oldest, name', 'newest')
+  .option('--json', 'output as JSON')
+  .action(async (cmdOpts: { page: string; limit: string; chain?: string; search?: string; sort?: string; json?: boolean }) => {
+    await verifiedCommand({
+      page: parseInt(cmdOpts.page, 10),
+      limit: parseInt(cmdOpts.limit, 10),
+      chain: cmdOpts.chain,
+      search: cmdOpts.search,
+      sort: cmdOpts.sort,
+      json: cmdOpts.json,
+    });
+    displayLLMNotice();
+  });
+
+program
+  .command('featured')
+  .description('Show featured verified deployments from ClawContractBook')
+  .option('--json', 'output as JSON')
+  .action(async (cmdOpts: { json?: boolean }) => {
+    await featuredCommand({ json: cmdOpts.json });
     displayLLMNotice();
   });
 

@@ -42,7 +42,7 @@ export const listDeploymentsSchema = z.object({
   chain: z.enum(CHAIN_KEYS as [string, ...string[]]).optional(),
   agent: z.string().optional(),
   search: z.string().optional(),
-  sort: z.enum(['newest', 'oldest', 'trending', 'name']).optional().default('newest'),
+  sort: z.enum(['newest', 'oldest', 'name']).optional().default('newest'),
   page: z.coerce.number().int().positive().optional().default(1),
   limit: z.coerce.number().int().positive().max(100).optional().default(20),
   verified: z.enum(['pending', 'verified', 'failed']).optional(),

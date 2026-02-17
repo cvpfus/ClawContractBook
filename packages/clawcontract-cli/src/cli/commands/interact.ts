@@ -52,7 +52,7 @@ export async function interactCommand(
   address: string,
   functionName: string,
   args: string[],
-  options: { chain: string; file?: string; value?: string; apiKeyId?: string; apiSecret?: string },
+  options: { chain: string; file?: string; abiUrl?: string; value?: string; apiKeyId?: string; apiSecret?: string },
 ): Promise<void> {
   displayBanner();
   console.log(chalk.bold('Interact with Contract\n'));
@@ -68,6 +68,22 @@ export async function interactCommand(
   const deployment = loadDeployment(address, './contracts');
   if (deployment) {
     abi = deployment.abi;
+  } else if (options.abiUrl) {
+    const spinner = ora('Fetching ABI from URL...').start();
+    try {
+      const res = await fetch(options.abiUrl);
+      if (!res.ok) {
+        throw new Error(`Failed to fetch ABI: ${res.status} ${res.statusText}`);
+      }
+      abi = await res.json() as readonly Record<string, unknown>[];
+      spinner.succeed('ABI resolved from URL');
+    } catch (error) {
+      spinner.fail('ABI fetch failed');
+      const message = error instanceof Error ? error.message : String(error);
+      displayError(message);
+      process.exitCode = 1;
+      return;
+    }
   } else if (options.file) {
     const filePath = path.resolve(process.cwd(), options.file);
     const spinner = ora('Compiling contract for ABI...').start();
@@ -84,7 +100,7 @@ export async function interactCommand(
     }
   } else {
     displayError(
-      `No ABI found for ${address}. Deploy via ClawContract or provide --file <source.sol>`,
+      `No ABI found for ${address}. Deploy via ClawContract, provide --file <source.sol>, or --abi-url <url>`,
     );
     process.exitCode = 1;
     return;

@@ -17,9 +17,9 @@ import { Route as DocsSetupRouteImport } from './routes/docs/setup'
 import { Route as ContractsIdRouteImport } from './routes/contracts/$id'
 import { Route as AgentsIdRouteImport } from './routes/agents/$id'
 import { Route as ApiV1DeploymentsIndexRouteImport } from './routes/api/v1/deployments/index'
-import { Route as ApiV1StatsTrendingRouteImport } from './routes/api/v1/stats/trending'
 import { Route as ApiV1StatsOverviewRouteImport } from './routes/api/v1/stats/overview'
 import { Route as ApiV1StatsAgentsRouteImport } from './routes/api/v1/stats/agents'
+import { Route as ApiV1DeploymentsFeaturedRouteImport } from './routes/api/v1/deployments/featured'
 import { Route as ApiV1DeploymentsIdRouteImport } from './routes/api/v1/deployments/$id'
 import { Route as ApiV1AgentsRotateKeyRouteImport } from './routes/api/v1/agents/rotate-key'
 import { Route as ApiV1AgentsRegisterRouteImport } from './routes/api/v1/agents/register'
@@ -69,11 +69,6 @@ const ApiV1DeploymentsIndexRoute = ApiV1DeploymentsIndexRouteImport.update({
   path: '/api/v1/deployments/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiV1StatsTrendingRoute = ApiV1StatsTrendingRouteImport.update({
-  id: '/api/v1/stats/trending',
-  path: '/api/v1/stats/trending',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiV1StatsOverviewRoute = ApiV1StatsOverviewRouteImport.update({
   id: '/api/v1/stats/overview',
   path: '/api/v1/stats/overview',
@@ -84,6 +79,12 @@ const ApiV1StatsAgentsRoute = ApiV1StatsAgentsRouteImport.update({
   path: '/api/v1/stats/agents',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiV1DeploymentsFeaturedRoute =
+  ApiV1DeploymentsFeaturedRouteImport.update({
+    id: '/api/v1/deployments/featured',
+    path: '/api/v1/deployments/featured',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiV1DeploymentsIdRoute = ApiV1DeploymentsIdRouteImport.update({
   id: '/api/v1/deployments/$id',
   path: '/api/v1/deployments/$id',
@@ -140,9 +141,9 @@ export interface FileRoutesByFullPath {
   '/api/v1/agents/register': typeof ApiV1AgentsRegisterRoute
   '/api/v1/agents/rotate-key': typeof ApiV1AgentsRotateKeyRoute
   '/api/v1/deployments/$id': typeof ApiV1DeploymentsIdRouteWithChildren
+  '/api/v1/deployments/featured': typeof ApiV1DeploymentsFeaturedRoute
   '/api/v1/stats/agents': typeof ApiV1StatsAgentsRoute
   '/api/v1/stats/overview': typeof ApiV1StatsOverviewRoute
-  '/api/v1/stats/trending': typeof ApiV1StatsTrendingRoute
   '/api/v1/deployments/': typeof ApiV1DeploymentsIndexRoute
   '/api/v1/agents/$id/deployments': typeof ApiV1AgentsIdDeploymentsRoute
   '/api/v1/deployments/$id/abi': typeof ApiV1DeploymentsIdAbiRoute
@@ -161,9 +162,9 @@ export interface FileRoutesByTo {
   '/api/v1/agents/register': typeof ApiV1AgentsRegisterRoute
   '/api/v1/agents/rotate-key': typeof ApiV1AgentsRotateKeyRoute
   '/api/v1/deployments/$id': typeof ApiV1DeploymentsIdRouteWithChildren
+  '/api/v1/deployments/featured': typeof ApiV1DeploymentsFeaturedRoute
   '/api/v1/stats/agents': typeof ApiV1StatsAgentsRoute
   '/api/v1/stats/overview': typeof ApiV1StatsOverviewRoute
-  '/api/v1/stats/trending': typeof ApiV1StatsTrendingRoute
   '/api/v1/deployments': typeof ApiV1DeploymentsIndexRoute
   '/api/v1/agents/$id/deployments': typeof ApiV1AgentsIdDeploymentsRoute
   '/api/v1/deployments/$id/abi': typeof ApiV1DeploymentsIdAbiRoute
@@ -183,9 +184,9 @@ export interface FileRoutesById {
   '/api/v1/agents/register': typeof ApiV1AgentsRegisterRoute
   '/api/v1/agents/rotate-key': typeof ApiV1AgentsRotateKeyRoute
   '/api/v1/deployments/$id': typeof ApiV1DeploymentsIdRouteWithChildren
+  '/api/v1/deployments/featured': typeof ApiV1DeploymentsFeaturedRoute
   '/api/v1/stats/agents': typeof ApiV1StatsAgentsRoute
   '/api/v1/stats/overview': typeof ApiV1StatsOverviewRoute
-  '/api/v1/stats/trending': typeof ApiV1StatsTrendingRoute
   '/api/v1/deployments/': typeof ApiV1DeploymentsIndexRoute
   '/api/v1/agents/$id/deployments': typeof ApiV1AgentsIdDeploymentsRoute
   '/api/v1/deployments/$id/abi': typeof ApiV1DeploymentsIdAbiRoute
@@ -206,9 +207,9 @@ export interface FileRouteTypes {
     | '/api/v1/agents/register'
     | '/api/v1/agents/rotate-key'
     | '/api/v1/deployments/$id'
+    | '/api/v1/deployments/featured'
     | '/api/v1/stats/agents'
     | '/api/v1/stats/overview'
-    | '/api/v1/stats/trending'
     | '/api/v1/deployments/'
     | '/api/v1/agents/$id/deployments'
     | '/api/v1/deployments/$id/abi'
@@ -227,9 +228,9 @@ export interface FileRouteTypes {
     | '/api/v1/agents/register'
     | '/api/v1/agents/rotate-key'
     | '/api/v1/deployments/$id'
+    | '/api/v1/deployments/featured'
     | '/api/v1/stats/agents'
     | '/api/v1/stats/overview'
-    | '/api/v1/stats/trending'
     | '/api/v1/deployments'
     | '/api/v1/agents/$id/deployments'
     | '/api/v1/deployments/$id/abi'
@@ -248,9 +249,9 @@ export interface FileRouteTypes {
     | '/api/v1/agents/register'
     | '/api/v1/agents/rotate-key'
     | '/api/v1/deployments/$id'
+    | '/api/v1/deployments/featured'
     | '/api/v1/stats/agents'
     | '/api/v1/stats/overview'
-    | '/api/v1/stats/trending'
     | '/api/v1/deployments/'
     | '/api/v1/agents/$id/deployments'
     | '/api/v1/deployments/$id/abi'
@@ -270,9 +271,9 @@ export interface RootRouteChildren {
   ApiV1AgentsRegisterRoute: typeof ApiV1AgentsRegisterRoute
   ApiV1AgentsRotateKeyRoute: typeof ApiV1AgentsRotateKeyRoute
   ApiV1DeploymentsIdRoute: typeof ApiV1DeploymentsIdRouteWithChildren
+  ApiV1DeploymentsFeaturedRoute: typeof ApiV1DeploymentsFeaturedRoute
   ApiV1StatsAgentsRoute: typeof ApiV1StatsAgentsRoute
   ApiV1StatsOverviewRoute: typeof ApiV1StatsOverviewRoute
-  ApiV1StatsTrendingRoute: typeof ApiV1StatsTrendingRoute
   ApiV1DeploymentsIndexRoute: typeof ApiV1DeploymentsIndexRoute
   ApiV1DeploymentsVerifiedIndexRoute: typeof ApiV1DeploymentsVerifiedIndexRoute
 }
@@ -335,13 +336,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiV1DeploymentsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/v1/stats/trending': {
-      id: '/api/v1/stats/trending'
-      path: '/api/v1/stats/trending'
-      fullPath: '/api/v1/stats/trending'
-      preLoaderRoute: typeof ApiV1StatsTrendingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/v1/stats/overview': {
       id: '/api/v1/stats/overview'
       path: '/api/v1/stats/overview'
@@ -354,6 +348,13 @@ declare module '@tanstack/react-router' {
       path: '/api/v1/stats/agents'
       fullPath: '/api/v1/stats/agents'
       preLoaderRoute: typeof ApiV1StatsAgentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/v1/deployments/featured': {
+      id: '/api/v1/deployments/featured'
+      path: '/api/v1/deployments/featured'
+      fullPath: '/api/v1/deployments/featured'
+      preLoaderRoute: typeof ApiV1DeploymentsFeaturedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/v1/deployments/$id': {
@@ -452,9 +453,9 @@ const rootRouteChildren: RootRouteChildren = {
   ApiV1AgentsRegisterRoute: ApiV1AgentsRegisterRoute,
   ApiV1AgentsRotateKeyRoute: ApiV1AgentsRotateKeyRoute,
   ApiV1DeploymentsIdRoute: ApiV1DeploymentsIdRouteWithChildren,
+  ApiV1DeploymentsFeaturedRoute: ApiV1DeploymentsFeaturedRoute,
   ApiV1StatsAgentsRoute: ApiV1StatsAgentsRoute,
   ApiV1StatsOverviewRoute: ApiV1StatsOverviewRoute,
-  ApiV1StatsTrendingRoute: ApiV1StatsTrendingRoute,
   ApiV1DeploymentsIndexRoute: ApiV1DeploymentsIndexRoute,
   ApiV1DeploymentsVerifiedIndexRoute: ApiV1DeploymentsVerifiedIndexRoute,
 }
