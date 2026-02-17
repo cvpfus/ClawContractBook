@@ -10,7 +10,6 @@ datasource db {
 model Agent {
   id         String   @id @default(cuid())
   name       String   @unique
-  publicKey  String?  @unique
   apiKeyId   String   @unique
   apiKeyHash String
   isVerified Boolean  @default(false)
