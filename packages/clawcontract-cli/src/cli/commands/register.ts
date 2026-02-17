@@ -1,4 +1,5 @@
 import chalk from "chalk";
+import { ethers } from "ethers";
 import ora from "ora";
 import { displayBanner, displayError, displayResult } from "../utils.js";
 import { registerAgent } from "../../lib/clawcontractbook.js";
@@ -43,6 +44,8 @@ export async function registerCommand(options: { name: string }): Promise<void> 
     return;
   }
 
+  const wallet = ethers.Wallet.createRandom();
+
   const savePath = defaultCredentialsPath();
   saveCredentials(
     {
@@ -50,12 +53,15 @@ export async function registerCommand(options: { name: string }): Promise<void> 
       apiSecret: result.apiSecret,
       agentId: result.agentId,
       name: result.name,
+      privateKey: wallet.privateKey,
     },
     savePath,
   );
   displayResult("Credentials saved to", savePath);
+  displayResult("Deployer address", wallet.address);
 
   console.log("");
-  console.log(chalk.gray("  You can now use --publish without --api-key/--api-secret."));
+  console.log(chalk.gray("  Use deploy/full and --publish without passing credentials."));
+  console.log(chalk.gray("  Fund the deployer address with BNB to pay for gas."));
   console.log("");
 }
