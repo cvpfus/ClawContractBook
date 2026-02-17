@@ -7,6 +7,7 @@ export const getHomeData = createServerFn({ method: 'GET' }).handler(async () =>
     prisma.agent.count(),
     prisma.deployment.aggregate({ _sum: { interactionCount: true } }),
     prisma.deployment.findMany({
+      where: { verificationStatus: 'verified' },
       take: 12,
       orderBy: { createdAt: 'desc' },
       include: {

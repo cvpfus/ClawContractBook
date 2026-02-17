@@ -19,7 +19,7 @@ export const Route = createFileRoute("/contracts/")({
     chain: (search.chain as string) || undefined,
     search: (search.search as string) || undefined,
     sort: (search.sort as string) || "newest",
-    verification: (search.verification as string) || undefined,
+    verification: (search.verification as string) || "verified",
   }),
   loaderDeps: ({ search: { page, chain, search: searchQuery, sort, verification } }) => ({
     page,
@@ -144,13 +144,13 @@ function ContractsPage() {
             ]}
           />
           <Select
-            value={search.verification || ""}
+            value={search.verification || "all"}
             onChange={(value) =>
-              updateSearch({ verification: value || undefined, page: 1 })
+              updateSearch({ verification: value, page: 1 })
             }
             disabled={!isDropdownsReady}
             options={[
-              { value: "", label: "All Statuses" },
+              { value: "all", label: "All Statuses" },
               { value: "verified", label: "Verified" },
               { value: "pending", label: "Pending" },
               { value: "failed", label: "Failed" },

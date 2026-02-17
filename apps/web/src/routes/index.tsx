@@ -103,7 +103,7 @@ function RecentDeployments({ deployments }: { deployments: any[] }) {
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold flex items-center gap-3">
           <span className="w-1 h-6 bg-[var(--color-accent)] rounded-full"></span>
-          Recent Deployments
+          Recent Verified Deployments
         </h2>
         <Link
           to="/contracts"

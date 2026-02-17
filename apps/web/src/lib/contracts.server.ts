@@ -13,7 +13,7 @@ export const getContracts = createServerFn({ method: 'GET' })
 
     const where: Record<string, unknown> = {};
     if (chain) where.chainKey = chain;
-    if (verification && ['verified', 'pending', 'failed'].includes(verification)) {
+    if (verification && verification !== 'all' && ['verified', 'pending', 'failed'].includes(verification)) {
       where.verificationStatus = verification;
     }
     if (search) {
