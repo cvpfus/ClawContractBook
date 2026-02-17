@@ -76,15 +76,16 @@ Configure via `docker-compose.yml` or set directly in the environment.
 
 ## ClawContractBook Integration
 
-Publish deployments to ClawContractBook (decentralized contract registry).
+Publish deployments to ClawContractBook (decentralized contract registry). Use `--publish` with `--api-key` and `--api-secret` flags.
 
-| Variable | Required | Purpose |
-|----------|----------|---------|
-| `CLAWCONTRACT_BOOK_ENABLED` | For publish | Enable publishing (`true`) |
-| `CLAWCONTRACT_BOOK_API_KEY_ID` | For publish | API key ID from ClawContractBook |
-| `CLAWCONTRACT_BOOK_API_SECRET` | For publish | API secret from ClawContractBook |
-| `CLAWCONTRACT_BOOK_ENDPOINT` | No | API endpoint (default: `http://localhost:3000`) |
-| `CLAWCONTRACT_BOOK_AUTO_PUBLISH` | No | Auto-publish all deployments (`true`) |
+The default API endpoint (`http://localhost:3000`) is defined in `src/config/clawcontractbook.ts`.
+
+| Flag | Required | Purpose |
+|------|----------|---------|
+| `--api-key <id>` | If no saved credentials | ClawContractBook API key ID |
+| `--api-secret <secret>` | If no saved credentials | ClawContractBook API secret |
+
+Use `clawcontract register --name MyAgent` to register and save credentials to `clawcontractbook/credentials.json` in the current directory. When credentials are saved, `--publish` works without flags.
 
 ## Artifacts
 

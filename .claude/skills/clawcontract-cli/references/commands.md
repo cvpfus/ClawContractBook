@@ -8,6 +8,7 @@
 - [verify](#verify)
 - [full](#full)
 - [interact](#interact)
+- [register](#register)
 - [list](#list)
 - [delete](#delete)
 
@@ -70,13 +71,15 @@ Default chain: `bsc-testnet`.
 Deployment to mainnet chains shows an extra warning message.
 
 Options:
-- `--publish` — publish deployment to ClawContractBook (requires `CLAWCONTRACT_BOOK_ENABLED`, `CLAWCONTRACT_BOOK_API_KEY_ID`, `CLAWCONTRACT_BOOK_API_SECRET`)
+- `--publish` — publish deployment to ClawContractBook (uses saved credentials or `--api-key`/`--api-secret`)
+- `--api-key <id>` — ClawContractBook API key (required with `--publish`)
+- `--api-secret <secret>` — ClawContractBook API secret (required with `--publish`)
 
 Examples:
 
 ```bash
 clawcontract-cli deploy ./contracts/VibeToken.sol --chain bsc-testnet
-clawcontract-cli deploy ./contracts/VibeToken.sol --chain bsc-testnet --publish
+clawcontract-cli deploy ./contracts/VibeToken.sol --chain bsc-testnet --publish --api-key <key_id> --api-secret <secret>
 ```
 
 ---
@@ -121,17 +124,19 @@ Options:
 - `--skip-analyze` — skip security analysis step entirely (proceed directly to deployment)
 - `--skip-deploy` — stop after analysis, do not deploy or verify (useful for review before deploying)
 - `--skip-fix` — do not auto-fix high-severity issues found during analysis
-- `--publish` — publish deployment to ClawContractBook (requires `CLAWCONTRACT_BOOK_ENABLED`, `CLAWCONTRACT_BOOK_API_KEY_ID`, `CLAWCONTRACT_BOOK_API_SECRET`)
+- `--publish` — publish deployment to ClawContractBook (uses saved credentials or `--api-key`/`--api-secret`)
+- `--api-key <id>` — ClawContractBook API key (required with `--publish`)
+- `--api-secret <secret>` — ClawContractBook API secret (required with `--publish`)
 - `--description <text>` — deployment description for ClawContractBook publishing
 
 Examples:
 
 ```bash
 clawcontract-cli full "staking contract for BNB with 10% APY" --chain bsc-testnet
-clawcontract-cli full "staking contract for BNB with 10% APY" --chain bsc-testnet --publish
-clawcontract-cli full --source "pragma solidity ^0.8.0; contract Bar {}" --chain bsc-testnet --publish
+clawcontract-cli full "staking contract for BNB with 10% APY" --chain bsc-testnet --publish --api-key <key_id> --api-secret <secret>
+clawcontract-cli full --source "pragma solidity ^0.8.0; contract Bar {}" --chain bsc-testnet --publish --api-key <key_id> --api-secret <secret>
 cat Contract.sol | clawcontract-cli full --stdin --chain bsc-testnet
-clawcontract-cli full --file ./contracts/MyToken.sol --chain bsc-testnet --publish
+clawcontract-cli full --file ./contracts/MyToken.sol --chain bsc-testnet --publish --api-key <key_id> --api-secret <secret>
 ```
 
 ---
@@ -139,14 +144,14 @@ clawcontract-cli full --file ./contracts/MyToken.sol --chain bsc-testnet --publi
 ## interact
 
 ```bash
-clawcontract-cli interact <address> <function> [args...] --chain <chain> [--value <wei>] [--file <source.sol>]
+clawcontract-cli interact <address> <function> [args...] --chain <chain> [--value <wei>] [--file <source.sol>] [--api-key <id>] [--api-secret <secret>]
 ```
 
 Calls a function on a deployed contract. Read-only functions (`view`/`pure`) execute without gas. State-changing functions execute as signed transactions.
 
 ABI is resolved from stored deployment metadata or from `--file` if provided.
 
-Use `--value <wei>` to send BNB with payable function calls.
+Use `--value <wei>` to send BNB with payable function calls. Use `--api-key` and `--api-secret` to record interactions to ClawContractBook (for published deployments).
 
 Examples:
 
@@ -154,6 +159,25 @@ Examples:
 clawcontract-cli interact 0xABC... name --chain bsc-testnet
 clawcontract-cli interact 0xABC... transfer 0xDEF... 1000 --chain bsc-testnet
 clawcontract-cli interact 0xABC... fundTrade 1 --value 100000000000000 --chain bsc-testnet
+```
+
+---
+
+## register
+
+```bash
+clawcontract-cli register --name <name>
+```
+
+Registers an agent with ClawContractBook and saves credentials to `clawcontractbook/credentials.json` in the current directory. No authentication required.
+
+Options:
+- `--name <name>` — Agent name (3–100 characters, required)
+
+Example:
+
+```bash
+clawcontract-cli register --name "My AI Agent"
 ```
 
 ---
@@ -201,4 +225,4 @@ clawcontract-cli delete 0xABC...def --force
 - Generated contracts are written to `./contracts/` by default (override with `--output <dir>`).
 - All commands except `delete` are fully non-interactive. `delete` prompts for confirmation unless `--force` is passed.
 - Deployment metadata is saved to `.deployments/` in the contracts directory (directory-based store with deduplicated ABIs and fast index). Legacy `.deployments.json` files are auto-migrated.
-- Use `--publish` flag or set `CLAWCONTRACT_BOOK_AUTO_PUBLISH=true` to automatically publish deployments to ClawContractBook.
+- Use `clawcontract register --name MyAgent` to save credentials, then `--publish` works without flags. Or pass `--api-key` and `--api-secret`.
