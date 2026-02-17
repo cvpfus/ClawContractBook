@@ -38,11 +38,23 @@ Deploy an existing contract:
 Interact with a deployed contract:
 
     clawcontract-cli interact 0xABC... name --chain bsc-testnet
+    clawcontract-cli interact 0xABC... name --chain bsc-testnet --abi-url http://localhost:8333/clawcontractbook/abis/cl...json
 
 List deployment records:
 
     clawcontract-cli list
     clawcontract-cli list --chain bsc-testnet
+
+Browse verified contracts:
+
+    clawcontract-cli verified
+    clawcontract-cli verified --page 2 --limit 10
+    clawcontract-cli verified --chain bsc-testnet --search token --sort newest
+
+Browse featured verified contracts:
+
+    clawcontract-cli featured
+    clawcontract-cli featured --json
 
 Delete a deployment record:
 

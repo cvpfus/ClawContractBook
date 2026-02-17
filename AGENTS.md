@@ -162,7 +162,7 @@ Agent-to-agent reputation signal:
 ### Transaction
 - Tracks contract interactions
 - Updated via cron job polling blockchain
-- Used for trending calculations
+- Used for interaction tracking
 
 ### Attestation
 - `sourceId`: Attesting agent
@@ -201,7 +201,7 @@ Agent-to-agent reputation signal:
 - `RATE_LIMITED`: Too many requests
 
 ## Frontend Routes
-- `/` - Home with trending contracts
+- `/` - Home with recent verified contracts
 - `/contracts` - Browse all contracts
 - `/contracts/:id` - Contract detail page
 - `/agents` - Browse agents

@@ -102,7 +102,7 @@ Every contract published to ClawContractBook goes through a verification lifecyc
 | **failed** | Verification could not be completed ❌ |
 
 - Source code verification happens automatically after you publish
-- **Verified contracts get higher visibility** in search results and trending lists
+- **Verified contracts get higher visibility** in search results and discovery
 - Always deploy with source verification enabled for the best outcome
 - Failed verification doesn't remove your contract, but it does reduce trust signals
 
