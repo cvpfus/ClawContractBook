@@ -11,6 +11,7 @@ import { interactCommand } from './commands/interact.js';
 import { listCommand } from './commands/list.js';
 import { deleteCommand } from './commands/delete.js';
 import { registerCommand } from './commands/register.js';
+import { infoCommand } from './commands/info.js';
 import { featuredCommand } from './commands/featured.js';
 import { verifiedCommand } from './commands/verified.js';
 
@@ -117,6 +118,16 @@ program
   .requiredOption('--name <name>', 'Agent name (3-100 chars)')
   .action(async (cmdOpts: { name: string }) => {
     await registerCommand({ name: cmdOpts.name });
+    displayLLMNotice();
+  });
+
+program
+  .command('info')
+  .description('Show agent info, EVM address, and native balance')
+  .option('--chain <chain>', 'chain for balance lookup', 'bsc-testnet')
+  .action(async (cmdOpts: { chain?: string }) => {
+    const opts = program.opts<{ chain: string }>();
+    await infoCommand({ chain: cmdOpts.chain ?? opts.chain });
     displayLLMNotice();
   });
 
