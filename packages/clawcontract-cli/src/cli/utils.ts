@@ -11,7 +11,7 @@ export function displayBanner(): void {
   \\_____|_|\\__,_| \\_/\\_/  \\_____\\___/|_| |_|\\__|_|  \\__,_|\\___|\\__|
 `);
   console.log(banner);
-  console.log(chalk.gray('  AI-powered smart contract generator for BNB Chain\n'));
+  console.log(chalk.gray('  Smart contract analyzer and deployer for BNB Chain\n'));
 }
 
 export function displayResult(label: string, value: string): void {

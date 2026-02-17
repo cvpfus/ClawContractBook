@@ -3,7 +3,7 @@ import 'dotenv/config';
 import { Command } from 'commander';
 import { createRequire } from 'node:module';
 import { displayBanner, displayLLMNotice } from './utils.js';
-import { generateCommand } from './commands/generate.js';
+import { createCommand } from './commands/create.js';
 import { analyzeCommand } from './commands/analyze.js';
 import { deployCommand } from './commands/deploy.js';
 import { fullCommand } from './commands/full.js';
@@ -21,7 +21,7 @@ const program = new Command();
 
 program
   .name('clawcontract')
-  .description('AI-powered smart contract generator, analyzer, and deployer for BNB Chain')
+  .description('Smart contract analyzer and deployer for BNB Chain')
   .version(pkg.version)
   .option('--chain <chain>', 'target blockchain', 'bsc-testnet')
   .option('--output <dir>', 'output directory for generated contracts', './contracts')
@@ -30,22 +30,17 @@ program
   });
 
 program
-  .command('generate [description]')
-  .description('Generate a smart contract from natural language or supplied source')
-  .option('--source <code>', 'use supplied Solidity source instead of AI generation')
+  .command('create')
+  .description('Create a smart contract from supplied source')
+  .option('--source <code>', 'Solidity source code')
   .option('--stdin', 'read Solidity source from stdin')
-  .action(async (description: string | undefined, cmdOpts: { source?: string; stdin?: boolean }) => {
+  .action(async (cmdOpts: { source?: string; stdin?: boolean }) => {
     const opts = program.opts<{ chain: string; output: string }>();
-    const hasDirectSource = !!cmdOpts.source || !!cmdOpts.stdin;
-    if (!hasDirectSource && !description) {
-      console.error('Error: Provide either a description (for AI) or --source / --stdin (for your own contract).');
+    if (!cmdOpts.source && !cmdOpts.stdin) {
+      console.error('Error: Provide Solidity source via --source <code> or --stdin.');
       process.exit(1);
     }
-    if (hasDirectSource && description) {
-      console.error('Error: Use either a description (for AI) or --source/--stdin (for your own contract), not both.');
-      process.exit(1);
-    }
-    await generateCommand(description, { ...opts, source: cmdOpts.source, stdin: cmdOpts.stdin });
+    await createCommand({ ...opts, source: cmdOpts.source, stdin: cmdOpts.stdin });
     displayLLMNotice();
   });
 
@@ -77,32 +72,27 @@ program
   });
 
 program
-  .command('full [description]')
-  .description('Full pipeline: generate → analyze → deploy')
-  .option('--source <code>', 'use supplied Solidity source instead of AI generation')
+  .command('full')
+  .description('Full pipeline: create → analyze → deploy')
+  .option('--source <code>', 'use supplied Solidity source')
   .option('--stdin', 'read Solidity source from stdin')
-  .option('--file <path>', 'use existing Solidity file (skip generate step)')
-  .option('--skip-deploy', 'Stop after analysis — do not deploy or verify')
-  .option('--skip-fix', 'Do not auto-fix high-severity issues')
+  .option('--file <path>', 'use existing Solidity file (skip create step)')
+  .option('--skip-deploy', 'Stop after analysis — do not deploy')
   .option('--skip-analyze', 'Skip security analysis step entirely')
   .option('--publish', 'Publish to ClawContractBook')
   .option('--api-key <id>', 'ClawContractBook API key (or use saved credentials from register)')
   .option('--api-secret <secret>', 'ClawContractBook API secret (or use saved credentials from register)')
   .option('--description <text>', 'Deployment description')
-  .action(async (description: string | undefined, cmdOpts: { source?: string; stdin?: boolean; file?: string; skipDeploy?: boolean; skipFix?: boolean; skipAnalyze?: boolean; publish?: boolean; apiKey?: string; apiSecret?: string; description?: string }) => {
+  .action(async (cmdOpts: { source?: string; stdin?: boolean; file?: string; skipDeploy?: boolean; skipAnalyze?: boolean; publish?: boolean; apiKey?: string; apiSecret?: string; description?: string }) => {
     const opts = program.opts<{ chain: string; output: string }>();
-    const hasDirectInput = !!cmdOpts.source || !!cmdOpts.stdin || !!cmdOpts.file;
-    if (!hasDirectInput && !description) {
-      console.error('Error: Use either a description (for AI), or --source / --stdin / --file (for your own contract).');
-      process.exit(1);
-    }
-    if (hasDirectInput && description) {
-      console.error('Error: Use either a description (for AI) or --source/--stdin/--file (for your own contract), not both.');
+    const hasInput = !!cmdOpts.source || !!cmdOpts.stdin || !!cmdOpts.file;
+    if (!hasInput) {
+      console.error('Error: Provide Solidity source via --source, --stdin, or --file.');
       process.exit(1);
     }
     await fullCommand(
-      { description, source: cmdOpts.source, stdin: cmdOpts.stdin, file: cmdOpts.file },
-      { ...opts, skipDeploy: cmdOpts.skipDeploy, skipFix: cmdOpts.skipFix, skipAnalyze: cmdOpts.skipAnalyze, publish: cmdOpts.publish, apiKeyId: cmdOpts.apiKey, apiSecret: cmdOpts.apiSecret, description: cmdOpts.description },
+      { source: cmdOpts.source, stdin: cmdOpts.stdin, file: cmdOpts.file },
+      { ...opts, skipDeploy: cmdOpts.skipDeploy, skipAnalyze: cmdOpts.skipAnalyze, publish: cmdOpts.publish, apiKeyId: cmdOpts.apiKey, apiSecret: cmdOpts.apiSecret, description: cmdOpts.description },
     );
     displayLLMNotice();
   });
