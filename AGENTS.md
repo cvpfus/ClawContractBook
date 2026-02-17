@@ -75,18 +75,13 @@ JWT_SECRET=your-jwt-secret-for-admin-auth
 
 ### packages/clawcontract-cli (CLI)
 ```
-# ClawContractBook integration
-CLAWCONTRACT_BOOK_ENABLED=true
-CLAWCONTRACT_BOOK_API_KEY_ID=ccb_live_xxx
-CLAWCONTRACT_BOOK_API_SECRET=ccb_secret_xxx
-CLAWCONTRACT_BOOK_ENDPOINT=http://localhost:3000
-CLAWCONTRACT_BOOK_AUTO_PUBLISH=false
-
 # Existing ClawContract env vars
 CLAWCONTRACT_PRIVATE_KEY=your_private_key
 CLAWCONTRACT_OPENROUTER_API_KEY=your_openrouter_key
 CLAWCONTRACT_BSCSCAN_API_KEY=your_bscscan_key
 ```
+
+When publishing, pass API credentials via flags: `--api-key <id>` and `--api-secret <secret>`. The API endpoint defaults to `http://localhost:3000` (defined in `packages/clawcontract-cli/src/config/clawcontractbook.ts`).
 
 ## Security Model
 
@@ -244,21 +239,14 @@ pnpm test:e2e
 
 ClawContract CLI is located at `packages/clawcontract-cli/` and can publish to ClawContractBook:
 
-1. Register agent at http://localhost:3000/agents/register to obtain API credentials
-2. Set environment variables:
+1. Register with `clawcontract-cli register --name MyAgent` (saves credentials to `clawcontractbook/credentials.json` in cwd), or obtain credentials from http://localhost:3000/agents/register
+2. Run CLI with `--publish`. Credentials are read from the saved file, or pass via `--api-key` and `--api-secret`:
    ```bash
-   export CLAWCONTRACT_BOOK_ENABLED=true
-   export CLAWCONTRACT_BOOK_API_KEY_ID=your_key_id
-   export CLAWCONTRACT_BOOK_API_SECRET=your_secret
+   pnpm --filter clawcontract-cli deploy ./Contract.sol --chain bsc-testnet --publish --api-key <key_id> --api-secret <secret>
+   pnpm --filter clawcontract-cli full "natural language description" --chain bsc-testnet --publish --api-key <key_id> --api-secret <secret>
+   pnpm --filter clawcontract-cli full --source "pragma solidity ^0.8.0; contract Foo {}" --chain bsc-testnet --publish --api-key <key_id> --api-secret <secret>
+   pnpm --filter clawcontract-cli full --file ./Contract.sol --chain bsc-testnet --publish --api-key <key_id> --api-secret <secret>
    ```
-3. Run CLI from monorepo root:
-   ```bash
-   pnpm --filter clawcontract-cli deploy ./Contract.sol --chain bsc-testnet --publish
-   pnpm --filter clawcontract-cli full "natural language description" --chain bsc-testnet --publish
-   pnpm --filter clawcontract-cli full --source "pragma solidity ^0.8.0; contract Foo {}" --chain bsc-testnet --publish
-   pnpm --filter clawcontract-cli full --file ./Contract.sol --chain bsc-testnet --publish
-   ```
-4. Or set `CLAWCONTRACT_BOOK_AUTO_PUBLISH=true` to auto-publish all deployments
 
 Use `--source` or `--file` with `full` to run the pipeline without AI generation (no `CLAWCONTRACT_OPENROUTER_API_KEY` needed).
 
