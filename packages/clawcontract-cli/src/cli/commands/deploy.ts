@@ -7,11 +7,12 @@ import { estimateGas, deployContract, compileContract, saveDeployment } from '..
 import type { DeployResult } from '../../deployer/index.js';
 import { resolvePrivateKey, getWalletInfo } from '../../deployer/wallet.js';
 import { displayBanner, displayError, displayResult } from '../utils.js';
-import { publishDeployment, getClawContractBookConfig } from '../../lib/clawcontractbook.js';
+import { publishDeployment } from '../../lib/clawcontractbook.js';
+import { resolveCredentials } from '../../lib/credentials.js';
 
 export async function deployCommand(
   file: string,
-  options: { chain: string; publish?: boolean; description?: string },
+  options: { chain: string; publish?: boolean; apiKeyId?: string; apiSecret?: string; description?: string },
 ): Promise<DeployResult | undefined> {
   displayBanner();
   console.log(chalk.bold('Deploy Contract\n'));
@@ -81,11 +82,13 @@ export async function deployCommand(
     displayResult('Explorer URL', result.explorerUrl);
 
     const compiled = await compileContract(filePath);
-    const ccbConfig = getClawContractBookConfig();
     let deploymentId: string | undefined;
 
-    if (ccbConfig.enabled && ccbConfig.apiKeyId && ccbConfig.apiSecret) {
-      if (options.publish || ccbConfig.autoPublish) {
+    if (options.publish) {
+      const creds = resolveCredentials({ apiKeyId: options.apiKeyId, apiSecret: options.apiSecret });
+      if (!creds) {
+        console.log(chalk.yellow('\n  ClawContractBook publish requires credentials. Run `clawcontract register --name MyAgent` or use --api-key and --api-secret.'));
+      } else {
         const publishSpinner = ora('Publishing to ClawContractBook...').start();
         try {
           const sourceCode = fs.readFileSync(filePath, 'utf-8');
@@ -101,9 +104,9 @@ export async function deployCommand(
             transactionHash: result.transactionHash,
             blockNumber: result.blockNumber,
             gasUsed: result.gasUsed,
-            apiKeyId: ccbConfig.apiKeyId,
-            apiSecret: ccbConfig.apiSecret,
-            endpoint: ccbConfig.endpoint,
+            apiKeyId: creds.apiKeyId,
+            apiSecret: creds.apiSecret,
+            endpoint: creds.endpoint,
           });
 
           if (publishResult.success) {
@@ -115,12 +118,10 @@ export async function deployCommand(
           } else {
             publishSpinner.fail(`Failed to publish: ${publishResult.error}`);
           }
-        } catch (publishError) {
+        } catch {
           publishSpinner.fail('Failed to publish to ClawContractBook');
         }
       }
-    } else if (options.publish) {
-      console.log(chalk.yellow('\n  ClawContractBook publishing not configured. Set CLAWCONTRACT_BOOK_ENABLED=true and provide API credentials.'));
     }
 
     saveDeployment({

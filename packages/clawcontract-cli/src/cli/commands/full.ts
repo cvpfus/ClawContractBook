@@ -68,7 +68,7 @@ async function autoFixHighSeverity(
 
 export async function fullCommand(
   input: FullCommandInput,
-  options: { chain: string; output: string; skipDeploy?: boolean; skipFix?: boolean; skipAnalyze?: boolean; publish?: boolean; description?: string },
+  options: { chain: string; output: string; skipDeploy?: boolean; skipFix?: boolean; skipAnalyze?: boolean; publish?: boolean; apiKeyId?: string; apiSecret?: string; description?: string },
 ): Promise<void> {
   displayBanner();
   console.log(chalk.bold('Full Pipeline: Generate → Analyze → Deploy → Verify\n'));
@@ -130,7 +130,13 @@ export async function fullCommand(
 
   // Step 3: Deploy
   console.log(chalk.bold.blue('\n━━━ Step 3/4: Deploy Contract ━━━\n'));
-  const deployResult = await deployCommand(filePath, { chain: options.chain, publish: options.publish, description: options.description });
+  const deployResult = await deployCommand(filePath, {
+    chain: options.chain,
+    publish: options.publish,
+    apiKeyId: options.apiKeyId,
+    apiSecret: options.apiSecret,
+    description: options.description,
+  });
 
   if (!deployResult) {
     console.log(chalk.yellow('\nPipeline stopped: deployment did not complete.'));

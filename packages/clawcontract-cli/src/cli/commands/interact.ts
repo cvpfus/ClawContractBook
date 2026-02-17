@@ -7,7 +7,8 @@ import { loadDeployment } from '../../deployer/metadata.js';
 import { compileContract } from '../../deployer/compiler.js';
 import { resolvePrivateKey } from '../../deployer/wallet.js';
 import { displayBanner, displayError, displayResult } from '../utils.js';
-import { getClawContractBookConfig, incrementInteraction } from '../../lib/clawcontractbook.js';
+import { incrementInteraction } from '../../lib/clawcontractbook.js';
+import { resolveCredentials } from '../../lib/credentials.js';
 
 interface AbiInput {
   name: string;
@@ -51,7 +52,7 @@ export async function interactCommand(
   address: string,
   functionName: string,
   args: string[],
-  options: { chain: string; file?: string; value?: string },
+  options: { chain: string; file?: string; value?: string; apiKeyId?: string; apiSecret?: string },
 ): Promise<void> {
   displayBanner();
   console.log(chalk.bold('Interact with Contract\n'));
@@ -156,13 +157,13 @@ export async function interactCommand(
         `${chainConfig.explorerUrl}/tx/${receipt.hash}`,
       );
 
-      const ccbConfig = getClawContractBookConfig();
-      if (ccbConfig.enabled && deployment?.deploymentId) {
+      const creds = resolveCredentials({ apiKeyId: options.apiKeyId, apiSecret: options.apiSecret });
+      if (creds && deployment?.deploymentId) {
         const result = await incrementInteraction({
           deploymentId: deployment.deploymentId,
-          apiKeyId: ccbConfig.apiKeyId!,
-          apiSecret: ccbConfig.apiSecret!,
-          endpoint: ccbConfig.endpoint,
+          apiKeyId: creds.apiKeyId,
+          apiSecret: creds.apiSecret,
+          endpoint: creds.endpoint,
         });
         if (result.success) {
           console.log(chalk.green('  Interaction recorded to ClawContractBook'));
