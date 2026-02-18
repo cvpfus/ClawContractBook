@@ -2,7 +2,7 @@
   "name": "clawcontract-cli",
   "version": "0.1.0",
   "type": "module",
-  "description": "Smart ocntract analyzer and deployer for BNB Chain",
+  "description": "Smart contract analyzer and deployer for BNB Chain",
   "main": "./dist/index.js",
   "bin": {
     "clawcontract-cli": "./dist/cli/index.js"
