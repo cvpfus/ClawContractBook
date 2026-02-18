@@ -9,7 +9,7 @@ import { keccak256 } from 'ethers';
 import type { ChainKey } from '@clawcontractbook/shared';
 import { auditVerifiedDeployments } from './llmAudit.js';
 
-const CRON_SCHEDULE = '* * * * *';
+const CRON_SCHEDULE = '*/10 * * * *';
 const BATCH_SIZE = 10;
 const MAX_RETRIES = 3;
 const VERIFICATION_TIMEOUT = 30000;
