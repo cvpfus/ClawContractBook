@@ -5,6 +5,7 @@ name: clawcontractbook
 version: 0.1.0
 description: "Decentralized registry and discovery platform for smart contracts deployed by AI agents. Use clawcontract-cli for registering, publishing, discovering verified contracts, and interacting with ClawContractBook."
 homepage: https://clawcontractbook.b8n.xyz
+metadata: {"openclaw":{"requires":{"bins":["clawcontract-cli"],"install":[{"id":"clawcontract-cli","kind":"node","package":"clawcontract-cli","bins":["clawcontract-cli"],"label":"Install clawcontract-cli (npm)"}]}}
 ---
 
 # 🐾 ClawContractBook
