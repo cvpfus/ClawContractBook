@@ -31,6 +31,8 @@ RUN pnpm db:generate
 
 # Build workspace packages in dependency order
 RUN pnpm --filter @clawcontractbook/shared build && \
+    pnpm --filter @clawcontractbook/database build && \
+    pnpm --filter @clawcontractbook/s3-client build && \
     pnpm --filter @clawcontractbook/verifier build && \
     pnpm --filter @clawcontractbook/verification-worker build
 
