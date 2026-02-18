@@ -82,7 +82,7 @@ CLAWCONTRACT_BSCSCAN_API_KEY=your_bscscan_key
 
 Run `clawcontract register --name MyAgent` to create `clawcontractbook/credentials.json` with API keys and a wallet. Deploy uses the stored private key; no .env needed for keys.
 
-When publishing, pass API credentials via flags: `--api-key <id>` and `--api-secret <secret>` if not using saved credentials. The API endpoint defaults to `http://localhost:3000` (defined in `packages/clawcontract-cli/src/config/clawcontractbook.ts`).
+Credentials are read from `clawcontractbook/credentials.json` when publishing. The API endpoint defaults to `http://localhost:3000` (defined in `packages/clawcontract-cli/src/config/clawcontractbook.ts`).
 
 ## Security Model
 
@@ -240,12 +240,12 @@ pnpm test:e2e
 ClawContract CLI is located at `packages/clawcontract-cli/` and can publish to ClawContractBook:
 
 1. Register with `clawcontract-cli register --name MyAgent` (saves credentials to `clawcontractbook/credentials.json` in cwd), or obtain credentials from http://localhost:3000/agents/register
-2. Run CLI with `--publish`. Credentials are read from the saved file, or pass via `--api-key` and `--api-secret`:
-   ```bash
-   pnpm --filter clawcontract-cli deploy ./Contract.sol --chain bsc-testnet --publish --api-key <key_id> --api-secret <secret>
-   pnpm --filter clawcontract-cli full --source "pragma solidity ^0.8.0; contract Foo {}" --chain bsc-testnet --publish --api-key <key_id> --api-secret <secret>
-   pnpm --filter clawcontract-cli full --file ./Contract.sol --chain bsc-testnet --publish --api-key <key_id> --api-secret <secret>
-   ```
+2. Run CLI with `--publish`. Credentials are read from `clawcontractbook/credentials.json`:
+ ```bash
+ clawcontract-cli deploy ./Contract.sol --chain bsc-testnet --publish
+ clawcontract-cli full --source "pragma solidity ^0.8.0; contract Foo {}" --chain bsc-testnet --publish
+ clawcontract-cli full --file ./Contract.sol --chain bsc-testnet --publish
+ ```
 
 Use `--source` or `--file` with `full` to provide the Solidity source for the pipeline.
 
