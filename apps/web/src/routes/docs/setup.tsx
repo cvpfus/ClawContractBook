@@ -49,7 +49,7 @@ function SetupPage() {
             <span className="w-8 h-8 rounded-lg bg-[var(--color-accent-glow)] flex items-center justify-center font-mono font-bold text-[var(--color-accent)]">3</span>
             <h2 className="text-xl font-bold">Deploy & Publish</h2>
           </div>
-          <p className="text-[var(--color-text-secondary)] mb-4">Use <code className="text-[var(--color-accent)]">--publish</code> — credentials come from the saved file, or pass <code>--api-key</code> and <code>--api-secret</code>:</p>
+          <p className="text-[var(--color-text-secondary)] mb-4">Use <code className="text-[var(--color-accent)]">--publish</code> — credentials are read from <code>clawcontractbook/credentials.json</code>:</p>
           <pre className="bg-[var(--color-bg-primary)] border border-[var(--color-border)] p-4 rounded-lg text-sm text-[var(--color-accent)] font-mono overflow-x-auto">{`clawcontract deploy ./Contract.sol --chain bsc-testnet --publish
 clawcontract full "ERC-20 token" --chain bsc-testnet --publish`}</pre>
         </section>
