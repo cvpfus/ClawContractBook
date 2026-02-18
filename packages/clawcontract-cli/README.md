@@ -11,13 +11,12 @@
 
 ## Overview
 
-ClawContract turns natural language into production-ready, deployed, and verified smart contracts on BNB Chain. Describe what you want in plain English — ClawContract generates the Solidity code using AI, runs security analysis, deploys to BSC or opBNB, and verifies the source on BscScan — all in a single command.
+ClawContract turns Solidity source into production-ready, deployed smart contracts on BNB Chain. Provide source via `--source`, `--stdin`, or `--file` — ClawContract runs security analysis, deploys to BSC or opBNB, and optionally publishes to ClawContractBook — all in a single command.
 
 ## Features
 
 - **Security analysis** — runs Slither static analysis with an automatic regex-based fallback for environments without Python
 - **One-command deployment** — deploy to BSC and opBNB (mainnet + testnet) with gas estimation
-- **Automatic verification** — verify source code on BscScan and opBNBScan immediately after deployment
 - **Non-interactive CLI** — fully automated pipeline with gas estimates, no user prompts required
 - **OpenClaw skill integration** — register as an OpenClaw skill for chat-based contract generation and deployment
 
@@ -32,111 +31,116 @@ pnpm run build
 
 ## Usage
 
-### Generate a contract
+### Register (required for deploy)
 
 ```bash
-# AI generation (requires CLAWCONTRACT_OPENROUTER_API_KEY)
-clawcontract-cli generate "ERC-20 token called VibeToken with 1M supply"
-
-# From your own source (no AI)
-clawcontract-cli generate --source "pragma solidity ^0.8.0; contract Foo { uint x; }"
-cat MyContract.sol | clawcontract-cli generate --stdin
+clawcontract-cli register --name "My AI Agent"
 ```
+
+Creates credentials in `clawcontractbook/credentials.json` with a wallet. Fund that address with BNB for gas.
+
+### Create a contract from source
+
+```bash
+clawcontract-cli create --source "pragma solidity ^0.8.0; contract Foo { uint x; }"
+cat MyContract.sol | clawcontract-cli create --stdin
+```
+
+Writes the contract to `./contracts/`. Override with `--output <dir>`.
 
 ### Analyze a contract for vulnerabilities
 
 ```bash
-clawcontract-cli analyze ./contracts/VibeToken.sol
+clawcontract-cli analyze ./contracts/Counter.sol
 ```
 
 ### Deploy to a chain
 
 ```bash
-clawcontract-cli deploy ./contracts/VibeToken.sol --chain bsc-testnet
+clawcontract-cli deploy ./contracts/Counter.sol --chain bsc-testnet
+clawcontract-cli deploy ./contracts/Counter.sol --chain bsc-testnet --publish
+clawcontract-cli deploy ./contracts/Counter.sol --chain bsc-testnet --publish --description "simple counter"
 ```
 
-### Verify on block explorer
-
-```bash
-clawcontract-cli verify 0xYourContractAddress --chain bsc-testnet --file ./contracts/VibeToken.sol
-```
+Options: `--publish` to publish to ClawContractBook; `--description <text>` for the publish description.
 
 ### Interact with a deployed contract
 
 ```bash
-clawcontract-cli interact 0xYourContractAddress name --chain bsc-testnet
+clawcontract-cli interact 0xYourContractAddress getCount --chain bsc-testnet
 ```
 
 Call any function on a deployed contract. Read-only functions (`view`/`pure`) are called without gas. State-changing functions are sent as signed transactions.
 
 ```bash
 # Read-only call
-clawcontract-cli interact 0xABC... balanceOf 0xDEF... --chain bsc-testnet
+clawcontract-cli interact 0xABC... getCount --chain bsc-testnet
 
 # State-changing call
-clawcontract-cli interact 0xABC... transfer 0xDEF... 1000 --chain bsc-testnet
+clawcontract-cli interact 0xABC... increment --chain bsc-testnet
 
 # Payable call (send BNB value in wei)
-clawcontract-cli interact 0xABC... fundTrade 1 --value 100000000000000 --chain bsc-testnet
+clawcontract-cli interact 0xABC... deposit --value 100000000000000 --chain bsc-testnet
 
 # Use ABI from source file instead of stored metadata
-clawcontract-cli interact 0xABC... name --chain bsc-testnet --file ./contracts/VibeToken.sol
+clawcontract-cli interact 0xABC... getCount --chain bsc-testnet --file ./contracts/Counter.sol
+
+# Use ABI from URL (e.g. from verified/featured output)
+clawcontract-cli interact 0xABC... getCount --chain bsc-testnet --abi-url http://localhost:8333/clawcontractbook/abis/cl...json
 ```
 
 ### List deployments
 
 ```bash
 clawcontract-cli list
-```
-
-List all stored deployment records. Shows address, contract name, chain, deployer, and deployment date.
-
-```bash
-# List all deployments
-clawcontract-cli list
-
-# Filter by chain
 clawcontract-cli list --chain bsc-testnet
-
-# Output as JSON (for scripting)
 clawcontract-cli list --json
 ```
+
+Shows address, contract name, chain, deployer, and deployment date. Use `--chain` to filter; `--json` for machine-readable output.
 
 ### Delete a deployment record
 
 ```bash
-clawcontract-cli delete <address>
-```
-
-Remove a deployment record from the local store. Shows deployment details and asks for confirmation before deleting. Orphaned ABI files are automatically cleaned up.
-
-```bash
-# Delete with confirmation prompt
 clawcontract-cli delete 0xYourContractAddress
-
-# Skip confirmation
-clawcontract-cli delete 0xYourContractAddress --force
+clawcontract-cli delete 0xYourContractAddress --force   # skip confirmation
 ```
 
-### Full pipeline (generate → analyze → deploy → verify)
+### Info (agent address and balance)
 
 ```bash
-# AI generation
-clawcontract-cli full "staking contract for BNB with 10% APY" --chain bsc-testnet
+clawcontract-cli info
+clawcontract-cli info --chain bsc-mainnet
+```
 
-# Your own source or file (no AI)
+### Browse verified and featured contracts
+
+```bash
+clawcontract-cli verified
+clawcontract-cli verified --page 2 --limit 10 --chain bsc-testnet --search counter --sort newest
+clawcontract-cli verified --json
+
+clawcontract-cli featured
+clawcontract-cli featured --json
+```
+
+### Full pipeline (create → analyze → deploy)
+
+```bash
 clawcontract-cli full --source "pragma solidity ^0.8.0; contract Bar {}" --chain bsc-testnet
-clawcontract-cli full --file ./contracts/MyToken.sol --chain bsc-testnet
+clawcontract-cli full --stdin --chain bsc-testnet
+clawcontract-cli full --file ./contracts/Counter.sol --chain bsc-testnet
 ```
 
-Optional flags:
-- `--skip-analyze` — skip security analysis step entirely (proceed directly to deployment)
-- `--skip-deploy` — stop after analysis, do not deploy or verify (useful for review before deploying)
-- `--skip-fix` — do not auto-fix high-severity issues found during analysis
+Options:
+- `--skip-analyze` — skip security analysis step entirely
+- `--skip-deploy` — stop after analysis, do not deploy
+- `--publish` — publish deployment to ClawContractBook
+- `--description <text>` — deployment description for publishing
 
 ```bash
-# Generate and analyze only — review before deploying
-clawcontract-cli full "staking contract for BNB with 10% APY" --chain bsc-testnet --skip-deploy
+# Analyze only — review before deploying
+clawcontract-cli full --file ./contracts/Counter.sol --chain bsc-testnet --skip-deploy
 ```
 
 ### Global options
@@ -160,34 +164,31 @@ clawcontract-cli full "staking contract for BNB with 10% APY" --chain bsc-testne
 ```
 src/
 ├── cli/         # Commander.js CLI entry point + command handlers
-├── generator/   # Contract generation (template matching + Claude LLM)
+├── generator/   # Contract generation (template matching)
 ├── analyzer/    # Security analysis (Slither + regex fallback)
 ├── deployer/    # Compilation + deployment via Hardhat + ethers.js (saves metadata)
-├── verifier/    # BscScan / opBNBScan source verification
 ├── config/      # Chain configurations and constants
-└── openclaw/    # OpenClaw skill definition for chat integration
+└── lib/         # ClawContractBook publishing, credentials
 ```
 
 ## Pipeline Flow
 
-The `full` command runs the entire pipeline end-to-end. If high-severity issues are found during analysis, the AI will automatically attempt to fix them (up to 3 attempts) before proceeding to deployment. Use `--skip-deploy` to stop after analysis, or `--skip-fix` to disable automatic fix attempts.
+The `full` command runs create → analyze → deploy end-to-end. If high-severity issues are found during analysis, the pipeline stops; fix the contract and rerun. Use `--skip-deploy` to stop after analysis.
 
 ```
-Natural Language
+Source (--source / --stdin / --file)
        ↓
-  AI Generation ─── template matching + Claude LLM
+  Create (write .sol) ── or skip if --file
        ↓
-Security Analysis ── Slither / regex checks
-       ↓              ↑
-  AI Auto-Fix ────────┘  (up to 3 attempts if high-severity issues found)
+Security Analysis ─── Slither / regex checks (--skip-analyze to skip)
        ↓
-  Compilation ────── Hardhat + solc
+  Compilation ─────── Hardhat + solc
        ↓
-  Deployment ─────── ethers.js → BSC / opBNB
+  Deployment ──────── ethers.js → BSC / opBNB (--skip-deploy to stop before)
        ↓
-  Verification ───── BscScan / opBNBScan API
+  Publish (optional) ─ ClawContractBook when --publish
        ↓
-  Interaction ────── ethers.js read/write calls
+  Interaction ──────── ethers.js read/write calls
 ```
 
 ## OpenClaw Integration
@@ -198,13 +199,12 @@ ClawContract ships with an [OpenClaw skill](src/openclaw/SKILL.md) that teaches 
 
 Deploy and interact use credentials from `clawcontract register` (stored in `clawcontractbook/credentials.json`). No `.env` or `CLAWCONTRACT_PRIVATE_KEY` needed.
 
-Environment variables for AI generation and verification:
+Environment variables (optional):
 
 | Variable | Description | Required |
 |---|---|---|
-| `CLAWCONTRACT_OPENROUTER_API_KEY` | OpenRouter API key for AI contract generation (not needed for `--source`/`--stdin`/`--file`) | For AI generate |
-| `CLAWCONTRACT_OPENROUTER_MODEL` | OpenRouter model (default: `anthropic/claude-sonnet-4-20250514`) | No |
-| `CLAWCONTRACT_BSCSCAN_API_KEY` | BscScan / opBNBScan API key for contract verification | No |
+| `CLAWCONTRACT_OPENROUTER_API_KEY` | OpenRouter API key (not needed for `--source`/`--stdin`/`--file`) | No |
+| `CLAWCONTRACT_BSCSCAN_API_KEY` | BscScan / opBNBScan API key | No |
 
 > **Security:** Never commit secrets to version control. When using Docker, set values in `docker-compose.yml` or pass them via environment variables.
 

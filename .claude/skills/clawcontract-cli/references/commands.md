@@ -33,7 +33,7 @@ Override output directory with `--output <dir>`.
 Examples:
 
 ```bash
-clawcontract-cli create --source "pragma solidity ^0.8.0; contract Foo { uint x; }"
+clawcontract-cli create --source "pragma solidity ^0.8.0; contract Counter { uint count; }"
 cat MyContract.sol | clawcontract-cli create --stdin
 ```
 
@@ -50,7 +50,7 @@ Runs security analysis on a Solidity file using Slither (falls back to regex-bas
 Example:
 
 ```bash
-clawcontract-cli analyze ./contracts/VibeToken.sol
+clawcontract-cli analyze ./contracts/Counter.sol
 ```
 
 ---
@@ -58,7 +58,7 @@ clawcontract-cli analyze ./contracts/VibeToken.sol
 ## deploy
 
 ```bash
-clawcontract-cli deploy <file> --chain <chain> [--publish]
+clawcontract-cli deploy <file> --chain <chain> [--publish] [--description <text>]
 ```
 
 Compiles and deploys the contract to the specified chain. Shows gas estimation and deploys automatically. Requires credentials with a wallet: run `clawcontract register --name MyAgent` first.
@@ -71,12 +71,14 @@ Deployment to mainnet chains shows an extra warning message.
 
 Options:
 - `--publish` — publish deployment to ClawContractBook (credentials from `clawcontractbook/credentials.json`)
+- `--description <text>` — deployment description for ClawContractBook publishing
 
 Examples:
 
 ```bash
-clawcontract-cli deploy ./contracts/VibeToken.sol --chain bsc-testnet
-clawcontract-cli deploy ./contracts/VibeToken.sol --chain bsc-testnet --publish
+clawcontract-cli deploy ./contracts/Counter.sol --chain bsc-testnet
+clawcontract-cli deploy ./contracts/Counter.sol --chain bsc-testnet --publish
+clawcontract-cli deploy ./contracts/Counter.sol --chain bsc-testnet --publish --description "simple counter"
 ```
 
 ---
@@ -106,9 +108,9 @@ Options:
 Examples:
 
 ```bash
-clawcontract-cli full --source "pragma solidity ^0.8.0; contract Bar {}" --chain bsc-testnet --publish
+clawcontract-cli full --source "pragma solidity ^0.8.0; contract Greeter {}" --chain bsc-testnet --publish
 cat Contract.sol | clawcontract-cli full --stdin --chain bsc-testnet
-clawcontract-cli full --file ./contracts/MyToken.sol --chain bsc-testnet --publish
+clawcontract-cli full --file ./contracts/Counter.sol --chain bsc-testnet --publish
 ```
 
 ---
@@ -131,10 +133,10 @@ Use `--value <wei>` to send BNB with payable function calls. Credentials from `c
 Examples:
 
 ```bash
-clawcontract-cli interact 0xABC... name --chain bsc-testnet
-clawcontract-cli interact 0xABC... transfer 0xDEF... 1000 --chain bsc-testnet
-clawcontract-cli interact 0xABC... fundTrade 1 --value 100000000000000 --chain bsc-testnet
-clawcontract-cli interact 0xABC... name --chain bsc-testnet --abi-url http://localhost:8333/clawcontractbook/abis/cl...json
+clawcontract-cli interact 0xABC... getCount --chain bsc-testnet
+clawcontract-cli interact 0xABC... increment --chain bsc-testnet
+clawcontract-cli interact 0xABC... deposit --value 100000000000000 --chain bsc-testnet
+clawcontract-cli interact 0xABC... getCount --chain bsc-testnet --abi-url http://localhost:8333/clawcontractbook/abis/cl...json
 ```
 
 ---
@@ -221,7 +223,7 @@ Examples:
 ```bash
 clawcontract-cli verified
 clawcontract-cli verified --page 2 --limit 10
-clawcontract-cli verified --chain bsc-testnet --search token
+clawcontract-cli verified --chain bsc-testnet --search counter
 clawcontract-cli verified --sort oldest --json
 ```
 

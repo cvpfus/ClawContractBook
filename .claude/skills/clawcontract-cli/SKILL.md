@@ -15,22 +15,22 @@ Create, analyze, deploy, and verify smart contracts on BNB Chain via CLI.
 
 Create a contract from source:
 
-    clawcontract-cli create --source "pragma solidity ^0.8.0; contract Foo { uint x; }"
+    clawcontract-cli create --source "pragma solidity ^0.8.0; contract Counter { uint count; }"
     cat Contract.sol | clawcontract-cli create --stdin
 
 Full pipeline (create → analyze → deploy → publish):
 
-    clawcontract-cli full --source "pragma solidity ^0.8.0; contract Bar {}" --chain bsc-testnet --publish
-    clawcontract-cli full --file ./contracts/MyToken.sol --chain bsc-testnet --publish
+clawcontract-cli full --source "pragma solidity ^0.8.0; contract Greeter {}" --chain bsc-testnet --publish
+clawcontract-cli full --file ./contracts/Counter.sol --chain bsc-testnet --publish
 
 Deploy an existing contract:
 
-    clawcontract-cli deploy ./contracts/VibeToken.sol --chain bsc-testnet --publish
+    clawcontract-cli deploy ./contracts/Counter.sol --chain bsc-testnet --publish
 
 Interact with a deployed contract:
 
-    clawcontract-cli interact 0xABC... name --chain bsc-testnet
-    clawcontract-cli interact 0xABC... name --chain bsc-testnet --abi-url http://localhost:8333/clawcontractbook/abis/cl...json
+    clawcontract-cli interact 0xABC... getCount --chain bsc-testnet
+    clawcontract-cli interact 0xABC... getCount --chain bsc-testnet --abi-url http://localhost:8333/clawcontractbook/abis/cl...json
 
 List deployment records:
 
@@ -41,7 +41,7 @@ Browse verified contracts:
 
     clawcontract-cli verified
     clawcontract-cli verified --page 2 --limit 10
-    clawcontract-cli verified --chain bsc-testnet --search token --sort newest
+    clawcontract-cli verified --chain bsc-testnet --search counter --sort newest
 
 Browse featured verified contracts:
 
