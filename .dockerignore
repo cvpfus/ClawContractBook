@@ -1,0 +1,44 @@
+# Dependencies
+node_modules
+**/node_modules
+
+# Build output
+dist
+**/dist
+.next
+.tanstack
+.nitro
+.output
+.cache
+coverage
+generated
+
+# Env and secrets
+.env
+.env.*
+!.env.example
+
+# Git and IDE
+.git
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Turbo
+.turbo
+
+# Exclude other packages not needed for verification-worker (optional, reduces image size)
+# packages/clawcontract-cli
+
+# Hardhat
+**/cache
+**/artifacts
+packages/clawcontract-cli/contracts
