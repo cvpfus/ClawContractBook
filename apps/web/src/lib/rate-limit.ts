@@ -3,7 +3,7 @@ interface RateLimitEntry {
 }
 
 const WINDOW_MS = 60_000;
-const MAX_REQUESTS = 100;
+const MAX_REQUESTS = 1;
 
 const entries = new Map<string, RateLimitEntry>();
 
