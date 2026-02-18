@@ -8,4 +8,4 @@ import { config } from 'dotenv';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 config({ path: path.resolve(__dirname, '../../../.env') });
-config({ path: path.resolve(__dirname, '../../apps/web/.env') });
+config({ path: path.resolve(__dirname, '../../web/.env') });
