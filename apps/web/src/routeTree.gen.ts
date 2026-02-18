@@ -10,6 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StatsRouteImport } from './routes/stats'
+import { Route as SKILLDotmdRouteImport } from './routes/SKILL[.]md'
+import { Route as RULESDotmdRouteImport } from './routes/RULES[.]md'
+import { Route as HEARTBEATDotmdRouteImport } from './routes/HEARTBEAT[.]md'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ContractsIndexRouteImport } from './routes/contracts/index'
 import { Route as AgentsIndexRouteImport } from './routes/agents/index'
@@ -32,6 +35,21 @@ import { Route as ApiV1AgentsIdDeploymentsRouteImport } from './routes/api/v1/ag
 const StatsRoute = StatsRouteImport.update({
   id: '/stats',
   path: '/stats',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SKILLDotmdRoute = SKILLDotmdRouteImport.update({
+  id: '/SKILL.md',
+  path: '/SKILL.md',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RULESDotmdRoute = RULESDotmdRouteImport.update({
+  id: '/RULES.md',
+  path: '/RULES.md',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HEARTBEATDotmdRoute = HEARTBEATDotmdRouteImport.update({
+  id: '/HEARTBEAT.md',
+  path: '/HEARTBEAT.md',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -131,6 +149,9 @@ const ApiV1AgentsIdDeploymentsRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/HEARTBEAT.md': typeof HEARTBEATDotmdRoute
+  '/RULES.md': typeof RULESDotmdRoute
+  '/SKILL.md': typeof SKILLDotmdRoute
   '/stats': typeof StatsRoute
   '/agents/$id': typeof AgentsIdRoute
   '/contracts/$id': typeof ContractsIdRoute
@@ -152,6 +173,9 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/HEARTBEAT.md': typeof HEARTBEATDotmdRoute
+  '/RULES.md': typeof RULESDotmdRoute
+  '/SKILL.md': typeof SKILLDotmdRoute
   '/stats': typeof StatsRoute
   '/agents/$id': typeof AgentsIdRoute
   '/contracts/$id': typeof ContractsIdRoute
@@ -174,6 +198,9 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/HEARTBEAT.md': typeof HEARTBEATDotmdRoute
+  '/RULES.md': typeof RULESDotmdRoute
+  '/SKILL.md': typeof SKILLDotmdRoute
   '/stats': typeof StatsRoute
   '/agents/$id': typeof AgentsIdRoute
   '/contracts/$id': typeof ContractsIdRoute
@@ -197,6 +224,9 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/HEARTBEAT.md'
+    | '/RULES.md'
+    | '/SKILL.md'
     | '/stats'
     | '/agents/$id'
     | '/contracts/$id'
@@ -218,6 +248,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/HEARTBEAT.md'
+    | '/RULES.md'
+    | '/SKILL.md'
     | '/stats'
     | '/agents/$id'
     | '/contracts/$id'
@@ -239,6 +272,9 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/HEARTBEAT.md'
+    | '/RULES.md'
+    | '/SKILL.md'
     | '/stats'
     | '/agents/$id'
     | '/contracts/$id'
@@ -261,6 +297,9 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  HEARTBEATDotmdRoute: typeof HEARTBEATDotmdRoute
+  RULESDotmdRoute: typeof RULESDotmdRoute
+  SKILLDotmdRoute: typeof SKILLDotmdRoute
   StatsRoute: typeof StatsRoute
   AgentsIdRoute: typeof AgentsIdRoute
   ContractsIdRoute: typeof ContractsIdRoute
@@ -285,6 +324,27 @@ declare module '@tanstack/react-router' {
       path: '/stats'
       fullPath: '/stats'
       preLoaderRoute: typeof StatsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/SKILL.md': {
+      id: '/SKILL.md'
+      path: '/SKILL.md'
+      fullPath: '/SKILL.md'
+      preLoaderRoute: typeof SKILLDotmdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/RULES.md': {
+      id: '/RULES.md'
+      path: '/RULES.md'
+      fullPath: '/RULES.md'
+      preLoaderRoute: typeof RULESDotmdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/HEARTBEAT.md': {
+      id: '/HEARTBEAT.md'
+      path: '/HEARTBEAT.md'
+      fullPath: '/HEARTBEAT.md'
+      preLoaderRoute: typeof HEARTBEATDotmdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -443,6 +503,9 @@ const ApiV1DeploymentsIdRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  HEARTBEATDotmdRoute: HEARTBEATDotmdRoute,
+  RULESDotmdRoute: RULESDotmdRoute,
+  SKILLDotmdRoute: SKILLDotmdRoute,
   StatsRoute: StatsRoute,
   AgentsIdRoute: AgentsIdRoute,
   ContractsIdRoute: ContractsIdRoute,
