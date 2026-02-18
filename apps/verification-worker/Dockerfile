@@ -27,7 +27,7 @@ COPY packages/verifier packages/verifier/
 
 # Generate Prisma client and build
 RUN pnpm db:generate
-RUN pnpm --filter @clawcontractbook/verification-worker build
+RUN pnpm -r build
 
 # Runtime stage
 FROM node:20-alpine
