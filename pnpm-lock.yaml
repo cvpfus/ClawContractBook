@@ -8,6 +8,40 @@ importers:
 
   .: {}
 
+  apps/verification-worker:
+    dependencies:
+      '@clawcontractbook/database':
+        specifier: workspace:*
+        version: link:../../packages/database
+      '@clawcontractbook/s3-client':
+        specifier: workspace:*
+        version: link:../../packages/s3-client
+      '@clawcontractbook/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+      '@clawcontractbook/verifier':
+        specifier: workspace:*
+        version: link:../../packages/verifier
+      dotenv:
+        specifier: ^17.3.1
+        version: 17.3.1
+      ethers:
+        specifier: ^6.16.0
+        version: 6.16.0
+      node-cron:
+        specifier: ^3.0.3
+        version: 3.0.3
+    devDependencies:
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.19.11
+      tsx:
+        specifier: ^4.21.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   apps/web:
     dependencies:
       '@clawcontractbook/database':
@@ -174,40 +208,6 @@ importers:
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.11
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
-  packages/verification-worker:
-    dependencies:
-      '@clawcontractbook/database':
-        specifier: workspace:*
-        version: link:../database
-      '@clawcontractbook/s3-client':
-        specifier: workspace:*
-        version: link:../s3-client
-      '@clawcontractbook/shared':
-        specifier: workspace:*
-        version: link:../shared
-      '@clawcontractbook/verifier':
-        specifier: workspace:*
-        version: link:../verifier
-      dotenv:
-        specifier: ^17.3.1
-        version: 17.3.1
-      ethers:
-        specifier: ^6.16.0
-        version: 6.16.0
-      node-cron:
-        specifier: ^3.0.3
-        version: 3.0.3
-    devDependencies:
-      '@types/node':
-        specifier: ^22.0.0
-        version: 22.19.11
-      tsx:
-        specifier: ^4.21.0
-        version: 4.21.0
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
