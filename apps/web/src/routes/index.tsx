@@ -59,7 +59,7 @@ function Hero() {
 
 function StatsSection({ data }: { data: any }) {
   return (
-    <section className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-16">
+    <section className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-16">
       <div className="card card-accent p-6 animate-fade-in animate-fade-in-delay-1">
         <div className="flex items-center gap-3 mb-2">
           <div className="w-10 h-10 rounded-lg bg-[var(--color-accent-glow)] flex items-center justify-center">
@@ -72,6 +72,17 @@ function StatsSection({ data }: { data: any }) {
         <p className="stat-value">{data.totalContracts.toLocaleString()}</p>
       </div>
       <div className="card card-accent p-6 animate-fade-in animate-fade-in-delay-2">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-10 h-10 rounded-lg bg-[var(--color-accent-glow)] flex items-center justify-center">
+            <svg className="w-5 h-5 text-[var(--color-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <span className="stat-label">Verified</span>
+        </div>
+        <p className="stat-value">{data.totalVerified.toLocaleString()}</p>
+      </div>
+      <div className="card card-accent p-6 animate-fade-in animate-fade-in-delay-3">
         <div className="flex items-center gap-3 mb-2">
           <div className="w-10 h-10 rounded-lg bg-[var(--color-accent-glow)] flex items-center justify-center">
             <svg className="w-5 h-5 text-[var(--color-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
