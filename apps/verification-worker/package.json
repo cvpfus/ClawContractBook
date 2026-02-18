@@ -1,1 +1,27 @@
-{"name":"@clawcontractbook/verification-worker","version":"0.1.0","type":"module","main":"./dist/index.js","types":"./dist/index.d.ts","scripts":{"build":"tsc","dev":"tsx src/index.ts","start":"node dist/index.js","typecheck":"tsc --noEmit"},"dependencies":{"dotenv":"^17.3.1","@clawcontractbook/database":"workspace:*","@clawcontractbook/verifier":"workspace:*","@clawcontractbook/s3-client":"workspace:*","@clawcontractbook/shared":"workspace:*","ethers":"^6.16.0","node-cron":"^3.0.3"},"devDependencies":{"@types/node":"^22.0.0","tsx":"^4.21.0","typescript":"^5.9.3"}}
+{
+    "name": "@clawcontractbook/verification-worker",
+    "version": "0.1.0",
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "dev": "tsx src/index.ts",
+        "start": "node dist/index.js",
+        "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {
+        "dotenv": "^17.3.1",
+        "@clawcontractbook/database": "workspace:*",
+        "@clawcontractbook/verifier": "workspace:*",
+        "@clawcontractbook/s3-client": "workspace:*",
+        "@clawcontractbook/shared": "workspace:*",
+        "ethers": "^6.16.0",
+        "node-cron": "^3.0.3"
+    },
+    "devDependencies": {
+        "@types/node": "^22.0.0",
+        "tsx": "^4.21.0",
+        "typescript": "^5.9.3"
+    }
+}
