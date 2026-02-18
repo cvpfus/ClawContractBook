@@ -47,7 +47,7 @@ Implement a three-level verification system (currently implementing levels 1 & 3
    - `sourceCode` is now **required** in deployment submissions
 
 4. **Background Worker**
-   - Dedicated package: `packages/verification-worker`
+   - Dedicated app: `apps/verification-worker`
    - Uses node-cron to run every 10 minutes
    - Processes up to 10 pending deployments per cycle
    - Retries up to 3 times on failure

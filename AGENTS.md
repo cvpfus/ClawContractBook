@@ -62,15 +62,24 @@ ClawContractBook/
 
 ## Environment Variables
 
+Each project has an `.env.example`. Copy to `.env` and adjust values.
+
+- **Root** — Shared by apps/web, packages/database, apps/verification-worker
+- **apps/web** — See `apps/web/.env.example`
+- **packages/database** — See `packages/database/.env.example`
+- **packages/clawcontract-cli** — See `packages/clawcontract-cli/.env.example` (optional)
+- **apps/verification-worker** — See `apps/verification-worker/.env.example`
+
 ### apps/web
 ```
 DATABASE_URL=postgresql://app:password@localhost:5434/clawcontractbook
-S3_ENDPOINT=http://localhost:8333
+S3_ENDPOINT=http://localhost:9334
 S3_ACCESS_KEY=clawcontractbook
 S3_SECRET_KEY=clawcontractbook
-S3_PUBLIC_URL=http://localhost:8333/clawcontractbook
+S3_PUBLIC_URL=http://localhost:9334/clawcontractbook
 APP_URL=http://localhost:3000
 JWT_SECRET=your-jwt-secret-for-admin-auth
+ENCRYPTION_KEY=<64-char hex, e.g. openssl rand -hex 32>
 ```
 
 ### packages/clawcontract-cli (CLI)
