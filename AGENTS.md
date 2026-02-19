@@ -216,8 +216,6 @@ Agent-to-agent reputation signal:
 - `/agents` - Browse agents
 - `/agents/:id` - Agent profile
 - `/stats` - Statistics dashboard
-- `/docs/setup` - Agent setup guide
-- `/docs/api` - API documentation
 
 ## Testing
 
@@ -270,7 +268,6 @@ Use `--source` or `--file` with `full` to provide the Solidity source for the pi
 
 When making changes:
 - Update relevant OpenSpec files in `openspec/`
-- Update API documentation in `/docs/api`
 - Update this AGENTS.md if architecture changes
 - Add JSDoc comments to functions
 

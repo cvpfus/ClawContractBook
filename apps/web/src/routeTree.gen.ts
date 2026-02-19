@@ -16,7 +16,6 @@ import { Route as HEARTBEATDotmdRouteImport } from './routes/HEARTBEAT[.]md'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ContractsIndexRouteImport } from './routes/contracts/index'
 import { Route as AgentsIndexRouteImport } from './routes/agents/index'
-import { Route as DocsSetupRouteImport } from './routes/docs/setup'
 import { Route as ContractsIdRouteImport } from './routes/contracts/$id'
 import { Route as AgentsIdRouteImport } from './routes/agents/$id'
 import { Route as ApiV1DeploymentsIndexRouteImport } from './routes/api/v1/deployments/index'
@@ -65,11 +64,6 @@ const ContractsIndexRoute = ContractsIndexRouteImport.update({
 const AgentsIndexRoute = AgentsIndexRouteImport.update({
   id: '/agents/',
   path: '/agents/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DocsSetupRoute = DocsSetupRouteImport.update({
-  id: '/docs/setup',
-  path: '/docs/setup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContractsIdRoute = ContractsIdRouteImport.update({
@@ -155,7 +149,6 @@ export interface FileRoutesByFullPath {
   '/stats': typeof StatsRoute
   '/agents/$id': typeof AgentsIdRoute
   '/contracts/$id': typeof ContractsIdRoute
-  '/docs/setup': typeof DocsSetupRoute
   '/agents/': typeof AgentsIndexRoute
   '/contracts/': typeof ContractsIndexRoute
   '/api/v1/agents/$id': typeof ApiV1AgentsIdRouteWithChildren
@@ -179,7 +172,6 @@ export interface FileRoutesByTo {
   '/stats': typeof StatsRoute
   '/agents/$id': typeof AgentsIdRoute
   '/contracts/$id': typeof ContractsIdRoute
-  '/docs/setup': typeof DocsSetupRoute
   '/agents': typeof AgentsIndexRoute
   '/contracts': typeof ContractsIndexRoute
   '/api/v1/agents/$id': typeof ApiV1AgentsIdRouteWithChildren
@@ -204,7 +196,6 @@ export interface FileRoutesById {
   '/stats': typeof StatsRoute
   '/agents/$id': typeof AgentsIdRoute
   '/contracts/$id': typeof ContractsIdRoute
-  '/docs/setup': typeof DocsSetupRoute
   '/agents/': typeof AgentsIndexRoute
   '/contracts/': typeof ContractsIndexRoute
   '/api/v1/agents/$id': typeof ApiV1AgentsIdRouteWithChildren
@@ -230,7 +221,6 @@ export interface FileRouteTypes {
     | '/stats'
     | '/agents/$id'
     | '/contracts/$id'
-    | '/docs/setup'
     | '/agents/'
     | '/contracts/'
     | '/api/v1/agents/$id'
@@ -254,7 +244,6 @@ export interface FileRouteTypes {
     | '/stats'
     | '/agents/$id'
     | '/contracts/$id'
-    | '/docs/setup'
     | '/agents'
     | '/contracts'
     | '/api/v1/agents/$id'
@@ -278,7 +267,6 @@ export interface FileRouteTypes {
     | '/stats'
     | '/agents/$id'
     | '/contracts/$id'
-    | '/docs/setup'
     | '/agents/'
     | '/contracts/'
     | '/api/v1/agents/$id'
@@ -303,7 +291,6 @@ export interface RootRouteChildren {
   StatsRoute: typeof StatsRoute
   AgentsIdRoute: typeof AgentsIdRoute
   ContractsIdRoute: typeof ContractsIdRoute
-  DocsSetupRoute: typeof DocsSetupRoute
   AgentsIndexRoute: typeof AgentsIndexRoute
   ContractsIndexRoute: typeof ContractsIndexRoute
   ApiV1AgentsIdRoute: typeof ApiV1AgentsIdRouteWithChildren
@@ -366,13 +353,6 @@ declare module '@tanstack/react-router' {
       path: '/agents'
       fullPath: '/agents/'
       preLoaderRoute: typeof AgentsIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/docs/setup': {
-      id: '/docs/setup'
-      path: '/docs/setup'
-      fullPath: '/docs/setup'
-      preLoaderRoute: typeof DocsSetupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contracts/$id': {
@@ -509,7 +489,6 @@ const rootRouteChildren: RootRouteChildren = {
   StatsRoute: StatsRoute,
   AgentsIdRoute: AgentsIdRoute,
   ContractsIdRoute: ContractsIdRoute,
-  DocsSetupRoute: DocsSetupRoute,
   AgentsIndexRoute: AgentsIndexRoute,
   ContractsIndexRoute: ContractsIndexRoute,
   ApiV1AgentsIdRoute: ApiV1AgentsIdRouteWithChildren,

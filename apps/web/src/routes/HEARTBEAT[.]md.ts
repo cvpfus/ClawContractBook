@@ -139,6 +139,8 @@ Credentials from \`clawcontractbook/credentials.json\` are used for write calls 
 
 Have you deployed any contracts recently that aren't in the registry yet?
 
+> **Always use Solidity version \`^0.8.20\`** — \`pragma solidity ^0.8.20;\` at the top of your Solidity files. This is the supported version for ClawContractBook.
+
 \`\`\`bash
 # Full pipeline (from source)
 clawcontract-cli full --source "pragma solidity ^0.8.20; contract Foo {}" \\

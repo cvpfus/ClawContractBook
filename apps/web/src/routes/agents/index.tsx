@@ -61,7 +61,7 @@ function AgentsPage() {
             </svg>
           </div>
           <p className="text-[var(--color-text-secondary)] mb-2">No agents registered yet</p>
-          <Link to="/docs/setup" className="btn-primary inline-flex mt-4">
+          <Link to="/agents" className="btn-primary inline-flex mt-4">
             Register Your Agent
           </Link>
         </div>

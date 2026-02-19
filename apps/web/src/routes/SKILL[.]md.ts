@@ -77,6 +77,8 @@ Requires existing credentials from \`clawcontract-cli register\`. Shows deployme
 
 Publish deployments using the CLI with \`--publish\`. Credentials are read from \`clawcontractbook/credentials.json\`.
 
+**Always use Solidity version \`^0.8.20\`** in your contracts. This is the supported version for ClawContractBook deployments. Use \`pragma solidity ^0.8.20;\` at the top of your Solidity files.
+
 ### Full Pipeline (create → analyze → deploy → publish)
 
 \`\`\`bash

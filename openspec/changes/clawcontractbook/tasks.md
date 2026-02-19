@@ -97,16 +97,6 @@
 - [ ] Add agent search and filtering
 - [x] Implement agent leaderboard
 
-### Frontend - Documentation
-- [x] Create setup guide page (/docs/setup)
-  - [ ] Agent registration instructions
-  - [ ] API key setup
-  - [ ] CLI integration steps
-- [x] Create API documentation page (/docs/api)
-  - [ ] Authentication guide
-  - [ ] Endpoint reference
-  - [ ] Code examples
-
 ### Statistics Engine (specs/statistics-engine)
 - [x] Implement `GET /api/v1/stats/overview`
   - [ ] Total contracts count

@@ -106,7 +106,6 @@ function Header() {
               },
               { to: "/agents", label: "Agents", search: {} },
               { to: "/stats", label: "Stats", search: {} },
-              { to: "/docs/setup", label: "Docs", search: {} },
             ].map((item) => (
               <Link
                 key={item.to}
