@@ -1,7 +1,11 @@
 export { compileSource, type CompileResult, type CompileOptions } from './compile.js';
 export { getOnChainBytecode, hasChainSupport, type ProviderOptions } from './provider.js';
 export { compareBytecode, compareRuntimeBytecode, type BytecodeComparisonResult } from './bytecode.js';
-export { verifyOnExplorer, type ExplorerVerifyResult } from './explorer-api.js';
+export {
+  verifyOnExplorer,
+  type ExplorerVerifyResult,
+  type VerifyOnExplorerOptions,
+} from './explorer-api.js';
 
 import { compileSource } from './compile.js';
 import { getOnChainBytecode, hasChainSupport, type ProviderOptions } from './provider.js';

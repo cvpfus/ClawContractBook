@@ -80,6 +80,11 @@ async function runVerificationJob(deploymentId: string): Promise<VerificationJob
             chainKey: deployment.chainKey as ChainKey,
             sourceCode,
             contractName: deployment.contractName,
+            compilerVersion: deployment.compilerVersion
+              ? (deployment.compilerVersion.startsWith('v') ? deployment.compilerVersion : `v${deployment.compilerVersion}`)
+              : undefined,
+            optimizationUsed: true,
+            runs: 200,
           }, bscscanApiKey);
 
           if (explorerResult.success) {

@@ -27,15 +27,11 @@ interface ExplorerApiResponse {
 const ETHERSCAN_V2_BASE = 'https://api.etherscan.io/v2/api';
 const DEFAULT_COMPILER_VERSION = 'v0.8.20+commit.a1b79de6';
 const DEFAULT_RUNS = 200;
-const MAX_POLL_RETRIES = 5;
+const MAX_RETRIES = 5;
 const INITIAL_POLL_INTERVAL_MS = 5_000;
 
 const SUBMIT_MAX_RETRIES = 5;
 const SUBMIT_INITIAL_DELAY_MS = 5_000;
-
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
 
 export async function submitVerification(
   options: SubmitVerificationOptions,
@@ -128,7 +124,7 @@ export async function pollVerificationStatus(
 ): Promise<{ success: boolean; message: string }> {
   let delay = INITIAL_POLL_INTERVAL_MS;
 
-  for (let attempt = 0; attempt < MAX_POLL_RETRIES; attempt++) {
+  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
     await sleep(delay);
 
     const result = await checkVerificationStatus(guid, chainKey, apiKey);
@@ -143,28 +139,54 @@ export async function pollVerificationStatus(
 }
 
 /**
+ * Options for explorer verification. Matches ClawContract's VerifyOptions exactly.
+ */
+export interface VerifyOnExplorerOptions {
+  contractAddress: string;
+  chainKey: ChainKey;
+  constructorArgs?: string;
+  sourceCode?: string;
+  contractName?: string;
+  compilerVersion?: string;
+  optimizationUsed?: boolean;
+  runs?: number;
+  standardJsonInput?: unknown;
+  solcLongVersion?: string;
+  fullyQualifiedName?: string;
+}
+
+/**
  * Submit source code to BscScan/opBNBScan for verification and poll for result.
+ * Uses the exact same submitVerification payload logic as ClawContract.
  */
 export async function verifyOnExplorer(
-  options: {
-    contractAddress: string;
-    chainKey: ChainKey;
-    sourceCode: string;
-    contractName: string;
-    compilerVersion?: string;
-  },
+  options: VerifyOnExplorerOptions,
   apiKey: string,
 ): Promise<ExplorerVerifyResult> {
   const chain = SUPPORTED_CHAINS[options.chainKey];
 
-  const guid = await submitVerification({
-    contractAddress: options.contractAddress,
-    sourceCode: options.sourceCode,
-    contractName: options.contractName,
-    chainKey: options.chainKey,
-    compilerVersion: options.compilerVersion,
-    codeFormat: 'solidity-single-file',
-  }, apiKey);
+  const useStandardJson = !!options.standardJsonInput;
+
+  const guid = await submitVerification(
+    {
+      contractAddress: options.contractAddress,
+      sourceCode: useStandardJson
+        ? JSON.stringify(options.standardJsonInput)
+        : options.sourceCode ?? '',
+      contractName: useStandardJson
+        ? (options.fullyQualifiedName ?? options.contractName ?? '')
+        : (options.contractName ?? ''),
+      chainKey: options.chainKey,
+      constructorArgs: options.constructorArgs,
+      compilerVersion: useStandardJson
+        ? (options.solcLongVersion ? `v${options.solcLongVersion}` : options.compilerVersion)
+        : options.compilerVersion,
+      optimizationUsed: options.optimizationUsed,
+      runs: options.runs,
+      codeFormat: useStandardJson ? 'solidity-standard-json-input' : 'solidity-single-file',
+    },
+    apiKey,
+  );
 
   const result = await pollVerificationStatus(guid, options.chainKey, apiKey);
 
@@ -173,4 +195,8 @@ export async function verifyOnExplorer(
     message: result.message,
     explorerUrl: `${chain.explorerUrl}/address/${options.contractAddress}#code`,
   };
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
