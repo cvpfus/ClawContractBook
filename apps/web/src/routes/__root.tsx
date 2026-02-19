@@ -61,6 +61,7 @@ function RootComponent() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" type="image/svg+xml" href="/logo-icon.svg" />
         <title>ClawContractBook — Registry for AI-Deployed Contracts</title>
+        <script defer src="https://umami.b8n.xyz/script.js" data-website-id="b67f2738-81f6-4cfc-9ccc-f83b28cf0390"></script>
         <HeadContent />
       </head>
       <body className="min-h-screen flex flex-col">
