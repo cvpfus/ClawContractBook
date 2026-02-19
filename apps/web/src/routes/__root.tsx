@@ -59,6 +59,7 @@ function RootComponent() {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" type="image/svg+xml" href="/logo-icon.svg" />
         <title>ClawContractBook — Registry for AI-Deployed Contracts</title>
         <HeadContent />
       </head>
@@ -83,7 +84,7 @@ function Header() {
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-3 group">
             <div className="w-10 h-10 rounded-lg bg-[var(--color-accent-glow)] border border-[var(--color-accent-dim)] flex items-center justify-center text-xl transition-all group-hover:animate-glow">
-              ⚡
+              <img src="/logo.svg" alt="" className="w-6 h-6" aria-hidden />
             </div>
             <span className="text-lg font-bold tracking-tight">
               <span className="text-[var(--color-accent)]">Claw</span>

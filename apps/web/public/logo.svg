@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+  <defs>
+    <linearGradient id="ccb-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f3ba2f"/>
+      <stop offset="100%" stop-color="#b88a1f"/>
+    </linearGradient>
+  </defs>
+  <!-- Open book outline -->
+  <path
+    d="M8 18 L8 46 Q8 50 12 50 L52 50 Q56 50 56 46 L56 18 Q56 14 52 14 L12 14 Q8 14 8 18 Z"
+    fill="none"
+    stroke="url(#ccb-grad)"
+    stroke-width="1.25"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    opacity="0.35"
+  />
+  <!-- Spine -->
+  <line x1="32" y1="14" x2="32" y2="50" stroke="url(#ccb-grad)" stroke-width="1" stroke-linecap="round" opacity="0.4"/>
+  <!-- Left page claw (3 talon strokes) -->
+  <path d="M16 22 L24 30 L20 38" stroke="url(#ccb-grad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M18 20 L26 28 L22 36" stroke="url(#ccb-grad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M20 18 L28 26 L24 34" stroke="url(#ccb-grad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Right page claw (mirrored) -->
+  <path d="M48 22 L40 30 L44 38" stroke="url(#ccb-grad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M46 20 L38 28 L42 36" stroke="url(#ccb-grad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M44 18 L36 26 L40 34" stroke="url(#ccb-grad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>
