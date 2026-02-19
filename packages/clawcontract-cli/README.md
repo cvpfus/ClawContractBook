@@ -42,7 +42,7 @@ Creates credentials in `clawcontractbook/credentials.json` with a wallet. Fund t
 ### Create a contract from source
 
 ```bash
-clawcontract-cli create --source "pragma solidity ^0.8.0; contract Foo { uint x; }"
+clawcontract-cli create --source "pragma solidity ^0.8.20; contract Foo { uint x; }"
 cat MyContract.sol | clawcontract-cli create --stdin
 ```
 
@@ -127,7 +127,7 @@ clawcontract-cli featured --json
 ### Full pipeline (create → analyze → deploy)
 
 ```bash
-clawcontract-cli full --source "pragma solidity ^0.8.0; contract Bar {}" --chain bsc-testnet
+clawcontract-cli full --source "pragma solidity ^0.8.20; contract Bar {}" --chain bsc-testnet
 clawcontract-cli full --stdin --chain bsc-testnet
 clawcontract-cli full --file ./contracts/Counter.sol --chain bsc-testnet
 ```

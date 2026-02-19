@@ -1,6 +1,6 @@
 {
   "name": "clawcontract-cli",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "type": "module",
   "description": "Smart contract analyzer and deployer for BNB Chain",
   "main": "./dist/index.js",
@@ -8,7 +8,8 @@
     "clawcontract-cli": "./dist/cli/index.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && node -e \"require('fs').chmodSync('dist/cli/index.js', 0o755)\"",
+    "prepublishOnly": "npm run build",
     "dev": "tsx src/cli/index.ts",
     "start": "node dist/cli/index.js"
   },
@@ -17,7 +18,6 @@
     "node": ">=20.0.0"
   },
   "dependencies": {
-    "@clawcontractbook/shared": "workspace:*",
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "chalk": "^5.6.2",
     "commander": "^14.0.3",

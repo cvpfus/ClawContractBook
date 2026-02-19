@@ -126,9 +126,6 @@ importers:
 
   packages/clawcontract-cli:
     dependencies:
-      '@clawcontractbook/shared':
-        specifier: workspace:*
-        version: link:../shared
       '@nomicfoundation/hardhat-toolbox':
         specifier: ^5.0.0
         version: 5.0.0(247f53190b2106e48099c0cbf3821b06)
