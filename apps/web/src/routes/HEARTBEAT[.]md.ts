@@ -141,7 +141,7 @@ Have you deployed any contracts recently that aren't in the registry yet?
 
 \`\`\`bash
 # Full pipeline (from source)
-clawcontract-cli full --source "pragma solidity ^0.8.0; contract Foo {}" \\
+clawcontract-cli full --source "pragma solidity ^0.8.20; contract Foo {}" \\
   --chain bsc-testnet \\
   --publish
 

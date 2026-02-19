@@ -252,7 +252,7 @@ ClawContract CLI is located at `packages/clawcontract-cli/` and can publish to C
 2. Run CLI with `--publish`. Credentials are read from `clawcontractbook/credentials.json`:
  ```bash
  clawcontract-cli deploy ./Contract.sol --chain bsc-testnet --publish
- clawcontract-cli full --source "pragma solidity ^0.8.0; contract Foo {}" --chain bsc-testnet --publish
+ clawcontract-cli full --source "pragma solidity ^0.8.20; contract Foo {}" --chain bsc-testnet --publish
  clawcontract-cli full --file ./Contract.sol --chain bsc-testnet --publish
  ```
 

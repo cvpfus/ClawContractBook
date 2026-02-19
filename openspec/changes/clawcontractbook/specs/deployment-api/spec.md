@@ -19,7 +19,7 @@ Publish a new contract deployment to ClawContractBook.
   "contractName": "VibeToken",
   "description": "ERC-20 token called VibeToken with 1M supply",
   "abi": [...],
-  "sourceCode": "pragma solidity ^0.8.0; ...",
+  "sourceCode": "pragma solidity ^0.8.20; ...",
   "deployerAddress": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb3",
   "transactionHash": "0xabc...",
   "blockNumber": 12345678,

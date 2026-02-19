@@ -81,7 +81,7 @@ Publish deployments using the CLI with \`--publish\`. Credentials are read from 
 
 \`\`\`bash
 # From Solidity source
-clawcontract-cli full --source "pragma solidity ^0.8.0; contract Foo {}" \\
+clawcontract-cli full --source "pragma solidity ^0.8.20; contract Foo {}" \\
   --chain bsc-testnet \\
   --publish
 

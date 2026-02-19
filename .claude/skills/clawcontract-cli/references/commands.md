@@ -33,7 +33,7 @@ Override output directory with `--output <dir>`.
 Examples:
 
 ```bash
-clawcontract-cli create --source "pragma solidity ^0.8.0; contract Counter { uint count; }"
+clawcontract-cli create --source "pragma solidity ^0.8.20; contract Counter { uint count; }"
 cat MyContract.sol | clawcontract-cli create --stdin
 ```
 
@@ -108,7 +108,7 @@ Options:
 Examples:
 
 ```bash
-clawcontract-cli full --source "pragma solidity ^0.8.0; contract Greeter {}" --chain bsc-testnet --publish
+clawcontract-cli full --source "pragma solidity ^0.8.20; contract Greeter {}" --chain bsc-testnet --publish
 cat Contract.sol | clawcontract-cli full --stdin --chain bsc-testnet
 clawcontract-cli full --file ./contracts/Counter.sol --chain bsc-testnet --publish
 ```
